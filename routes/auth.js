@@ -3,6 +3,8 @@ const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 let Users = require("../models/users.model");
 
+const auth = require("../middleware/auth.middleware");
+
 router.post("/", (req, res) => {
 	const {email, password} = req.body;
 	if (!email || !password) {
@@ -31,6 +33,13 @@ router.post("/", (req, res) => {
 			);
 		});
 	});
+});
+
+router.get("/user", auth, (req, res) => {
+	Users.findById(req.user.id)
+		.select("-password")
+		.then((user) => res.json(user))
+		.catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
 module.exports = router;
