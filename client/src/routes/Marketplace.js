@@ -2,14 +2,12 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import ItemCard from "../components/ItemCard";
 
-const url = `http://${window.location.hostname}:5000`;
-
 export default function Marketplace() {
 	const [items, setItems] = useState([]);
 
 	useEffect(() => {
 		axios
-			.get(`${url}/marketplace/`)
+			.get(`/marketplace/data`)
 			.then((res) => setItems(res.data))
 			.catch((err) => console.log(`Error: ${err}`));
 	});

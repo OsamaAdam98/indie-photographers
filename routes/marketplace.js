@@ -1,13 +1,13 @@
 const router = require("express").Router();
 let Market = require("../models/marketplace.model");
 
-router.get("/", (req, res) => {
+router.get("/marketplace", (req, res) => {
 	Market.find()
 		.then((items) => res.json(items))
 		.catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
-router.post("/add", (req, res) => {
+router.post("/marketplace/add", (req, res) => {
 	const img = req.body.img;
 	const title = req.body.title;
 	const name = req.body.name;
