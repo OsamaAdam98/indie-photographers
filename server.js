@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const path = require("path");
 
 const marketRoute = require("./routes/marketplace");
+const usersRoute = require("./routes/users");
+const authRoute = require("./routes/auth");
 
 require("dotenv").config();
 
@@ -27,7 +29,9 @@ connection.once("open", () =>
 	console.log("Database connection established successfully.")
 );
 
-app.use("/api", marketRoute);
+app.use("/api/items", marketRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/auth", authRoute);
 
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static("client/build"));

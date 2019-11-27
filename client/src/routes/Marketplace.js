@@ -7,7 +7,7 @@ export default function Marketplace() {
 
 	useEffect(() => {
 		axios
-			.get(`/api`)
+			.get(`/api/items`)
 			.then((res) => setItems(res.data))
 			.catch((err) => console.log(`Error: ${err}`));
 	});

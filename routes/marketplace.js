@@ -1,13 +1,15 @@
 const router = require("express").Router();
 let Market = require("../models/marketplace.model");
 
+const auth = require("../middleware/auth.middleware");
+
 router.get("/", (req, res) => {
 	Market.find()
 		.then((items) => res.json(items))
 		.catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
-router.post("/add", (req, res) => {
+router.post("/add", auth, (req, res) => {
 	const img = req.body.img;
 	const title = req.body.title;
 	const name = req.body.name;
@@ -26,13 +28,13 @@ router.post("/add", (req, res) => {
 		.catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
-router.delete("/delete/:id", (req, res) => {
+router.delete("/delete/:id", auth, (req, res) => {
 	Market.findByIdAndDelete(req.params.id)
 		.then(() => res.json(`item deleted`))
 		.catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
-router.post("/update/:id", (req, res) => {
+router.post("/update/:id", auth, (req, res) => {
 	Market.findById(req.params.id)
 		.then((item) => {
 			item.img = req.body.img;
