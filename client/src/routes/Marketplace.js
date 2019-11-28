@@ -10,7 +10,7 @@ export default function Marketplace() {
 			.get(`/api/items`)
 			.then((res) => setItems(res.data))
 			.catch((err) => console.log(`Error: ${err}`));
-	});
+	}, []);
 
 	const itemCard = items.map((item, i) => <ItemCard item={item} key={i} />);
 	return (
