@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {Link} from "react-router-dom";
+import Login from "./Login";
 
 export default function NavBar() {
 	return (
@@ -28,6 +29,7 @@ export default function NavBar() {
 							Marketplace
 						</Link>
 					</Nav>
+					<Login />
 				</Navbar.Collapse>
 			</Navbar>
 		</>
