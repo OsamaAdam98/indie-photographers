@@ -1,13 +1,14 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 
-export default function Login() {
+export default function Login(props) {
+	const {isLogged, setIsLogged} = props;
+
 	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [isLogged, setIsLogged] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 
 	const handleClose = () => {
@@ -19,10 +20,6 @@ export default function Login() {
 		setShow(true);
 		setErrorMsg("");
 	};
-
-	useEffect(() => {
-		if (localStorage.getItem("token")) setIsLogged(true);
-	}, []);
 
 	const emailChange = (event) => setEmail(event.target.value);
 	const passwordChange = (event) => setPassword(event.target.value);

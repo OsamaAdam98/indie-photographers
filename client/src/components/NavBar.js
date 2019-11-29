@@ -3,8 +3,11 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {Link} from "react-router-dom";
 import Login from "./Login";
+import Post from "./Post";
 
-export default function NavBar() {
+export default function NavBar(props) {
+	const {isLogged, setIsLogged} = props;
+
 	return (
 		<>
 			<Navbar
@@ -30,7 +33,8 @@ export default function NavBar() {
 							Marketplace
 						</Link>
 					</Nav>
-					<Login />
+					<Post isLogged={isLogged} />
+					<Login isLogged={isLogged} setIsLogged={setIsLogged} />
 				</Navbar.Collapse>
 			</Navbar>
 		</>

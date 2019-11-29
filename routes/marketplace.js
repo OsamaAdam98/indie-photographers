@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/add", auth, (req, res) => {
-	const img = req.body.img;
+	const img = req.body.imgUrl;
 	const title = req.body.title;
 	const name = req.body.name;
 	const desc = req.body.desc;
