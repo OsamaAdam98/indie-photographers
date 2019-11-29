@@ -1,11 +1,15 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
+import Loadingpage from "../components/Loadingpage";
 
 export default function Profile() {
 	const [user, setUser] = useState({});
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const token = localStorage.getItem("token");
+
+		setIsLoading(true);
 
 		axios
 			.get("/api/auth/user", {
@@ -15,10 +19,12 @@ export default function Profile() {
 			})
 			.then((res) => {
 				setUser(res.data);
+				setIsLoading(false);
 			})
 			.catch((err) => console.log(err));
 	}, []);
 
+	if (isLoading) return <Loadingpage />;
 	return (
 		<div className="container-fluid">
 			{user.username}
