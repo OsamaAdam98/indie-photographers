@@ -34,7 +34,6 @@ export default function Login() {
 					const {token} = res.data;
 					if (token) {
 						localStorage.setItem("token", token);
-						console.log(token);
 						setEmail("");
 						setPassword("");
 						handleClose();

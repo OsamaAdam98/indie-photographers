@@ -14,7 +14,6 @@ export default function Profile() {
 				}
 			})
 			.then((res) => {
-				console.log(res.data);
 				setUser(res.data);
 			})
 			.catch((err) => console.log(err));

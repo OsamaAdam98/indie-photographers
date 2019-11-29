@@ -17,6 +17,8 @@ router.post("/", (req, res) => {
 			password
 		});
 
+		newUser.email = email.toLowerCase();
+
 		bcrypt.genSalt(10, (err, salt) => {
 			bcrypt.hash(newUser.password, salt, (err, hash) => {
 				if (err) throw err;
