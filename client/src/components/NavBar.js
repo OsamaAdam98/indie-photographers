@@ -10,6 +10,7 @@ export default function NavBar() {
 			<Navbar
 				bg="dark"
 				variant="dark"
+				sticky="top"
 				collapseOnSelect
 				expand="lg"
 				className="mb-3"

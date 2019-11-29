@@ -8,10 +8,17 @@ export default function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLogged, setIsLogged] = useState(false);
+	const [errorMsg, setErrorMsg] = useState("");
 
-	const handleClose = () => setShow(false);
+	const handleClose = () => {
+		setShow(false);
+		setErrorMsg("");
+	};
 
-	const handleShow = () => setShow(true);
+	const handleShow = () => {
+		setShow(true);
+		setErrorMsg("");
+	};
 
 	useEffect(() => {
 		if (localStorage.getItem("token")) setIsLogged(true);
@@ -21,7 +28,7 @@ export default function Login() {
 	const passwordChange = (event) => setPassword(event.target.value);
 	const handleSubmit = (event) => {
 		if (!email || !password) {
-			console.log("no email or password");
+			setErrorMsg("Please enter all fields");
 			event.preventDefault();
 		} else {
 			const user = {
@@ -44,6 +51,7 @@ export default function Login() {
 					console.log(err);
 					localStorage.removeItem("token");
 					setIsLogged(false);
+					setErrorMsg("Invalid credentials");
 				});
 		}
 		event.preventDefault();
@@ -63,6 +71,11 @@ export default function Login() {
 		</Link>
 	);
 
+	const loginError = errorMsg ? (
+		<div className="alert alert-danger" role="alert">
+			{errorMsg}
+		</div>
+	) : null;
 	return (
 		<>
 			{loginButton}
@@ -92,6 +105,7 @@ export default function Login() {
 								onChange={passwordChange}
 							/>
 						</div>
+						{loginError}
 					</Modal.Body>
 					<Modal.Footer>
 						<button
