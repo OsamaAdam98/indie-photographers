@@ -5,7 +5,11 @@ export default function ItemCard(props) {
 		<div className="col-md-auto mb-3">
 			<div
 				className="card"
-				style={{height: "400px", maxWidth: "400px", overflow: "hidden"}}
+				style={{
+					height: "25rem",
+					width: "20rem",
+					overflow: "hidden"
+				}}
 			>
 				<img
 					src={props.item.img}

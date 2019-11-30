@@ -2,8 +2,8 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import Loadingpage from "../components/Loadingpage";
 
-export default function Profile() {
-	const [user, setUser] = useState({});
+export default function Profile(props) {
+	const {user, setUser} = props;
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {

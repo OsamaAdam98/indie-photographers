@@ -9,6 +9,7 @@ import Profile from "./routes/Profile";
 
 function App() {
 	const [isLogged, setIsLogged] = useState(false);
+	const [user, setUser] = useState({});
 
 	useEffect(() => {
 		if (localStorage.getItem("token")) setIsLogged(true);
@@ -17,10 +18,17 @@ function App() {
 	return (
 		<Router>
 			<div className="container-full">
-				<NavBar isLogged={isLogged} setIsLogged={setIsLogged} />
+				<NavBar
+					isLogged={isLogged}
+					setIsLogged={setIsLogged}
+					user={user}
+					setUser={setUser}
+				/>
 				<Route exact path="/" component={Home} />
 				<Route path="/marketplace" component={Marketplace} />
-				<Route path="/profile" component={Profile} />
+				<Route path="/profile">
+					<Profile user={user} setUser={setUser} />
+				</Route>
 			</div>
 		</Router>
 	);

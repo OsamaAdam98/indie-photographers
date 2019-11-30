@@ -6,7 +6,7 @@ import Login from "./Login";
 import Post from "./Post";
 
 export default function NavBar(props) {
-	const {isLogged, setIsLogged} = props;
+	const {isLogged, setIsLogged, user, setUser} = props;
 
 	return (
 		<>
@@ -33,7 +33,7 @@ export default function NavBar(props) {
 							Marketplace
 						</Link>
 					</Nav>
-					<Post isLogged={isLogged} />
+					<Post isLogged={isLogged} user={user} setUser={setUser} />
 					<Login isLogged={isLogged} setIsLogged={setIsLogged} />
 				</Navbar.Collapse>
 			</Navbar>

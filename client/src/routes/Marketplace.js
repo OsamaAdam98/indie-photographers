@@ -19,12 +19,10 @@ export default function Marketplace() {
 	}, []);
 
 	const itemCard = items.map((item, i) => <ItemCard item={item} key={i} />);
-	if (isLoading) {
-		return <Loadingpage />;
-	}
+	if (isLoading) return <Loadingpage />;
 	return (
-		<div className="container-fluid">
-			<div className="row justify-content-center">{itemCard}</div>
+		<div className="container">
+			<div className="row">{itemCard}</div>
 		</div>
 	);
 }

@@ -3,14 +3,13 @@ import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 
 export default function Post(props) {
-	const {isLogged} = props;
+	const {isLogged, user, setUser} = props;
 
 	const [show, setShow] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 
 	const [imgUrl, setImgUrl] = useState("");
 	const [title, setTitle] = useState("");
-	const [name, setName] = useState("");
 	const [desc, setDesc] = useState("");
 
 	const handleClose = () => {
@@ -21,14 +20,27 @@ export default function Post(props) {
 	const handleShow = () => {
 		setShow(true);
 		setErrorMsg("");
+		if (!user.username) {
+			const token = localStorage.getItem("token");
+			axios
+				.get("/api/auth/user", {
+					headers: {
+						"x-auth-token": `${token}`
+					}
+				})
+				.then((res) => {
+					setUser(res.data);
+				})
+				.catch((err) => console.log(err));
+		}
 	};
 
 	const imgUrlChange = (event) => setImgUrl(event.target.value);
 	const titleChange = (event) => setTitle(event.target.value);
-	const nameChange = (event) => setName(event.target.value);
 	const descChange = (event) => setDesc(event.target.value);
 
 	const handleSubmit = (event) => {
+		const name = user.username;
 		const postData = {
 			imgUrl,
 			title,
@@ -90,16 +102,6 @@ export default function Post(props) {
 								id="title-input"
 								value={title}
 								onChange={titleChange}
-							/>
-						</div>
-						<div className="form-group">
-							<label htmlFor="name-input">Name</label>
-							<input
-								type="text"
-								className="form-control"
-								id="name-input"
-								value={name}
-								onChange={nameChange}
 							/>
 						</div>
 						<div className="form-group">
