@@ -26,22 +26,17 @@ router.post("/", (req, res) => {
 				newUser
 					.save()
 					.then((user) => {
-						jwt.sign(
-							{id: user._id},
-							process.env.jwtSecret,
-							{expiresIn: 3600},
-							(err, token) => {
-								if (err) throw err;
-								res.json({
-									token,
-									user: {
-										id: user._id,
-										username: user.username,
-										email: user.email
-									}
-								});
-							}
-						);
+						jwt.sign({id: user._id}, process.env.jwtSecret, (err, token) => {
+							if (err) throw err;
+							res.json({
+								token,
+								user: {
+									id: user._id,
+									username: user.username,
+									email: user.email
+								}
+							});
+						});
 					})
 					.catch((err) => res.status(400).json(`Error: ${err}`));
 			});
