@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import Loadingpage from "../components/Loadingpage";
 
 export default function Profile(props) {
-	const {user} = props;
+	const {user, setIsLogged} = props;
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
@@ -21,6 +21,7 @@ export default function Profile(props) {
 				className="btn btn-danger"
 				onClick={() => {
 					localStorage.removeItem("token");
+					setIsLogged(false);
 					window.location = "/";
 				}}
 			>

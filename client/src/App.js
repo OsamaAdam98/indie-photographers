@@ -9,29 +9,30 @@ import Marketplace from "./routes/Marketplace";
 import Profile from "./routes/Profile";
 
 function App() {
-	const [isLogged, setIsLogged] = useState(false);
+	const [isLogged, setIsLogged] = useState(true);
 	const [user, setUser] = useState({});
 
 	useEffect(() => {
 		const token = localStorage.getItem("token");
-
-		axios
-			.get("/api/auth/user", {
-				headers: {
-					"x-auth-token": `${token}`
-				}
-			})
-			.then((res) => {
-				setUser(res.data);
-				setIsLogged(true);
-			})
-			.catch((err) => {
-				if (err) {
-					setIsLogged(false);
-					localStorage.removeItem("token");
-				}
-			});
-	}, []);
+		if (isLogged) {
+			axios
+				.get("/api/auth/user", {
+					headers: {
+						"x-auth-token": `${token}`
+					}
+				})
+				.then((res) => {
+					setUser(res.data);
+					setIsLogged(true);
+				})
+				.catch((err) => {
+					if (err) {
+						localStorage.removeItem("token");
+						setIsLogged(false);
+					}
+				});
+		}
+	}, [isLogged]);
 
 	return (
 		<Router>
@@ -45,7 +46,7 @@ function App() {
 				<Route exact path="/" component={Home} />
 				<Route path="/marketplace" component={Marketplace} />
 				<Route path="/profile">
-					<Profile user={user} />
+					<Profile user={user} setIsLogged={setIsLogged} />
 				</Route>
 			</div>
 		</Router>

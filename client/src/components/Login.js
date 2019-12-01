@@ -45,7 +45,6 @@ export default function Login(props) {
 					}
 					if (user) {
 						setUser(user);
-						console.log(user);
 					}
 				})
 				.catch((err) => {
