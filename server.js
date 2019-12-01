@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
+const sslRedirect = require("heroku-ssl-redirect");
 
 const marketRoute = require("./routes/marketplace");
 const usersRoute = require("./routes/users");
@@ -15,6 +16,7 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use(sslRedirect());
 
 const uri = process.env.ATLAS_URI;
 
