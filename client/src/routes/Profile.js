@@ -1,28 +1,14 @@
 import React, {useState, useEffect} from "react";
-import axios from "axios";
 import Loadingpage from "../components/Loadingpage";
 
 export default function Profile(props) {
-	const {user, setUser} = props;
+	const {user} = props;
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const token = localStorage.getItem("token");
-
-		setIsLoading(true);
-
-		axios
-			.get("/api/auth/user", {
-				headers: {
-					"x-auth-token": `${token}`
-				}
-			})
-			.then((res) => {
-				setUser(res.data);
-				setIsLoading(false);
-			})
-			.catch((err) => console.log(err));
-	}, []);
+		if (!user) setIsLoading(true);
+		setIsLoading(false);
+	}, [user]);
 
 	if (isLoading) return <Loadingpage />;
 	return (

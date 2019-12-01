@@ -33,8 +33,12 @@ export default function NavBar(props) {
 							Marketplace
 						</Link>
 					</Nav>
-					<Post isLogged={isLogged} user={user} setUser={setUser} />
-					<Login isLogged={isLogged} setIsLogged={setIsLogged} />
+					<Post isLogged={isLogged} user={user} />
+					<Login
+						isLogged={isLogged}
+						setIsLogged={setIsLogged}
+						setUser={setUser}
+					/>
 				</Navbar.Collapse>
 			</Navbar>
 		</>

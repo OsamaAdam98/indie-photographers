@@ -3,6 +3,8 @@ const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 let Users = require("../models/users.model");
 
+// User registeration
+
 router.post("/", (req, res) => {
 	const {username, email, password} = req.body;
 	if (!username || !email || !password) {
@@ -20,23 +22,29 @@ router.post("/", (req, res) => {
 		newUser.email = email.toLowerCase();
 
 		bcrypt.genSalt(10, (err, salt) => {
+			if (err) throw err;
 			bcrypt.hash(newUser.password, salt, (err, hash) => {
 				if (err) throw err;
 				newUser.password = hash;
 				newUser
 					.save()
 					.then((user) => {
-						jwt.sign({id: user._id}, process.env.jwtSecret, (err, token) => {
-							if (err) throw err;
-							res.json({
-								token,
-								user: {
-									id: user._id,
-									username: user.username,
-									email: user.email
-								}
-							});
-						});
+						jwt.sign(
+							{id: user._id},
+							process.env.jwtSecret,
+							{expiresIn: 3600},
+							(err, token) => {
+								if (err) throw err;
+								res.json({
+									token,
+									user: {
+										id: user._id,
+										username: user.username,
+										email: user.email
+									}
+								});
+							}
+						);
 					})
 					.catch((err) => res.status(400).json(`Error: ${err}`));
 			});

@@ -4,7 +4,7 @@ import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 
 export default function Login(props) {
-	const {isLogged, setIsLogged} = props;
+	const {isLogged, setIsLogged, setUser} = props;
 
 	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("");
@@ -42,6 +42,10 @@ export default function Login(props) {
 						setPassword("");
 						handleClose();
 						setIsLogged(true);
+					}
+					if (user) {
+						setUser(user);
+						console.log(user);
 					}
 				})
 				.catch((err) => {

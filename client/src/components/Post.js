@@ -3,7 +3,7 @@ import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 
 export default function Post(props) {
-	const {isLogged, user, setUser} = props;
+	const {isLogged, user} = props;
 
 	const [show, setShow] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
@@ -20,19 +20,6 @@ export default function Post(props) {
 	const handleShow = () => {
 		setShow(true);
 		setErrorMsg("");
-		if (!user.username) {
-			const token = localStorage.getItem("token");
-			axios
-				.get("/api/auth/user", {
-					headers: {
-						"x-auth-token": `${token}`
-					}
-				})
-				.then((res) => {
-					setUser(res.data);
-				})
-				.catch((err) => console.log(err));
-		}
 	};
 
 	const imgUrlChange = (event) => setImgUrl(event.target.value);

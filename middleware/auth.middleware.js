@@ -10,7 +10,7 @@ function auth(req, res, next) {
 		req.user = decrypted;
 		next();
 	} catch (e) {
-		res.status(400).json({msg: "Not a valid token"});
+		res.status(401).json({msg: "Not a valid token"});
 	}
 }
 

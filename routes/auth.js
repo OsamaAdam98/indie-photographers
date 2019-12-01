@@ -5,6 +5,8 @@ let Users = require("../models/users.model");
 
 const auth = require("../middleware/auth.middleware");
 
+// sign in and token generation
+
 router.post("/", (req, res) => {
 	const {password} = req.body;
 	const email = req.body.email.toLowerCase();
@@ -30,6 +32,8 @@ router.post("/", (req, res) => {
 		});
 	});
 });
+
+// user data
 
 router.get("/user", auth, (req, res) => {
 	Users.findById(req.user.id)
