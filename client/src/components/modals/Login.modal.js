@@ -67,7 +67,7 @@ export default function Login(props) {
 		</button>
 	) : (
 		<Link to="/profile" className="btn btn-outline-light">
-			profile
+			Profile
 		</Link>
 	);
 
