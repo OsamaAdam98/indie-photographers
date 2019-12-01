@@ -7,9 +7,12 @@ import NavBar from "./components/NavBar";
 import Home from "./routes/Home";
 import Marketplace from "./routes/Marketplace";
 import Profile from "./routes/Profile";
+import Submissions from "./routes/Submissions";
 
 function App() {
-	const [isLogged, setIsLogged] = useState(true);
+	const [isLogged, setIsLogged] = useState(
+		localStorage.getItem("token") ? true : false
+	);
 	const [user, setUser] = useState({});
 
 	useEffect(() => {
@@ -27,10 +30,11 @@ function App() {
 				})
 				.catch((err) => {
 					if (err) {
-						localStorage.removeItem("token");
 						setIsLogged(false);
 					}
 				});
+		} else {
+			localStorage.removeItem("token");
 		}
 	}, [isLogged]);
 
@@ -48,6 +52,7 @@ function App() {
 				<Route path="/profile">
 					<Profile user={user} setIsLogged={setIsLogged} />
 				</Route>
+				<Route path="/submissions" component={Submissions} />
 			</div>
 		</Router>
 	);

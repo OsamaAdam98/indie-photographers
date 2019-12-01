@@ -2,15 +2,15 @@ import React, {useState} from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 
-export default function Post(props) {
+export default function SubmitModal(props) {
 	const {isLogged, user} = props;
 
 	const [show, setShow] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 
-	const [imgUrl, setImgUrl] = useState("");
-	const [title, setTitle] = useState("");
-	const [desc, setDesc] = useState("");
+	const [msg, setMsg] = useState("");
+
+	const msgChange = (event) => setMsg(event.target.value);
 
 	const handleClose = () => {
 		setShow(false);
@@ -22,49 +22,48 @@ export default function Post(props) {
 		setErrorMsg("");
 	};
 
-	const imgUrlChange = (event) => setImgUrl(event.target.value);
-	const titleChange = (event) => setTitle(event.target.value);
-	const descChange = (event) => setDesc(event.target.value);
-
 	const handleSubmit = (event) => {
-		const name = user.username;
-		const postData = {
-			imgUrl,
-			title,
-			name,
-			desc
+		const username = user.username;
+		const email = user.email;
+		const subData = {
+			username,
+			email,
+			msg
 		};
 		const token = localStorage.getItem("token");
 
 		axios
-			.post("/api/items/add", postData, {
+			.post("/api/submissions/add", subData, {
 				headers: {
 					"x-auth-token": `${token}`
 				}
 			})
-			.then(() => handleClose())
+			.then(() => {
+				handleClose();
+				window.location = "/submissions";
+			})
 			.catch((err) => console.log(err));
 		event.preventDefault();
 	};
 
-	const postButton = isLogged ? (
+	const subButton = isLogged ? (
 		<button
 			type="button"
 			className="btn btn-outline-light mr-3"
 			onClick={handleShow}
 		>
-			Post
+			Submit
 		</button>
 	) : null;
 
-	const postError = errorMsg ? (
+	const subError = errorMsg ? (
 		<div className="alert alert-danger" role="alert">
 			{errorMsg}
 		</div>
 	) : null;
 	return (
 		<>
-			{postButton}
+			{subButton}
 			<Modal show={show} onHide={handleClose}>
 				<form onSubmit={handleSubmit}>
 					<Modal.Header closeButton>
@@ -72,36 +71,16 @@ export default function Post(props) {
 					</Modal.Header>
 					<Modal.Body>
 						<div className="form-group">
-							<label htmlFor="url-input">Image source</label>
-							<input
-								type="url"
-								className="form-control"
-								id="url-input"
-								value={imgUrl}
-								onChange={imgUrlChange}
-							/>
-						</div>
-						<div className="form-group">
-							<label htmlFor="title-input">Title</label>
-							<input
+							<label htmlFor="msg-input">Message</label>
+							<textarea
 								type="text"
 								className="form-control"
-								id="title-input"
-								value={title}
-								onChange={titleChange}
+								id="msg-input"
+								value={msg}
+								onChange={msgChange}
 							/>
 						</div>
-						<div className="form-group">
-							<label htmlFor="title-input">Description</label>
-							<input
-								type="text"
-								className="form-control"
-								id="desc-input"
-								value={desc}
-								onChange={descChange}
-							/>
-						</div>
-						{postError}
+						{subError}
 					</Modal.Body>
 					<Modal.Footer>
 						<button
@@ -109,7 +88,7 @@ export default function Post(props) {
 							className="btn btn-primary"
 							onClick={handleSubmit}
 						>
-							Post
+							Submit
 						</button>
 						<button
 							type="button"

@@ -6,7 +6,7 @@ let Users = require("../models/users.model");
 // User registeration
 
 router.post("/", (req, res) => {
-	const {username, email, password} = req.body;
+	const {username, email, password, admin} = req.body;
 	if (!username || !email || !password) {
 		return res.status(400).json({msg: "Please enter all fields"});
 	}
@@ -16,7 +16,8 @@ router.post("/", (req, res) => {
 		const newUser = new Users({
 			username,
 			email,
-			password
+			password,
+			admin
 		});
 
 		newUser.email = email.toLowerCase();
@@ -40,7 +41,8 @@ router.post("/", (req, res) => {
 									user: {
 										id: user._id,
 										username: user.username,
-										email: user.email
+										email: user.email,
+										admin: user.admin
 									}
 								});
 							}

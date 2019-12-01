@@ -1,29 +1,24 @@
 const mongoose = require("mongoose");
 
-const userSchema = mongoose.Schema({
+const submissionSchema = mongoose.Schema({
 	username: {
 		type: String,
 		required: true
 	},
 	email: {
 		type: String,
-		unique: true,
 		required: true
 	},
-	password: {
+	msg: {
 		type: String,
 		required: true
 	},
-	registerDate: {
+	date: {
 		type: Date,
 		default: Date.now
-	},
-	admin: {
-		type: Boolean,
-		default: false
 	}
 });
 
-const User = mongoose.model("users", userSchema);
+const Submissions = mongoose.model("Submissions", submissionSchema);
 
-module.exports = User;
+module.exports = Submissions;

@@ -2,8 +2,9 @@ import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {Link} from "react-router-dom";
-import Login from "./Login";
-import Post from "./Post";
+import Login from "./modals/Login.modal";
+import Post from "./modals/Post.modal";
+import SubmitModal from "./modals/Submit.modal";
 
 export default function NavBar(props) {
 	const {isLogged, setIsLogged, user, setUser} = props;
@@ -32,7 +33,11 @@ export default function NavBar(props) {
 						<Link to="/marketplace/" className="nav-link">
 							Marketplace
 						</Link>
+						<Link to="/submissions/" className="nav-link">
+							Submissions
+						</Link>
 					</Nav>
+					<SubmitModal isLogged={isLogged} user={user} />
 					<Post isLogged={isLogged} user={user} />
 					<Login
 						isLogged={isLogged}

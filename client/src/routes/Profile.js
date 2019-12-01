@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import {Link} from "react-router-dom";
 import Loadingpage from "../components/Loadingpage";
 
 export default function Profile(props) {
@@ -17,16 +18,15 @@ export default function Profile(props) {
 			<br />
 			{user.email}
 			<br />
-			<button
+			<Link
+				to="/"
 				className="btn btn-danger"
 				onClick={() => {
-					localStorage.removeItem("token");
 					setIsLogged(false);
-					window.location = "/";
 				}}
 			>
 				Logout
-			</button>
+			</Link>
 		</div>
 	);
 }

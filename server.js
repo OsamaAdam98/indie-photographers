@@ -6,6 +6,7 @@ const path = require("path");
 const marketRoute = require("./routes/marketplace");
 const usersRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
+const subRoute = require("./routes/submissions");
 
 require("dotenv").config();
 
@@ -32,6 +33,7 @@ connection.once("open", () =>
 app.use("/api/items", marketRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/submissions", subRoute);
 
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static("client/build"));
