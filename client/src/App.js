@@ -10,16 +10,10 @@ import Profile from "./routes/Profile";
 import Submissions from "./routes/Submissions";
 
 function App() {
-	const genericUser = {
-		username: "placeholder",
-		email: "placeholder@placeholder.com",
-		admin: false
-	};
-
 	const [isLogged, setIsLogged] = useState(
 		localStorage.getItem("token") ? true : false
 	);
-	const [user, setUser] = useState(genericUser);
+	const [user, setUser] = useState({admin: false});
 
 	useEffect(() => {
 		const token = localStorage.getItem("token");

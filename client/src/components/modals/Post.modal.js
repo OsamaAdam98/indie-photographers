@@ -47,16 +47,20 @@ export default function Post(props) {
 		event.preventDefault();
 	};
 
-	const postButton =
-		isLogged && user.admin ? (
-			<button
-				type="button"
-				className="btn btn-outline-light mr-3"
-				onClick={handleShow}
-			>
-				Post
-			</button>
-		) : null;
+	let postButton = "";
+
+	if (user) {
+		postButton =
+			isLogged && user.admin ? (
+				<button
+					type="button"
+					className="btn btn-outline-light mr-3"
+					onClick={handleShow}
+				>
+					Post
+				</button>
+			) : null;
+	}
 
 	const postError = errorMsg ? (
 		<div className="alert alert-danger" role="alert">
