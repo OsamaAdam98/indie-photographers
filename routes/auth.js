@@ -25,11 +25,33 @@ router.post("/", (req, res) => {
 					user: {
 						id: user._id,
 						username: user.username,
-						email: user.email
+						email: user.email,
+						profilePicture: user.profilePicture
 					}
 				});
 			});
 		});
+	});
+});
+
+router.post("/facebook-login", (req, res) => {
+	const {email} = req.body;
+
+	Users.findOne({email}).then((user) => {
+		if (user) {
+			jwt.sign({id: user._id}, process.env.jwtSecret, (err, token) => {
+				if (err) throw err;
+				res.json({
+					token,
+					user: {
+						id: user._id,
+						username: user.username,
+						email: user.email,
+						profilePicture: user.profilePicture
+					}
+				});
+			});
+		} else res.status(404).json("User doesn't exist");
 	});
 });
 

@@ -8,6 +8,7 @@ import Home from "./routes/Home";
 import Marketplace from "./routes/Marketplace";
 import Profile from "./routes/Profile";
 import Submissions from "./routes/Submissions";
+import FBSignUp from "./routes/FBSignUp";
 
 function App() {
 	const [isLogged, setIsLogged] = useState(
@@ -53,6 +54,9 @@ function App() {
 					<Profile user={user} setIsLogged={setIsLogged} />
 				</Route>
 				<Route path="/submissions" component={Submissions} />
+				<Route path="/facebook-signup">
+					<FBSignUp user={user} setUser={setUser} setIsLogged={setIsLogged} />
+				</Route>
 			</div>
 		</Router>
 	);

@@ -1,10 +1,13 @@
 import React, {useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
+import FacebookLogin from "react-facebook-login";
 
 export default function Login(props) {
 	const {isLogged, setIsLogged, setUser} = props;
+
+	const history = useHistory();
 
 	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("");
@@ -21,6 +24,35 @@ export default function Login(props) {
 		setErrorMsg("");
 	};
 
+	const componentClicked = () => console.log("Button clicked");
+
+	const responseFacebook = (res) => {
+		console.log(res);
+		axios
+			.post("/api/auth/facebook-login", {email: res.email})
+			.then((res) => {
+				const {token, user} = res.data;
+				if (token) {
+					localStorage.setItem("token", token);
+					handleClose();
+					setIsLogged(true);
+				}
+				if (user) {
+					setUser(user);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+				setUser({
+					username: res.name,
+					email: res.email,
+					profilePicture: res.picture.data.url
+				});
+				history.push("/facebook-signup");
+				handleClose();
+			});
+	};
+
 	const emailChange = (event) => setEmail(event.target.value);
 	const passwordChange = (event) => setPassword(event.target.value);
 	const handleSubmit = (event) => {
@@ -35,7 +67,7 @@ export default function Login(props) {
 			axios
 				.post("/api/auth/", user)
 				.then((res) => {
-					const {token} = res.data;
+					const {token, user} = res.data;
 					if (token) {
 						localStorage.setItem("token", token);
 						setEmail("");
@@ -105,6 +137,13 @@ export default function Login(props) {
 								onChange={passwordChange}
 							/>
 						</div>
+						<FacebookLogin
+							appId="608523869954489"
+							autoLoad={false}
+							fields="name,email,picture"
+							onClick={componentClicked}
+							callback={responseFacebook}
+						/>
 						{loginError}
 					</Modal.Body>
 					<Modal.Footer>
