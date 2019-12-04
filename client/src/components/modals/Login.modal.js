@@ -145,7 +145,7 @@ export default function Login(props) {
 							autoLoad={false}
 							textButton="Login using facebook"
 							size="small"
-							fields={`name,email,picture`}
+							fields={`name,email,picture.width(800).height(800)`}
 							onClick={componentClicked}
 							callback={responseFacebook}
 							disableMobileRedirect={true}
