@@ -27,7 +27,6 @@ export default function Login(props) {
 	const componentClicked = () => console.log("Button clicked");
 
 	const responseFacebook = (res) => {
-		console.log(res);
 		axios
 			.post("/api/auth/facebook-login", {email: res.email})
 			.then((res) => {

@@ -12,7 +12,8 @@ const userSchema = mongoose.Schema({
 	},
 	profilePicture: {
 		type: String,
-		required: false
+		required: false,
+		default: "https://i.imgur.com/MOPs2Ls.jpg"
 	},
 	password: {
 		type: String,

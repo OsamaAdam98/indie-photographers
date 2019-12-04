@@ -12,7 +12,14 @@ export default function Marketplace() {
 		axios
 			.get(`/api/submissions/`)
 			.then((res) => {
-				setSubs(res.data);
+				const {data} = res;
+				setSubs(
+					data.sort((a, b) => {
+						let dateA = new Date(a.submission.date);
+						let dateB = new Date(b.submission.date);
+						return dateB - dateA;
+					})
+				);
 				setIsLoading(false);
 			})
 			.catch((err) => console.log(`Error: ${err}`));
