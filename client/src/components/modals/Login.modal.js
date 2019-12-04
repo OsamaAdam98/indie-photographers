@@ -143,6 +143,7 @@ export default function Login(props) {
 							fields="name,email,picture"
 							onClick={componentClicked}
 							callback={responseFacebook}
+							disableMobileRedirect={true}
 						/>
 						{loginError}
 					</Modal.Body>
