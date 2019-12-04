@@ -1,13 +1,11 @@
 import React, {useState} from "react";
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import FacebookLogin from "react-facebook-login";
 
 export default function Login(props) {
 	const {isLogged, setIsLogged, setUser, user} = props;
-
-	const history = useHistory();
 
 	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("");
@@ -28,7 +26,7 @@ export default function Login(props) {
 
 	const responseFacebook = (res) => {
 		axios
-			.post("/api/auth/facebook-login", {email: res.email})
+			.post("/api/auth/facebook-login", res)
 			.then((res) => {
 				const {token, user} = res.data;
 				if (token) {
@@ -45,9 +43,9 @@ export default function Login(props) {
 				setUser({
 					username: res.name,
 					email: res.email,
-					profilePicture: res.picture.data.url
+					profilePicture: res.picture.data.url,
+					admin: false
 				});
-				history.push("/facebook-signup");
 				handleClose();
 			});
 	};
@@ -97,8 +95,14 @@ export default function Login(props) {
 			Login
 		</button>
 	) : (
-		<Link to="/profile" >
-			{user ? <img src={user.profilePicture} alt="profile" style={{width: "2rem", height: "2rem", borderRadius: "50%"}} /> : null}
+		<Link to="/profile">
+			{user ? (
+				<img
+					src={user.profilePicture}
+					alt="profile"
+					style={{width: "2rem", height: "2rem", borderRadius: "50%"}}
+				/>
+			) : null}
 		</Link>
 	);
 
@@ -137,11 +141,11 @@ export default function Login(props) {
 							/>
 						</div>
 						<FacebookLogin
-							appId="608523869954489"
+							appId={`608523869954489`}
 							autoLoad={false}
 							textButton="Login using facebook"
 							size="small"
-							fields="name,email,picture"
+							fields={`name,email,picture`}
 							onClick={componentClicked}
 							callback={responseFacebook}
 							disableMobileRedirect={true}

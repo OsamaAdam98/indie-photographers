@@ -6,13 +6,17 @@ export default function ExtProfile(props) {
 	const [pic, setPic] = useState("");
 
 	useEffect(() => {
-		axios.get(`/api/users/profile/${props.match.params.id}`).then((res) => {
-			const {username, profilePicture} = res.data;
-			setUsername(username);
-			setPic(profilePicture);
-		});
-	}, [props.match.params.id]);
+		if (props.match.params.id === props.user._id) {
+		} else {
+			axios.get(`/api/users/profile/${props.match.params.id}`).then((res) => {
+				const {username, profilePicture} = res.data;
+				setUsername(username);
+				setPic(profilePicture);
+			});
+		}
+	}, []);
 
+	if (props.match.params.id === props.user._id) return null;
 	return (
 		<div>
 			<div className="container-fluid">

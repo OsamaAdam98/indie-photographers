@@ -32,6 +32,18 @@ router.get("/", async (req, res) => {
 								id: user._id
 							}
 						});
+					} else {
+						subArray.push({
+							submission: {
+								msg: "removed"
+							},
+							user: {
+								username: "removed",
+								email: "removed@web.com",
+								profilePicture: "",
+								id: "xxx"
+							}
+						});
 					}
 				});
 			});

@@ -35,7 +35,8 @@ router.post("/", (req, res) => {
 });
 
 router.post("/facebook-login", (req, res) => {
-	const {email} = req.body;
+	const {email, accessToken, name} = req.body;
+	const {url} = req.body.picture.data;
 
 	Users.findOne({email}).then((user) => {
 		if (user) {
@@ -47,11 +48,50 @@ router.post("/facebook-login", (req, res) => {
 						id: user._id,
 						username: user.username,
 						email: user.email,
-						profilePicture: user.profilePicture
+						profilePicture: user.profilePicture,
+						admin: user.admin
 					}
 				});
 			});
-		} else res.status(404).json("User doesn't exist");
+		} else {
+			const newUser = new Users({
+				username: name,
+				email: email,
+				password: accessToken,
+				profilePicture: url
+			});
+
+			bcrypt.genSalt(10, (err, salt) => {
+				if (err) throw err;
+				bcrypt.hash(newUser.password, salt, (err, hash) => {
+					if (err) throw err;
+					newUser.password = hash;
+					newUser
+						.save()
+						.then((user) => {
+							jwt.sign(
+								{id: user._id},
+								process.env.jwtSecret,
+								{expiresIn: 3600},
+								(err, token) => {
+									if (err) throw err;
+									res.json({
+										token,
+										user: {
+											id: user._id,
+											username: user.username,
+											email: user.email,
+											admin: user.admin,
+											profilePicture: user.profilePicture
+										}
+									});
+								}
+							);
+						})
+						.catch((err) => res.status(400).json(err));
+				});
+			});
+		}
 	});
 });
 

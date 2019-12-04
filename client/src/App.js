@@ -8,7 +8,6 @@ import Home from "./routes/Home";
 import Marketplace from "./routes/Marketplace";
 import Profile from "./routes/Profile";
 import Submissions from "./routes/Submissions";
-import FBSignUp from "./routes/FBSignUp";
 import ExtProfile from "./routes/ExtProfile";
 
 function App() {
@@ -54,11 +53,11 @@ function App() {
 				<Route exact path={["/profile", `/profile/${user._id}`]}>
 					<Profile user={user} setIsLogged={setIsLogged} />
 				</Route>
-				<Route path="/profile/:id" component={ExtProfile} />
+				<Route
+					path="/profile/:id"
+					render={(props) => <ExtProfile {...props} user={user} />}
+				/>
 				<Route path="/submissions" component={Submissions} />
-				<Route path="/facebook-signup">
-					<FBSignUp user={user} setUser={setUser} setIsLogged={setIsLogged} />
-				</Route>
 			</div>
 		</Router>
 	);
