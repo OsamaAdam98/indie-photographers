@@ -40,6 +40,7 @@ export default function NavBar(props) {
 					<SubmitModal isLogged={isLogged} user={user} />
 					<Post isLogged={isLogged} user={user} />
 					<Login
+						user={user}
 						isLogged={isLogged}
 						setIsLogged={setIsLogged}
 						setUser={setUser}

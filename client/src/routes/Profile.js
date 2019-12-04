@@ -14,6 +14,9 @@ export default function Profile(props) {
 	if (isLoading) return <Loadingpage />;
 	return (
 		<div className="container-fluid">
+			<div>
+				<img src={user.profilePicture} alt="avatar" style={{width: "10rem", height: "10rem", borderRadius: "50%"}} />
+			</div>
 			{user.username}
 			<br />
 			{user.email}

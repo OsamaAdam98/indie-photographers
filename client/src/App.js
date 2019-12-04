@@ -9,6 +9,7 @@ import Marketplace from "./routes/Marketplace";
 import Profile from "./routes/Profile";
 import Submissions from "./routes/Submissions";
 import FBSignUp from "./routes/FBSignUp";
+import ExtProfile from "./routes/ExtProfile";
 
 function App() {
 	const [isLogged, setIsLogged] = useState(
@@ -50,9 +51,10 @@ function App() {
 				/>
 				<Route exact path="/" component={Home} />
 				<Route path="/marketplace" component={Marketplace} />
-				<Route path="/profile">
+				<Route exact path={["/profile", `/profile/${user._id}`]}>
 					<Profile user={user} setIsLogged={setIsLogged} />
 				</Route>
+				<Route path="/profile/:id" component={ExtProfile} />
 				<Route path="/submissions" component={Submissions} />
 				<Route path="/facebook-signup">
 					<FBSignUp user={user} setUser={setUser} setIsLogged={setIsLogged} />

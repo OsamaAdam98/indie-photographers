@@ -57,4 +57,15 @@ router.post("/", (req, res) => {
 	});
 });
 
+router.get("/profile/:id", (req, res) => {
+	const id = req.params.id;
+	Users.findById(id, (err, user) => {
+		if (err) throw err;
+		res.json({
+			username: user.username,
+			profilePicture: user.profilePicture
+		});
+	});
+});
+
 module.exports = router;

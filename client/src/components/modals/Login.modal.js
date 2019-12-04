@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import FacebookLogin from "react-facebook-login";
 
 export default function Login(props) {
-	const {isLogged, setIsLogged, setUser} = props;
+	const {isLogged, setIsLogged, setUser, user} = props;
 
 	const history = useHistory();
 
@@ -97,8 +97,8 @@ export default function Login(props) {
 			Login
 		</button>
 	) : (
-		<Link to="/profile" className="btn btn-outline-light">
-			Profile
+		<Link to="/profile" >
+			{user ? <img src={user.profilePicture} alt="profile" style={{width: "2rem", height: "2rem", borderRadius: "50%"}} /> : null}
 		</Link>
 	);
 
@@ -139,6 +139,8 @@ export default function Login(props) {
 						<FacebookLogin
 							appId="608523869954489"
 							autoLoad={false}
+							textButton="Login using facebook"
+							size="small"
 							fields="name,email,picture"
 							onClick={componentClicked}
 							callback={responseFacebook}
