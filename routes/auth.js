@@ -35,7 +35,7 @@ router.post("/", (req, res) => {
 });
 
 router.post("/facebook-login", (req, res) => {
-	const {email, accessToken, name} = req.body;
+	const {email, name} = req.body;
 	const {url} = req.body.picture.data;
 
 	Users.findOne({email}).then((user) => {
@@ -53,11 +53,14 @@ router.post("/facebook-login", (req, res) => {
 					}
 				});
 			});
+			Users.updateOne({email}, {$set: {profilePicture: url}}, (err) => {
+				if (err) throw err;
+			});
 		} else {
 			const newUser = new Users({
 				username: name,
 				email: email,
-				password: accessToken,
+				password: req.body.accessToken,
 				profilePicture: url
 			});
 
