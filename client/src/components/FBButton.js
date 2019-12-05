@@ -51,7 +51,7 @@ export default function FBButton(props) {
 						onClick={renderProps.onClick}
 						className="btn btn-block btn-social btn-facebook"
 					>
-						<span class="fab fa-facebook" style={{fontSize: "1rem"}}></span>
+						<span className="fab fa-facebook" style={{fontSize: "1rem"}}></span>
 						Continue with Facebook
 					</button>
 				)}

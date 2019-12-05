@@ -1,45 +1,71 @@
-import React from "react";
+import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
-import Dropdown from "react-bootstrap/Dropdown";
+import Avatar from "@material-ui/core/Avatar";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import IconButton from "@material-ui/core/IconButton";
 
 export default function ProfileAvatar(props) {
 	const {user, setIsLogged} = props;
 	const history = useHistory();
+
+	const [anchorEl, setAnchorEl] = useState(null);
+	const open = Boolean(anchorEl);
+
+	const handleMenu = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
 	return (
 		<>
-			{user ? (
-				<Dropdown drop="bottom">
-					<Dropdown.Toggle variant="btn">
-						<img
-							src={user.profilePicture}
-							alt="profile"
-							style={{width: "2rem", height: "2rem", borderRadius: "50%"}}
-						/>
-					</Dropdown.Toggle>
-					<Dropdown.Menu>
-						<Dropdown.Header>
-							<h6>Profile</h6>
-						</Dropdown.Header>
-						<Dropdown.Item onClick={() => history.push("/profile")}>
-							<img
-								src={user.profilePicture}
-								alt="profile"
-								style={{width: "10rem", height: "10rem", borderRadius: "50%"}}
-							/>
-						</Dropdown.Item>
-						<Dropdown.Divider />
-						<Dropdown.Item
-							onClick={() => {
-								setIsLogged(false);
-								history.push("/");
-							}}
-							bsPrefix="dropdown justify-content-center"
-						>
-							<button className="dropdown-item">Logout</button>
-						</Dropdown.Item>
-					</Dropdown.Menu>
-				</Dropdown>
-			) : null}
+			<IconButton
+				aria-label="account of current user"
+				aria-controls="menu-appbar"
+				aria-haspopup="true"
+				onClick={handleMenu}
+				color="inherit"
+			>
+				<Avatar src={user.profilePicture} alt="profile">
+					{user.username ? user.username : `U`}
+				</Avatar>
+			</IconButton>
+			<Menu
+				id="simple-menu"
+				anchorEl={anchorEl}
+				anchorOrigin={{
+					vertical: "top",
+					horizontal: "right"
+				}}
+				keepMounted
+				transformOrigin={{
+					vertical: "top",
+					horizontal: "right"
+				}}
+				open={open}
+				onClose={handleClose}
+			>
+				<MenuItem
+					onClick={() => {
+						handleClose();
+						history.push("/profile");
+					}}
+				>
+					Profile
+				</MenuItem>
+				<MenuItem
+					onClick={() => {
+						handleClose();
+						setIsLogged(false);
+						history.push("/");
+					}}
+				>
+					Logout
+				</MenuItem>
+			</Menu>
 		</>
 	);
 }

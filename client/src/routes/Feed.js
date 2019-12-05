@@ -30,18 +30,14 @@ export default function Feed(props) {
 	}, []);
 
 	const postMedia = posts.map((feedPost, i) => (
-		<>
-			<FeedPost feedPost={feedPost} key={i} />
-			<hr />
-		</>
+		<FeedPost feedPost={feedPost} key={i} />
 	));
-	const postModal = <PostModal isLogged={isLogged} user={user} />;
 
 	if (isLoading) return <Loadingpage />;
 	return (
 		<div className="container">
 			{postMedia}
-			{postModal}
+			<PostModal isLogged={isLogged} user={user} />
 		</div>
 	);
 }

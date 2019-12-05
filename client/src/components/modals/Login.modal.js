@@ -3,6 +3,8 @@ import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import FBButton from "../FBButton";
 import ProfileAvatar from "../ProfileAvatar";
+import Button from "@material-ui/core/Button";
+import "../../css/modal.css";
 
 export default function Login(props) {
 	const {isLogged, setIsLogged, setUser, user} = props;
@@ -59,13 +61,9 @@ export default function Login(props) {
 	};
 
 	const loginButton = !isLogged ? (
-		<button
-			type="button"
-			className="btn btn-outline-light"
-			onClick={handleShow}
-		>
+		<Button color="inherit" onClick={handleShow}>
 			Login
-		</button>
+		</Button>
 	) : (
 		<ProfileAvatar user={user} setIsLogged={setIsLogged} />
 	);
@@ -78,7 +76,7 @@ export default function Login(props) {
 	return (
 		<>
 			{loginButton}
-			<Modal show={show} onHide={handleClose}>
+			<Modal show={show} onHide={handleClose} dialogClassName="custom-dialog">
 				<form onSubmit={handleSubmit}>
 					<Modal.Header closeButton>
 						<Modal.Title>Login</Modal.Title>

@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
+import "../../css/modal.css";
 
 export default function MPPost(props) {
 	const {isLogged, user} = props;
@@ -70,7 +71,7 @@ export default function MPPost(props) {
 	return (
 		<>
 			{postButton}
-			<Modal show={show} onHide={handleClose}>
+			<Modal show={show} onHide={handleClose} dialogClassName="custom-dialog">
 				<form onSubmit={handleSubmit}>
 					<Modal.Header closeButton>
 						<Modal.Title>Post</Modal.Title>

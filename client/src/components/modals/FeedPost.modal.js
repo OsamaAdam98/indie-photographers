@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import {Container, Button} from "react-floating-action-button";
+import "../../css/modal.css";
 
 export default function PostModal(props) {
 	const {isLogged, user} = props;
@@ -66,7 +67,7 @@ export default function PostModal(props) {
 	return (
 		<>
 			{subButton}
-			<Modal show={show} onHide={handleClose}>
+			<Modal show={show} onHide={handleClose} dialogClassName="custom-dialog">
 				<form onSubmit={handleSubmit}>
 					<Modal.Header closeButton>
 						<Modal.Title>Post</Modal.Title>

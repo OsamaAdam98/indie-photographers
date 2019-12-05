@@ -4,12 +4,12 @@ import {BrowserRouter as Router, Route} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-import NavBar from "./components/NavBar";
 import Home from "./routes/Home";
 import Marketplace from "./routes/Marketplace";
 import Profile from "./routes/Profile";
 import Feed from "./routes/Feed";
 import ExtProfile from "./routes/ExtProfile";
+import MenuAppBar from "./components/MenuAppBar";
 
 function App() {
 	const [isLogged, setIsLogged] = useState(
@@ -42,8 +42,8 @@ function App() {
 
 	return (
 		<Router>
-			<div className="container-full">
-				<NavBar
+			<>
+				<MenuAppBar
 					isLogged={isLogged}
 					setIsLogged={setIsLogged}
 					user={user}
@@ -64,7 +64,7 @@ function App() {
 						<Feed {...props} isLogged={isLogged} user={user} />
 					)}
 				/>
-			</div>
+			</>
 		</Router>
 	);
 }
