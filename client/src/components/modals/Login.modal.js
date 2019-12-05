@@ -1,11 +1,8 @@
 import React, {useState} from "react";
-import {Link} from "react-router-dom";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import FBButton from "../FBButton";
 import ProfileAvatar from "../ProfileAvatar";
-
-import Dropdown from "react-bootstrap/Dropdown";
 
 export default function Login(props) {
 	const {isLogged, setIsLogged, setUser, user} = props;

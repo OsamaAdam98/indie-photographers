@@ -1,7 +1,6 @@
 import React from "react";
-import {Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
-import LogoutButton from "./LogoutButton";
 
 export default function ProfileAvatar(props) {
 	const {user, setIsLogged} = props;
