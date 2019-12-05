@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 
-export default function SubmitModal(props) {
+export default function PostModal(props) {
 	const {isLogged, user} = props;
 
 	const [show, setShow] = useState(false);
@@ -33,14 +33,14 @@ export default function SubmitModal(props) {
 		const token = localStorage.getItem("token");
 
 		axios
-			.post("/api/submissions/add", subData, {
+			.post("/api/feed/add", subData, {
 				headers: {
 					"x-auth-token": `${token}`
 				}
 			})
 			.then(() => {
 				handleClose();
-				window.location = "/submissions";
+				window.location = "/feed";
 			})
 			.catch((err) => console.log(err));
 		event.preventDefault();
@@ -52,7 +52,7 @@ export default function SubmitModal(props) {
 			className="btn btn-outline-light mr-3"
 			onClick={handleShow}
 		>
-			Submit
+			Post
 		</button>
 	) : null;
 
@@ -88,7 +88,7 @@ export default function SubmitModal(props) {
 							className="btn btn-primary"
 							onClick={handleSubmit}
 						>
-							Submit
+							Post
 						</button>
 						<button
 							type="button"

@@ -1,22 +1,22 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import Loadingpage from "../components/Loadingpage";
-import Submission from "../components/Submission";
+import FeedPost from "../components/FeedPost";
 
-export default function Marketplace() {
-	const [subs, setSubs] = useState([]);
+export default function Feed() {
+	const [posts, setPosts] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		setIsLoading(true);
 		axios
-			.get(`/api/submissions/`)
+			.get(`/api/feed/`)
 			.then((res) => {
 				const {data} = res;
-				setSubs(
+				setPosts(
 					data.sort((a, b) => {
-						let dateA = new Date(a.submission.date);
-						let dateB = new Date(b.submission.date);
+						let dateA = new Date(a.post.date);
+						let dateB = new Date(b.post.date);
 						return dateB - dateA;
 					})
 				);
@@ -25,8 +25,13 @@ export default function Marketplace() {
 			.catch((err) => console.log(`Error: ${err}`));
 	}, []);
 
-	const subMedia = subs.map((sub, i) => <Submission sub={sub} key={i} />);
+	const postMedia = posts.map((feedPost, i) => (
+		<>
+			<FeedPost feedPost={feedPost} key={i} />
+			<hr />
+		</>
+	));
 
 	if (isLoading) return <Loadingpage />;
-	return <div className="container">{subMedia}</div>;
+	return <div className="container">{postMedia}</div>;
 }

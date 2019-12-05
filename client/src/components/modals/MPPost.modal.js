@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 
-export default function Post(props) {
+export default function MPPost(props) {
 	const {isLogged, user} = props;
 
 	const [show, setShow] = useState(false);
@@ -57,7 +57,7 @@ export default function Post(props) {
 					className="btn btn-outline-light mr-3"
 					onClick={handleShow}
 				>
-					Post
+					Post to Store
 				</button>
 			) : null;
 	}

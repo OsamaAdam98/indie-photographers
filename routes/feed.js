@@ -1,30 +1,30 @@
 const router = require("express").Router();
-let Submissions = require("../models/submissions.model");
+let Feed = require("../models/feed.model");
 let Users = require("../models/users.model");
 
 const auth = require("../middleware/auth.middleware");
 
 // work-around to wait for asyc function.. hope no possible-employer ever see this
 
-const awaitArray = (subArray, submissions, res) => {
-	if (subArray.length === submissions.length) {
-		setTimeout(() => res.json(subArray), 50);
+const awaitArray = (postArray, posts, res) => {
+	if (postArray.length === posts.length) {
+		setTimeout(() => res.json(postArray), 50);
 	} else {
-		setTimeout(() => awaitArray(subArray, submissions, res), 50);
+		setTimeout(() => awaitArray(postArray, posts, res), 50);
 	}
 };
 
 router.get("/", async (req, res) => {
-	await Submissions.find({}, (err, submissions) => {
+	await Feed.find({}, (err, posts) => {
 		if (err) throw err;
-		if (submissions) {
-			let subArray = [];
-			submissions.forEach(async (submission) => {
-				await Users.findOne({email: submission.email}, (err, user) => {
+		if (posts) {
+			let postArray = [];
+			posts.forEach(async (post) => {
+				await Users.findOne({email: post.email}, (err, user) => {
 					if (err) throw err;
 					if (user) {
-						subArray.push({
-							submission,
+						postArray.push({
+							post,
 							user: {
 								username: user.username,
 								email: user.email,
@@ -33,8 +33,8 @@ router.get("/", async (req, res) => {
 							}
 						});
 					} else {
-						subArray.push({
-							submission: {
+						postArray.push({
+							post: {
 								msg: "removed"
 							},
 							user: {
@@ -47,7 +47,7 @@ router.get("/", async (req, res) => {
 					}
 				});
 			});
-			awaitArray(subArray, submissions, res);
+			awaitArray(postArray, posts, res);
 		}
 	});
 });
@@ -56,25 +56,25 @@ router.post("/add", auth, (req, res) => {
 	const email = req.body.email;
 	const msg = req.body.msg;
 
-	const newSubmission = new Submissions({
+	const newPost = new Feed({
 		email,
 		msg
 	});
 
-	newSubmission
+	newPost
 		.save()
 		.then(() => res.json("Submission saved"))
 		.catch((err) => res.status(400).json(err));
 });
 
 router.delete("/delete/:id", auth, (req, res) => {
-	Submissions.findByIdAndDelete(req.params.id)
+	Feed.findByIdAndDelete(req.params.id)
 		.then(() => res.json(`item deleted`))
 		.catch((err) => res.status(400).json(err));
 });
 
 router.post("/update/:id", auth, (req, res) => {
-	Submissions.findById(req.params.id)
+	Feed.findById(req.params.id)
 		.then((item) => {
 			item.username = req.body.username;
 			item.email = req.body.email;

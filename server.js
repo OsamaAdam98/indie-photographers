@@ -7,7 +7,7 @@ const sslRedirect = require("heroku-ssl-redirect");
 const marketRoute = require("./routes/marketplace");
 const usersRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
-const subRoute = require("./routes/submissions");
+const feedRoute = require("./routes/feed");
 
 require("dotenv").config();
 
@@ -35,7 +35,7 @@ connection.once("open", () =>
 app.use("/api/items", marketRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/auth", authRoute);
-app.use("/api/submissions", subRoute);
+app.use("/api/feed", feedRoute);
 
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static("client/build"));

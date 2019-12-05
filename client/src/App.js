@@ -7,7 +7,7 @@ import NavBar from "./components/NavBar";
 import Home from "./routes/Home";
 import Marketplace from "./routes/Marketplace";
 import Profile from "./routes/Profile";
-import Submissions from "./routes/Submissions";
+import Feed from "./routes/Feed";
 import ExtProfile from "./routes/ExtProfile";
 
 function App() {
@@ -57,7 +57,7 @@ function App() {
 					path="/profile/:id"
 					render={(props) => <ExtProfile {...props} user={user} />}
 				/>
-				<Route path="/submissions" component={Submissions} />
+				<Route path="/feed" component={Feed} />
 			</div>
 		</Router>
 	);

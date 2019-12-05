@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const submissionSchema = mongoose.Schema({
+const feedSchema = mongoose.Schema({
 	email: {
 		type: String,
 		required: true
@@ -15,6 +15,6 @@ const submissionSchema = mongoose.Schema({
 	}
 });
 
-const Submissions = mongoose.model("Submissions", submissionSchema);
+const Feed = mongoose.model("feed", feedSchema);
 
-module.exports = Submissions;
+module.exports = Feed;

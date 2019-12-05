@@ -3,8 +3,8 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {Link} from "react-router-dom";
 import Login from "./modals/Login.modal";
-import Post from "./modals/Post.modal";
-import SubmitModal from "./modals/Submit.modal";
+import FeedPost from "./modals/FeedPost.modal";
+import MPPost from "./modals/MPPost.modal";
 
 export default function NavBar(props) {
 	const {isLogged, setIsLogged, user, setUser} = props;
@@ -30,15 +30,15 @@ export default function NavBar(props) {
 						<Link to="/" className="nav-link">
 							Home
 						</Link>
-						<Link to="/marketplace/" className="nav-link">
-							Marketplace
+						<Link to="/feed/" className="nav-link">
+							Feed
 						</Link>
-						<Link to="/submissions/" className="nav-link">
-							Submissions
+						<Link to="/marketplace/" className="nav-link">
+							Store
 						</Link>
 					</Nav>
-					<SubmitModal isLogged={isLogged} user={user} />
-					<Post isLogged={isLogged} user={user} />
+					<FeedPost isLogged={isLogged} user={user} />
+					<MPPost isLogged={isLogged} user={user} />
 					<Login
 						user={user}
 						isLogged={isLogged}

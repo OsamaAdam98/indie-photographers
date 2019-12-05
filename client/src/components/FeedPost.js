@@ -1,9 +1,9 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
-export default function Submission(props) {
-	const {msg} = props.sub.submission;
-	const {username, profilePicture, id} = props.sub.user;
+export default function FeedPost(props) {
+	const {msg} = props.feedPost.post;
+	const {username, profilePicture, id} = props.feedPost.user;
 
 	return (
 		<div className="media mb-3">
@@ -16,9 +16,11 @@ export default function Submission(props) {
 				/>
 			</Link>
 			<div className="media-body">
-				<h5 className="mt-0">{username}</h5>
+				<h5 className="mt-0">
+					<Link to={`/profile/${id}`}>{username}</Link>
+				</h5>
+
 				<p>{msg}</p>
-				<hr />
 			</div>
 		</div>
 	);
