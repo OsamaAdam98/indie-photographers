@@ -2,13 +2,17 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import Loadingpage from "../components/Loadingpage";
 import FeedPost from "../components/FeedPost";
+import PostModal from "../components/modals/FeedPost.modal";
 
-export default function Feed() {
+export default function Feed(props) {
+	const {isLogged, user} = props;
+
 	const [posts, setPosts] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		setIsLoading(true);
+
 		axios
 			.get(`/api/feed/`)
 			.then((res) => {
@@ -31,7 +35,13 @@ export default function Feed() {
 			<hr />
 		</>
 	));
+	const postModal = <PostModal isLogged={isLogged} user={user} />;
 
 	if (isLoading) return <Loadingpage />;
-	return <div className="container">{postMedia}</div>;
+	return (
+		<div className="container">
+			{postMedia}
+			{postModal}
+		</div>
+	);
 }

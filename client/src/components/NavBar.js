@@ -3,7 +3,6 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import {Link} from "react-router-dom";
 import Login from "./modals/Login.modal";
-import FeedPost from "./modals/FeedPost.modal";
 import MPPost from "./modals/MPPost.modal";
 
 export default function NavBar(props) {
@@ -14,9 +13,8 @@ export default function NavBar(props) {
 			<Navbar
 				bg="dark"
 				variant="dark"
-				sticky="top"
 				collapseOnSelect
-				expand="lg"
+				expand="sm"
 				className="mb-3"
 			>
 				<Navbar.Brand>
@@ -37,7 +35,6 @@ export default function NavBar(props) {
 							Store
 						</Link>
 					</Nav>
-					<FeedPost isLogged={isLogged} user={user} />
 					<MPPost isLogged={isLogged} user={user} />
 					<Login
 						user={user}

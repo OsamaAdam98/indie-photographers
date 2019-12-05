@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
+import {Container, Button} from "react-floating-action-button";
 
 export default function PostModal(props) {
 	const {isLogged, user} = props;
@@ -47,13 +48,14 @@ export default function PostModal(props) {
 	};
 
 	const subButton = isLogged ? (
-		<button
-			type="button"
-			className="btn btn-outline-light mr-3"
-			onClick={handleShow}
-		>
-			Post
-		</button>
+		<Container styles={{marginRight: "-1rem", marginBottom: "-2rem"}}>
+			<Button
+				tooltip="Post"
+				icon="fas fa-edit"
+				rotate={false}
+				onClick={() => handleShow()}
+			/>
+		</Container>
 	) : null;
 
 	const subError = errorMsg ? (

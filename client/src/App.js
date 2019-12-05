@@ -2,8 +2,9 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import NavBar from "./components/NavBar";
+import "@fortawesome/fontawesome-free/css/all.css";
 
+import NavBar from "./components/NavBar";
 import Home from "./routes/Home";
 import Marketplace from "./routes/Marketplace";
 import Profile from "./routes/Profile";
@@ -57,7 +58,12 @@ function App() {
 					path="/profile/:id"
 					render={(props) => <ExtProfile {...props} user={user} />}
 				/>
-				<Route path="/feed" component={Feed} />
+				<Route
+					path="/feed"
+					render={(props) => (
+						<Feed {...props} isLogged={isLogged} user={user} />
+					)}
+				/>
 			</div>
 		</Router>
 	);

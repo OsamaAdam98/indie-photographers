@@ -2,7 +2,10 @@ import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
-import FacebookLogin from "react-facebook-login";
+import FBButton from "../FBButton";
+import ProfileAvatar from "../ProfileAvatar";
+
+import Dropdown from "react-bootstrap/Dropdown";
 
 export default function Login(props) {
 	const {isLogged, setIsLogged, setUser, user} = props;
@@ -20,34 +23,6 @@ export default function Login(props) {
 	const handleShow = () => {
 		setShow(true);
 		setErrorMsg("");
-	};
-
-	const componentClicked = () => console.log("Button clicked");
-
-	const responseFacebook = (res) => {
-		axios
-			.post("/api/auth/facebook-login", res)
-			.then((res) => {
-				const {token, user} = res.data;
-				if (token) {
-					localStorage.setItem("token", token);
-					handleClose();
-					setIsLogged(true);
-				}
-				if (user) {
-					setUser(user);
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-				setUser({
-					username: res.name,
-					email: res.email,
-					profilePicture: res.picture.data.url,
-					admin: false
-				});
-				handleClose();
-			});
 	};
 
 	const emailChange = (event) => setEmail(event.target.value);
@@ -95,15 +70,7 @@ export default function Login(props) {
 			Login
 		</button>
 	) : (
-		<Link to="/profile">
-			{user ? (
-				<img
-					src={user.profilePicture}
-					alt="profile"
-					style={{width: "2rem", height: "2rem", borderRadius: "50%"}}
-				/>
-			) : null}
-		</Link>
+		<ProfileAvatar user={user} setIsLogged={setIsLogged} />
 	);
 
 	const loginError = errorMsg ? (
@@ -140,16 +107,14 @@ export default function Login(props) {
 								onChange={passwordChange}
 							/>
 						</div>
-						<FacebookLogin
-							appId={`608523869954489`}
-							autoLoad={false}
-							textButton="Login using facebook"
-							size="small"
-							fields={`name,email,picture.width(800).height(800)`}
-							onClick={componentClicked}
-							callback={responseFacebook}
-							disableMobileRedirect={true}
-						/>
+						<div>
+							<FBButton
+								setUser={setUser}
+								handleClose={handleClose}
+								setIsLogged={setIsLogged}
+							/>
+						</div>
+						<br />
 						{loginError}
 					</Modal.Body>
 					<Modal.Footer>
