@@ -44,7 +44,7 @@ export default function LeftDrawer(props) {
 	};
 
 	const userProfile = (
-		<Link to="/profile">
+		<Link to={user.profilePicture ? `/profile` : `${window.location.pathname}`}>
 			<Image
 				src={
 					user.profilePicture

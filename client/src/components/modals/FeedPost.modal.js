@@ -43,7 +43,7 @@ export default function PostModal(props) {
 			})
 			.then(() => {
 				handleClose();
-				window.location = "/feed";
+				window.location = "/feed/";
 			})
 			.catch((err) => console.log(err));
 		event.preventDefault();

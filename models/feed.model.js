@@ -9,6 +9,10 @@ const feedSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
+	photo: {
+		type: String,
+		required: false
+	},
 	date: {
 		type: Date,
 		default: Date.now
