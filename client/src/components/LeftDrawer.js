@@ -46,7 +46,11 @@ export default function LeftDrawer(props) {
 	const userProfile = (
 		<Link to="/profile">
 			<Image
-				src={user.profilePicture ? user.profilePicture : ""}
+				src={
+					user.profilePicture
+						? user.profilePicture
+						: "https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-7.png"
+				}
 				aspectRatio={16 / 16}
 			/>
 		</Link>
