@@ -3,12 +3,13 @@ import {useHistory} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
+import Image from "material-ui-image";
+import {Link} from "react-router-dom";
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
@@ -20,11 +21,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 	drawerPaper: {
 		width: drawerWidth
-	},
-	toolbar: theme.mixins.toolbar
+	}
 }));
 
-export default function LeftDrawer() {
+export default function LeftDrawer(props) {
+	const {user} = props;
 	const history = useHistory();
 
 	const classes = useStyles();
@@ -42,6 +43,15 @@ export default function LeftDrawer() {
 		setState(open);
 	};
 
+	const userProfile = (
+		<Link to="/profile">
+			<Image
+				src={user.profilePicture ? user.profilePicture : ""}
+				aspectRatio={16 / 16}
+			/>
+		</Link>
+	);
+
 	const sideList = () => (
 		<div
 			className={classes.list}
@@ -49,16 +59,14 @@ export default function LeftDrawer() {
 			onClick={toggleDrawer(false)}
 			onKeyDown={toggleDrawer(false)}
 		>
-			<div className={classes.toolbar} />
+			{userProfile}
 			<List>
 				<ListItem button onClick={() => history.push("/")}>
 					Home
 				</ListItem>
-				<Divider />
 				<ListItem button onClick={() => history.push("/feed/")}>
 					Feed
 				</ListItem>
-				<Divider />
 				<ListItem button onClick={() => history.push("/marketplace/")}>
 					Store
 				</ListItem>

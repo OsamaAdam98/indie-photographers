@@ -1,10 +1,9 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {withRouter} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
 import Login from "./modals/Login.modal";
 import LeftDrawer from "./LeftDrawer";
 
@@ -27,12 +26,30 @@ const useStyles = makeStyles((theme) => ({
 	toolbar: theme.mixins.toolbar
 }));
 
-String.prototype.capitalize = function() {
-	return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
 function MenuAppBar(props) {
 	const {isLogged, setIsLogged, user, setUser} = props;
+	const {pathname} = props.location;
+
+	const [position, setPosition] = useState("");
+
+	useEffect(() => {
+		switch (pathname) {
+			case "/":
+				setPosition("Home");
+				break;
+			case "/feed/":
+				setPosition("Feed");
+				break;
+			case "/marketplace/":
+				setPosition("Store");
+				break;
+			case "/profile":
+				setPosition("Profile");
+				break;
+			default:
+				setPosition("User Profile");
+		}
+	}, [pathname]);
 
 	const classes = useStyles();
 
@@ -40,11 +57,9 @@ function MenuAppBar(props) {
 		<div className={(classes.root, classes.barMargin)}>
 			<AppBar position="sticky" className={classes.appBar} color="primary">
 				<Toolbar>
-					<LeftDrawer />
+					<LeftDrawer user={user} />
 					<Typography variant="h6" className={classes.title}>
-						{props.location.pathname !== "/"
-							? props.location.pathname.replace(/\\|\//g, "").capitalize()
-							: "Home"}
+						{position}
 					</Typography>
 					<Login
 						user={user}

@@ -2,8 +2,11 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import ItemCard from "../components/ItemCard";
 import Loadingpage from "../components/Loadingpage";
+import MPPost from "../components/modals/MPPost.modal";
 
-export default function Marketplace() {
+export default function Marketplace(props) {
+	const {isLogged, user} = props;
+
 	const [items, setItems] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -22,7 +25,10 @@ export default function Marketplace() {
 	if (isLoading) return <Loadingpage />;
 	return (
 		<div className="container">
-			<div className="row">{itemCard}</div>
+			<div className="row">
+				{itemCard}
+				<MPPost isLogged={isLogged} user={user} />
+			</div>
 		</div>
 	);
 }

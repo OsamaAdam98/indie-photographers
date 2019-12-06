@@ -3,8 +3,18 @@ import axios from "axios";
 import Loadingpage from "../components/Loadingpage";
 import FeedPost from "../components/FeedPost";
 import PostModal from "../components/modals/FeedPost.modal";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+	root: {
+		backgroundColor: theme.palette.background.paper,
+		position: "relative",
+		minHeight: 200
+	}
+}));
 
 export default function Feed(props) {
+	const classes = useStyles();
 	const {isLogged, user} = props;
 
 	const [posts, setPosts] = useState([]);
@@ -35,7 +45,7 @@ export default function Feed(props) {
 
 	if (isLoading) return <Loadingpage />;
 	return (
-		<div className="container">
+		<div className={(classes.root, `container-fluid`)}>
 			{postMedia}
 			<PostModal isLogged={isLogged} user={user} />
 		</div>

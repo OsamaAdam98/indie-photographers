@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import "../../css/modal.css";
+import FAB from "../FAB";
+import AddIcon from "@material-ui/icons/Add";
 
 export default function MPPost(props) {
 	const {isLogged, user} = props;
@@ -53,13 +55,11 @@ export default function MPPost(props) {
 	if (user) {
 		postButton =
 			isLogged && user.admin ? (
-				<button
-					type="button"
-					className="btn btn-outline-light mr-3"
-					onClick={handleShow}
-				>
-					Post to Store
-				</button>
+				<FAB
+					handleClick={handleShow}
+					currentLocation="/marketplace/"
+					icon={<AddIcon />}
+				/>
 			) : null;
 	}
 

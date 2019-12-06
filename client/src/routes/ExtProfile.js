@@ -14,6 +14,7 @@ export default function ExtProfile(props) {
 				setPic(profilePicture);
 			});
 		}
+		// eslint-disable-next-line
 	}, []);
 
 	if (props.match.params.id === props.user._id) return null;

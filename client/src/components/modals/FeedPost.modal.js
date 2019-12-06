@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
-import {Container, Button} from "react-floating-action-button";
 import "../../css/modal.css";
+import FAB from "../FAB";
+import EditIcon from "@material-ui/icons/Edit";
 
 export default function PostModal(props) {
 	const {isLogged, user} = props;
@@ -49,14 +50,11 @@ export default function PostModal(props) {
 	};
 
 	const subButton = isLogged ? (
-		<Container styles={{marginRight: "-1rem", marginBottom: "-2rem"}}>
-			<Button
-				tooltip="Post"
-				icon="fas fa-edit"
-				rotate={false}
-				onClick={() => handleShow()}
-			/>
-		</Container>
+		<FAB
+			handleClick={handleShow}
+			currentLocation="/feed/"
+			icon={<EditIcon />}
+		/>
 	) : null;
 
 	const subError = errorMsg ? (

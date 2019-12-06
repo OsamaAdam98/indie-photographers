@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import Home from "./routes/Home";
 import Marketplace from "./routes/Marketplace";
@@ -50,7 +49,12 @@ function App() {
 					setUser={setUser}
 				/>
 				<Route exact path="/" component={Home} />
-				<Route path="/marketplace" component={Marketplace} />
+				<Route
+					path="/marketplace"
+					render={(props) => (
+						<Marketplace {...props} isLogged={isLogged} user={user} />
+					)}
+				/>
 				<Route exact path={["/profile", `/profile/${user._id}`]}>
 					<Profile user={user} setIsLogged={setIsLogged} />
 				</Route>
