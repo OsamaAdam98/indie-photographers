@@ -60,7 +60,7 @@ export default function ProfileAvatar(props) {
 					onClick={() => {
 						handleClose();
 						setIsLogged(false);
-						history.push("/");
+						window.location = props.location.pathname;
 					}}
 				>
 					Logout

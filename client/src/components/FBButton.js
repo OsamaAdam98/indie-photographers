@@ -20,7 +20,7 @@ export default function FBButton(props) {
 	const {setUser, handleClose, setIsLogged} = props;
 	const classes = useStyles();
 
-	const componentClicked = () => console.log("Button clicked");
+	const componentClicked = () => console.log("Signing in using facebook.");
 
 	const responseFacebook = (res) => {
 		axios
