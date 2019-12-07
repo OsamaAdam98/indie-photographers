@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import "../../css/modal.css";
 import FAB from "../FAB";
 import EditIcon from "@material-ui/icons/Edit";
-import {IconButton} from "@material-ui/core";
+import {IconButton, LinearProgress} from "@material-ui/core";
 import {PhotoCamera} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
 
@@ -23,6 +23,8 @@ export default function PostModal(props) {
 	const [errorMsg, setErrorMsg] = useState("");
 	const [msg, setMsg] = useState("");
 	const [photo, setPhoto] = useState("");
+	const [uploadProgress, setUploadProgress] = useState(0);
+	const [isUploading, setIsUploading] = useState(false);
 
 	const onUpload = (e) => {
 		const files = e.target.files;
@@ -31,13 +33,21 @@ export default function PostModal(props) {
 		formData.append("file", files[0]);
 		formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET);
 		axios
-			.post(process.env.REACT_APP_CLOUDINARY_URL, formData)
+			.post(process.env.REACT_APP_CLOUDINARY_URL, formData, {
+				onUploadProgress: (progress) => {
+					setIsUploading(true);
+					setUploadProgress((progress.loaded / progress.total) * 100);
+					console.log((progress.loaded / progress.total) * 100);
+				}
+			})
 			.then((res) => {
-				console.log(res.data);
+				setIsUploading(false);
 				const {secure_url} = res.data;
 				setPhoto(secure_url);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				if (err) setErrorMsg("Upload failed!");
+			});
 	};
 
 	const msgChange = (event) => setMsg(event.target.value);
@@ -63,16 +73,20 @@ export default function PostModal(props) {
 		};
 		const token = localStorage.getItem("token");
 
-		axios
-			.post("/api/feed/add", subData, {
-				headers: {
-					"x-auth-token": `${token}`
-				}
-			})
-			.then(() => {
-				handleClose();
-			})
-			.catch((err) => console.log(err));
+		if (isUploading) {
+			setErrorMsg("Picture still uploading..");
+		} else {
+			axios
+				.post("/api/feed/add", subData, {
+					headers: {
+						"x-auth-token": `${token}`
+					}
+				})
+				.then(() => {
+					handleClose();
+				})
+				.catch((err) => console.log(err));
+		}
 		event.preventDefault();
 	};
 
@@ -124,6 +138,9 @@ export default function PostModal(props) {
 								<PhotoCamera />
 							</IconButton>
 						</label>
+						{isUploading ? (
+							<LinearProgress variant="determinate" value={uploadProgress} />
+						) : null}
 						{subError}
 					</Modal.Body>
 					<Modal.Footer>
