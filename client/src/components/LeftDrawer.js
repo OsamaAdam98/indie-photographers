@@ -52,6 +52,8 @@ export default function LeftDrawer(props) {
 						: "https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-7.png"
 				}
 				aspectRatio={16 / 16}
+				disableSpinner={true}
+				disableTransition={true}
 			/>
 		</Link>
 	);

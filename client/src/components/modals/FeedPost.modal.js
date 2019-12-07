@@ -4,6 +4,8 @@ import Modal from "react-bootstrap/Modal";
 import "../../css/modal.css";
 import FAB from "../FAB";
 import EditIcon from "@material-ui/icons/Edit";
+import {IconButton} from "@material-ui/core";
+import {PhotoCamera} from "@material-ui/icons";
 
 export default function PostModal(props) {
 	const {isLogged, user} = props;
@@ -12,6 +14,16 @@ export default function PostModal(props) {
 	const [errorMsg, setErrorMsg] = useState("");
 
 	const [msg, setMsg] = useState("");
+
+	// const onUpload = () => {
+	// const formData = new FormData();
+	// 	formData.append("file", file);
+	// 	formData.append("upload_preset", REACT_APP_CLOUDINARY_PRESET);
+
+	// 	axios
+	// 		.post(REACT_APP_CLOUDINARY_URL, formData)
+	// 		.then((res) => console.log(res));
+	// };
 
 	const msgChange = (event) => setMsg(event.target.value);
 
@@ -81,6 +93,21 @@ export default function PostModal(props) {
 								onChange={msgChange}
 							/>
 						</div>
+						{/* <input
+							accept="image/*"
+							className={classes.input}
+							id="icon-button-file"
+							type="file"
+						/>
+						<label htmlFor="icon-button-file">
+							<IconButton
+								color="primary"
+								aria-label="upload picture"
+								component="span"
+							>
+								<PhotoCamera />
+							</IconButton>
+						</label> */}
 						{subError}
 					</Modal.Body>
 					<Modal.Footer>

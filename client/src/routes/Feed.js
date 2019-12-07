@@ -1,30 +1,24 @@
 import React, {useState, useEffect, useRef, useCallback} from "react";
 import axios from "axios";
-import Loadingpage from "../components/Loadingpage";
-import FeedPost from "../components/FeedPost";
 import PostModal from "../components/modals/FeedPost.modal";
-import {makeStyles} from "@material-ui/core/styles";
-
-const useStyles = makeStyles((theme) => ({
-	root: {
-		backgroundColor: theme.palette.background.paper,
-		position: "relative",
-		minHeight: 200
-	}
-}));
+import PostMedia from "../components/PostMedia";
+import {Grid, Box} from "@material-ui/core";
 
 export default function Feed(props) {
-	const classes = useStyles();
 	const {isLogged, user} = props;
 
 	const [posts, setPosts] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(false);
+	const [isDesktop, setIsDesktop] = useState(false);
+
+	useEffect(() => {
+		setIsDesktop(window.innerWidth > 500 ? true : false);
+	}, []);
 
 	useEffect(() => {
 		setIsLoading(true);
-		console.log(page);
 		axios
 			.get(`/api/feed/?page=${page}`)
 			.then((res) => {
@@ -62,24 +56,36 @@ export default function Feed(props) {
 	const postMedia = posts.map((feedPost, i) => {
 		if (posts.length === i + 1) {
 			return (
-				<div ref={lastElementRef} key={i}>
-					<FeedPost feedPost={feedPost} />
+				<div ref={lastElementRef} key={feedPost.post._id}>
+					<PostMedia feedPost={feedPost} isLoading={isLoading} />
 				</div>
 			);
 		} else {
 			return (
-				<div key={i}>
-					<FeedPost feedPost={feedPost} />
+				<div key={feedPost.post._id}>
+					<PostMedia feedPost={feedPost} isLoading={isLoading} user={user} />
 				</div>
 			);
 		}
 	});
 
-	// if (isLoading) return <Loadingpage />;
 	return (
-		<div className={(classes.root, `container-fluid`)}>
-			{postMedia}
-			<PostModal isLogged={isLogged} user={user} />
-		</div>
+		<>
+			<Grid container direction="column" alignItems="center" justify="center">
+				{isDesktop ? (
+					<Box width="500px">
+						{postMedia}
+						{!hasMore && !isLoading ? <h5>That's all</h5> : null}
+						<PostModal isLogged={isLogged} user={user} />
+					</Box>
+				) : (
+					<Box minWidth="100%">
+						{postMedia}
+						{!hasMore && !isLoading ? <h5>That's all</h5> : null}
+						<PostModal isLogged={isLogged} user={user} />
+					</Box>
+				)}
+			</Grid>
+		</>
 	);
 }
