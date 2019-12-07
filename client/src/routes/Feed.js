@@ -17,6 +17,19 @@ export default function Feed(props) {
 		setIsDesktop(window.innerWidth > 500 ? true : false);
 	}, []);
 
+	const handleDelete = (id) => {
+		const token = localStorage.getItem("token");
+		axios
+			.delete(`/api/feed/delete/${id}`, {
+				headers: {
+					"x-auth-token": `${token}`
+				}
+			})
+			.then((res) => console.log(res))
+			.then(() => (window.location = "/feed/"))
+			.catch((err) => console.log(err));
+	};
+
 	useEffect(() => {
 		setIsLoading(true);
 		axios
@@ -57,13 +70,23 @@ export default function Feed(props) {
 		if (posts.length === i + 1) {
 			return (
 				<div ref={lastElementRef} key={feedPost.post._id}>
-					<PostMedia feedPost={feedPost} isLoading={isLoading} />
+					<PostMedia
+						feedPost={feedPost}
+						isLoading={isLoading}
+						currentUser={user}
+						handleDelete={handleDelete}
+					/>
 				</div>
 			);
 		} else {
 			return (
 				<div key={feedPost.post._id}>
-					<PostMedia feedPost={feedPost} isLoading={isLoading} user={user} />
+					<PostMedia
+						feedPost={feedPost}
+						isLoading={isLoading}
+						currentUser={user}
+						handleDelete={handleDelete}
+					/>
 				</div>
 			);
 		}

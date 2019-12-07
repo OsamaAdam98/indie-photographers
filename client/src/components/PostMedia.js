@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import PropTypes from "prop-types";
 import {makeStyles} from "@material-ui/core/styles";
@@ -11,6 +11,11 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Skeleton from "@material-ui/lab/Skeleton";
+import {CardActions} from "@material-ui/core";
+import ShareIcon from "@material-ui/icons/Share";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -18,14 +23,25 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(2)
 	},
 	media: {
-		height: 190
+		height: 250
 	}
 }));
 
 export default function PostMedia(props) {
-	const {isLoading} = props;
+	const {isLoading, currentUser, handleDelete} = props;
 	const {user, post} = props.feedPost;
 	const classes = useStyles();
+
+	const [anchorEl, setAnchorEl] = useState(null);
+	const open = Boolean(anchorEl);
+
+	const handleMenu = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
 
 	const today = new Date();
 	let date = new Date(post.date);
@@ -49,11 +65,39 @@ export default function PostMedia(props) {
 					)
 				}
 				action={
-					isLoading ? null : (
-						<IconButton aria-label="settings">
-							<MoreVertIcon />
-						</IconButton>
-					)
+					isLoading ? null : currentUser._id === user.id ? (
+						<>
+							<IconButton
+								aria-label="settings"
+								aria-controls="menu-appbar"
+								aria-haspopup="true"
+								onClick={handleMenu}
+								color="inherit"
+							>
+								<MoreVertIcon />
+							</IconButton>
+							<Menu
+								id="simple-menu"
+								anchorEl={anchorEl}
+								anchorOrigin={{
+									vertical: "top",
+									horizontal: "right"
+								}}
+								keepMounted
+								transformOrigin={{
+									vertical: "top",
+									horizontal: "right"
+								}}
+								open={open}
+								onClose={handleClose}
+							>
+								<MenuItem>Edit</MenuItem>
+								<MenuItem onClick={() => handleDelete(post._id)}>
+									Delete
+								</MenuItem>
+							</Menu>
+						</>
+					) : null
 				}
 				title={
 					isLoading ? (
@@ -67,7 +111,9 @@ export default function PostMedia(props) {
 				subheader={
 					isLoading ? (
 						<Skeleton height={10} width="40%" />
-					) : daysOffset === 0 ? (
+					) : !daysOffset && !hoursOffset ? (
+						"Posted just now"
+					) : !daysOffset && hoursOffset ? (
 						`Posted ${hoursOffset} hours ago`
 					) : daysOffset === 1 ? (
 						`Posted yesterday`
@@ -100,8 +146,14 @@ export default function PostMedia(props) {
 			) : (
 				""
 			)}
-
-			<CardContent></CardContent>
+			<CardActions disableSpacing>
+				<IconButton aria-label="add to favorites">
+					<FavoriteIcon />
+				</IconButton>
+				<IconButton aria-label="share">
+					<ShareIcon />
+				</IconButton>
+			</CardActions>
 		</Card>
 	);
 }

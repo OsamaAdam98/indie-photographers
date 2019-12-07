@@ -33,6 +33,7 @@ export default function PostModal(props) {
 		axios
 			.post(process.env.REACT_APP_CLOUDINARY_URL, formData)
 			.then((res) => {
+				console.log(res.data);
 				const {secure_url} = res.data;
 				setPhoto(secure_url);
 			})
@@ -70,7 +71,6 @@ export default function PostModal(props) {
 			})
 			.then(() => {
 				handleClose();
-				window.location = "/feed/";
 			})
 			.catch((err) => console.log(err));
 		event.preventDefault();
