@@ -76,18 +76,6 @@ export default function PostMedia(props) {
 					)
 				}
 			/>
-			{isLoading ? (
-				<Skeleton variant="rect" className={classes.media} />
-			) : post.photo ? (
-				<CardMedia
-					className={classes.media}
-					image={post.photo}
-					title="feedPost image"
-				/>
-			) : (
-				""
-			)}
-
 			<CardContent>
 				{isLoading ? (
 					<React.Fragment>
@@ -100,6 +88,20 @@ export default function PostMedia(props) {
 					</Typography>
 				)}
 			</CardContent>
+
+			{isLoading ? (
+				<Skeleton variant="rect" className={classes.media} />
+			) : post.photo ? (
+				<CardMedia
+					className={classes.media}
+					image={post.photo}
+					title="feedPost image"
+				/>
+			) : (
+				""
+			)}
+
+			<CardContent></CardContent>
 		</Card>
 	);
 }

@@ -6,24 +6,38 @@ import FAB from "../FAB";
 import EditIcon from "@material-ui/icons/Edit";
 import {IconButton} from "@material-ui/core";
 import {PhotoCamera} from "@material-ui/icons";
+import {makeStyles} from "@material-ui/styles";
+
+const useStyles = makeStyles((theme) => ({
+	input: {
+		display: "none"
+	}
+}));
 
 export default function PostModal(props) {
 	const {isLogged, user} = props;
 
+	const classes = useStyles();
+
 	const [show, setShow] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
-
 	const [msg, setMsg] = useState("");
+	const [photo, setPhoto] = useState("");
 
-	// const onUpload = () => {
-	// const formData = new FormData();
-	// 	formData.append("file", file);
-	// 	formData.append("upload_preset", REACT_APP_CLOUDINARY_PRESET);
+	const onUpload = (e) => {
+		const files = e.target.files;
 
-	// 	axios
-	// 		.post(REACT_APP_CLOUDINARY_URL, formData)
-	// 		.then((res) => console.log(res));
-	// };
+		const formData = new FormData();
+		formData.append("file", files[0]);
+		formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET);
+		axios
+			.post(process.env.REACT_APP_CLOUDINARY_URL, formData)
+			.then((res) => {
+				const {secure_url} = res.data;
+				setPhoto(secure_url);
+			})
+			.catch((err) => console.log(err));
+	};
 
 	const msgChange = (event) => setMsg(event.target.value);
 
@@ -43,7 +57,8 @@ export default function PostModal(props) {
 		const subData = {
 			username,
 			email,
-			msg
+			msg,
+			photo
 		};
 		const token = localStorage.getItem("token");
 
@@ -93,11 +108,12 @@ export default function PostModal(props) {
 								onChange={msgChange}
 							/>
 						</div>
-						{/* <input
-							accept="image/*"
+						<input
 							className={classes.input}
 							id="icon-button-file"
+							name="file"
 							type="file"
+							onChange={onUpload}
 						/>
 						<label htmlFor="icon-button-file">
 							<IconButton
@@ -107,7 +123,7 @@ export default function PostModal(props) {
 							>
 								<PhotoCamera />
 							</IconButton>
-						</label> */}
+						</label>
 						{subError}
 					</Modal.Body>
 					<Modal.Footer>
