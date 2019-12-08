@@ -77,6 +77,7 @@ export default function Feed(props) {
 						currentUser={user}
 						handleDelete={handleDelete}
 					/>
+					{hasMore ? <PostSkeleton /> : null}
 				</div>
 			);
 		} else {
@@ -99,14 +100,14 @@ export default function Feed(props) {
 				{isDesktop ? (
 					<Box width="500px">
 						{postMedia}
-						{isLoading ? <PostSkeleton isLoading={isLoading} /> : null}
+						{isLoading ? <PostSkeleton /> : null}
 						{!hasMore && !isLoading ? <h5>That's all</h5> : null}
 						<PostModal isLogged={isLogged} user={user} />
 					</Box>
 				) : (
 					<Box minWidth="100%">
 						{postMedia}
-						{isLoading ? <PostSkeleton isLoading={isLoading} /> : null}
+						{isLoading ? <PostSkeleton /> : null}
 						{!hasMore && !isLoading ? <h5>That's all</h5> : null}
 						<PostModal isLogged={isLogged} user={user} />
 					</Box>
