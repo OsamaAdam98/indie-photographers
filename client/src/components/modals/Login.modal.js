@@ -1,10 +1,13 @@
 import React, {useState} from "react";
 import axios from "axios";
-import Modal from "react-bootstrap/Modal";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import FBButton from "../FBButton";
 import ProfileAvatar from "../ProfileAvatar";
-import Button from "@material-ui/core/Button";
-import "../../css/modal.css";
 
 export default function Login(props) {
 	const {isLogged, setIsLogged, setUser, user} = props;
@@ -76,32 +79,36 @@ export default function Login(props) {
 	return (
 		<>
 			{loginButton}
-			<Modal show={show} onHide={handleClose} dialogClassName="custom-dialog">
+			<Dialog
+				open={show}
+				onClose={handleClose}
+				aria-labelledby="form-dialog-title"
+			>
 				<form onSubmit={handleSubmit}>
-					<Modal.Header closeButton>
-						<Modal.Title>Login</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						<div className="form-group">
-							<label htmlFor="email-input">Email</label>
-							<input
-								type="email"
-								className="form-control"
-								id="email-input"
-								value={email}
-								onChange={emailChange}
-							/>
-						</div>
-						<div className="form-group">
-							<label htmlFor="password-input">Password</label>
-							<input
-								type="password"
-								className="form-control"
-								id="password-input"
-								value={password}
-								onChange={passwordChange}
-							/>
-						</div>
+					<DialogTitle id="form-dialog-title">Login</DialogTitle>
+
+					<DialogContent>
+						<TextField
+							autoFocus
+							margin="dense"
+							id="name"
+							label="Email Address"
+							type="email"
+							fullWidth
+							value={email}
+							onChange={emailChange}
+						/>
+						<TextField
+							autoFocus
+							margin="dense"
+							id="password"
+							label="Password"
+							type="password"
+							fullWidth
+							value={password}
+							onChange={passwordChange}
+						/>
+
 						<div>
 							<FBButton
 								setUser={setUser}
@@ -109,27 +116,16 @@ export default function Login(props) {
 								setIsLogged={setIsLogged}
 							/>
 						</div>
-						<br />
 						{loginError}
-					</Modal.Body>
-					<Modal.Footer>
-						<button
-							type="submit"
-							className="btn btn-primary"
-							onClick={handleSubmit}
-						>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={handleSubmit} color="primary">
 							Login
-						</button>
-						<button
-							type="button"
-							className="btn btn-dark"
-							onClick={handleClose}
-						>
-							Close
-						</button>
-					</Modal.Footer>
+						</Button>
+						<Button onClick={handleClose}>Cancel</Button>
+					</DialogActions>
 				</form>
-			</Modal>
+			</Dialog>
 		</>
 	);
 }
