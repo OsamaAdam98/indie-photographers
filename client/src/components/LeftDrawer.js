@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Image from "material-ui-image";
 import {Link} from "react-router-dom";
 
-const drawerWidth = 200;
+const drawerWidth = 280;
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {

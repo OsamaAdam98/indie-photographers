@@ -10,7 +10,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import Skeleton from "@material-ui/lab/Skeleton";
 import {CardActions} from "@material-ui/core";
 import ShareIcon from "@material-ui/icons/Share";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -28,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PostMedia(props) {
-	const {isLoading, currentUser, handleDelete} = props;
+	const {currentUser, handleDelete} = props;
 	const {user, post} = props.feedPost;
 	const classes = useStyles();
 
@@ -53,19 +52,15 @@ export default function PostMedia(props) {
 		<Card className={classes.card}>
 			<CardHeader
 				avatar={
-					isLoading ? (
-						<Skeleton variant="circle" width={40} height={40} />
-					) : (
-						<Link to={`/profile/${user.id}`}>
-							<Avatar
-								alt="user avatar"
-								src={user.profilePicture ? user.profilePicture : ""}
-							/>
-						</Link>
-					)
+					<Link to={`/profile/${user.id}`}>
+						<Avatar
+							alt="user avatar"
+							src={user.profilePicture ? user.profilePicture : ""}
+						/>
+					</Link>
 				}
 				action={
-					isLoading ? null : currentUser._id === user.id ? (
+					currentUser._id === user.id ? (
 						<>
 							<IconButton
 								aria-label="settings"
@@ -100,44 +95,27 @@ export default function PostMedia(props) {
 					) : null
 				}
 				title={
-					isLoading ? (
-						<Skeleton height={10} width="80%" style={{marginBottom: 6}} />
-					) : (
-						<Link to={`/profile/${user.id}`}>
-							<div style={{fontWeight: "bold"}}>{user.username}</div>
-						</Link>
-					)
+					<Link to={`/profile/${user.id}`}>
+						<div style={{fontWeight: "bold"}}>{user.username}</div>
+					</Link>
 				}
 				subheader={
-					isLoading ? (
-						<Skeleton height={10} width="40%" />
-					) : !daysOffset && !hoursOffset ? (
-						"Posted just now"
-					) : !daysOffset && hoursOffset ? (
-						`Posted ${hoursOffset} hours ago`
-					) : daysOffset === 1 ? (
-						`Posted yesterday`
-					) : (
-						`Posted ${daysOffset} days ago`
-					)
+					!daysOffset && !hoursOffset
+						? "Posted just now"
+						: !daysOffset && hoursOffset
+						? `Posted ${hoursOffset} hours ago`
+						: daysOffset === 1
+						? `Posted yesterday`
+						: `Posted ${daysOffset} days ago`
 				}
 			/>
 			<CardContent>
-				{isLoading ? (
-					<React.Fragment>
-						<Skeleton height={10} style={{marginBottom: 6}} />
-						<Skeleton height={10} width="80%" />
-					</React.Fragment>
-				) : (
-					<Typography variant="body2" component="p">
-						{post.msg}
-					</Typography>
-				)}
+				<Typography variant="body2" component="p">
+					{post.msg}
+				</Typography>
 			</CardContent>
 
-			{isLoading ? (
-				<Skeleton variant="rect" className={classes.media} />
-			) : post.photo ? (
+			{post.photo ? (
 				<CardMedia
 					className={classes.media}
 					image={post.photo}

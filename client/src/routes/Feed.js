@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef, useCallback} from "react";
 import axios from "axios";
 import PostModal from "../components/modals/FeedPost.modal";
 import PostMedia from "../components/PostMedia";
+import PostSkeleton from "../components/PostSkeleton";
 import {Grid, Box} from "@material-ui/core";
 
 export default function Feed(props) {
@@ -98,12 +99,14 @@ export default function Feed(props) {
 				{isDesktop ? (
 					<Box width="500px">
 						{postMedia}
+						{isLoading ? <PostSkeleton isLoading={isLoading} /> : null}
 						{!hasMore && !isLoading ? <h5>That's all</h5> : null}
 						<PostModal isLogged={isLogged} user={user} />
 					</Box>
 				) : (
 					<Box minWidth="100%">
 						{postMedia}
+						{isLoading ? <PostSkeleton isLoading={isLoading} /> : null}
 						{!hasMore && !isLoading ? <h5>That's all</h5> : null}
 						<PostModal isLogged={isLogged} user={user} />
 					</Box>
