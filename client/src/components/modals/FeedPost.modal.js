@@ -1,16 +1,30 @@
 import React, {useState} from "react";
 import axios from "axios";
-import Modal from "react-bootstrap/Modal";
-import "../../css/modal.css";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import FAB from "../FAB";
 import EditIcon from "@material-ui/icons/Edit";
-import {IconButton, LinearProgress} from "@material-ui/core";
+import {LinearProgress} from "@material-ui/core";
 import {PhotoCamera} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
 
 const useStyles = makeStyles((theme) => ({
 	input: {
 		display: "none"
+	},
+	buttonDivStyle: {
+		width: "100%",
+		marginTop: "1rem"
+	},
+	buttonStyle: {
+		width: "100%"
+	},
+	iconStyle: {
+		marginRight: "1rem"
 	}
 }));
 
@@ -28,6 +42,7 @@ export default function PostModal(props) {
 
 	const onUpload = (e) => {
 		const files = e.target.files;
+		console.log("Clicked");
 
 		const formData = new FormData();
 		formData.append("file", files[0]);
@@ -106,61 +121,58 @@ export default function PostModal(props) {
 	return (
 		<>
 			{subButton}
-			<Modal show={show} onHide={handleClose} dialogClassName="custom-dialog">
+			<Dialog
+				open={show}
+				onClose={handleClose}
+				aria-labelledby="form-dialog-title"
+			>
 				<form onSubmit={handleSubmit}>
-					<Modal.Header closeButton>
-						<Modal.Title>Post</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						<div className="form-group">
-							<label htmlFor="msg-input">Message</label>
-							<textarea
-								type="text"
-								className="form-control"
-								id="msg-input"
-								value={msg}
-								onChange={msgChange}
-							/>
-						</div>
-						<input
-							className={classes.input}
-							id="icon-button-file"
-							name="file"
-							type="file"
-							onChange={onUpload}
+					<DialogTitle id="form-dialog-title">Post</DialogTitle>
+					<DialogContent>
+						<TextField
+							id="outlined-textarea"
+							label="Message"
+							placeholder="What's on your mind?"
+							multiline
+							variant="outlined"
+							value={msg}
+							onChange={msgChange}
+							autoFocus={true}
 						/>
-						<label htmlFor="icon-button-file">
-							<IconButton
-								color="primary"
-								aria-label="upload picture"
-								component="span"
-							>
-								<PhotoCamera />
-							</IconButton>
-						</label>
+						<div className={classes.buttonDivStyle}>
+							<input
+								accept="image/*"
+								className={classes.input}
+								id="outlined-button-file"
+								multiple
+								type="file"
+								onChange={onUpload}
+							/>
+							<label htmlFor="outlined-button-file">
+								<Button
+									variant="outlined"
+									color="primary"
+									component="span"
+									className={classes.buttonStyle}
+								>
+									<PhotoCamera className={classes.iconStyle} />
+									Upload
+								</Button>
+							</label>
+						</div>
 						{isUploading ? (
 							<LinearProgress variant="determinate" value={uploadProgress} />
 						) : null}
 						{subError}
-					</Modal.Body>
-					<Modal.Footer>
-						<button
-							type="submit"
-							className="btn btn-primary"
-							onClick={handleSubmit}
-						>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={handleSubmit} color="primary">
 							Post
-						</button>
-						<button
-							type="button"
-							className="btn btn-dark"
-							onClick={handleClose}
-						>
-							Close
-						</button>
-					</Modal.Footer>
+						</Button>
+						<Button onClick={handleClose}>Cancel</Button>
+					</DialogActions>
 				</form>
-			</Modal>
+			</Dialog>
 		</>
 	);
 }
