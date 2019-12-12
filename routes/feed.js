@@ -1,77 +1,85 @@
 const router = require("express").Router();
 let Feed = require("../models/feed.model");
-let Users = require("../models/users.model");
+let Comment = require("../models/comments.model");
+let Likes = require("../models/likes.model");
 
 const auth = require("../middleware/auth.middleware");
 
-// work-around to wait for asyc function.. hope no possible-employer ever see this
-
-const awaitArray = (postArray, posts, res) => {
-	if (postArray.length === posts.length) {
-		setTimeout(() => res.json(postArray), 50);
-	} else {
-		setTimeout(() => awaitArray(postArray, posts, res), 50);
-	}
-};
-
 router.get("/", (req, res) => {
 	const {page} = req.query;
-	Feed.find(
-		{},
-		null,
-		{sort: {date: -1}, limit: 10, skip: page >= 1 ? 10 * (page - 1) : 0},
-		(err, posts) => {
-			if (err) throw err;
-			if (posts) {
-				let postArray = [];
-				posts.forEach((post) => {
-					Users.findOne({email: post.email}, (err, user) => {
-						if (err) throw err;
-						if (user) {
-							postArray.push({
-								post,
-								user: {
-									username: user.username,
-									email: user.email,
-									profilePicture: user.profilePicture,
-									id: user._id
-								}
-							});
-						} else {
-							postArray.push({
-								post: {
-									msg: "removed"
-								},
-								user: {
-									username: "removed",
-									email: "removed@web.com",
-									profilePicture: "",
-									id: "xxx"
-								}
-							});
-						}
-					});
-				});
-				awaitArray(postArray, posts, res);
-			}
-		}
-	);
+
+	Feed.find()
+		.sort({date: -1})
+		.limit(10)
+		.skip(page >= 1 ? 10 * (page - 1) : 0)
+		.populate("user comments likes", "-password -registerDate -__v -posts")
+		.exec()
+		.then((result) => res.status(200).json(result))
+		.catch((err) => res.status(500).json(err));
 });
 
 router.post("/add", auth, (req, res) => {
-	const email = req.body.email;
 	const msg = req.body.msg;
 	const photo = req.body.photo;
+	const user = req.user.id;
 
 	const newPost = new Feed({
-		email,
 		msg,
-		photo
+		photo,
+		user
 	});
 
 	newPost
 		.save()
 		.then(() => res.json("Submission saved"))
+		.catch((err) => res.status(400).json(err));
+});
+
+router.post("/comment/:id", auth, (req, res) => {
+	const msg = req.body.msg;
+	const photo = req.body.photo;
+	const user = req.user.id;
+	const post = req.params.id;
+
+	const newComment = new Comment({
+		msg,
+		photo,
+		user,
+		post
+	});
+
+	newComment
+		.save()
+		.then(() => {
+			Feed.findByIdAndUpdate(
+				post,
+				{$push: {comments: newComment._id}},
+				(err) => {
+					if (err) throw err;
+				}
+			);
+			res.status(200).json("Comment submitted");
+		})
+		.catch((err) => res.status(500).json(err));
+});
+
+router.post("/like/:id", auth, (req, res) => {
+	const id = req.params.id;
+	const user = req.user.id;
+
+	const like = new Likes({
+		user,
+		post: id
+	});
+
+	like
+		.save()
+		.then(() => {
+			// Todo: make the like change state when called
+			Feed.findByIdAndUpdate(post, {$set: {likes: !likes}}, (err) => {
+				if (err) throw err;
+			});
+		})
 		.catch((err) => res.status(400).json(err));
 });
 

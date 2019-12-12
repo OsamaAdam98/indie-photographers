@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const feedSchema = mongoose.Schema({
+const commentSchema = mongoose.Schema({
 	user: {
 		type: mongoose.Types.ObjectId,
 		ref: "users",
@@ -20,18 +20,17 @@ const feedSchema = mongoose.Schema({
 			ref: "likes"
 		}
 	],
-	comments: [
-		{
-			type: mongoose.Types.ObjectId,
-			ref: "comments"
-		}
-	],
+	post: {
+		type: mongoose.Types.ObjectId,
+		ref: "feed",
+		required: true
+	},
 	date: {
 		type: Date,
 		default: Date.now
 	}
 });
 
-const Feed = mongoose.model("feed", feedSchema);
+const Comments = mongoose.model("comments", commentSchema);
 
-module.exports = Feed;
+module.exports = Comments;

@@ -13,7 +13,8 @@ const userSchema = mongoose.Schema({
 	profilePicture: {
 		type: String,
 		required: false,
-		default: "https://i.imgur.com/MOPs2Ls.jpg"
+		default:
+			"https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-7.png"
 	},
 	password: {
 		type: String,
@@ -26,7 +27,13 @@ const userSchema = mongoose.Schema({
 	admin: {
 		type: Boolean,
 		default: false
-	}
+	},
+	posts: [
+		{
+			type: mongoose.Types.ObjectId,
+			ref: "feed"
+		}
+	]
 });
 
 const User = mongoose.model("users", userSchema);
