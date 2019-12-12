@@ -61,7 +61,7 @@ router.get("/profile/:id", (req, res) => {
 	const id = req.params.id;
 
 	Users.findById(id)
-		.select("username email")
+		.select("-password")
 		.then((user) => {
 			res.status(200).json(user);
 		})
