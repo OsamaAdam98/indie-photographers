@@ -59,13 +59,13 @@ router.post("/", (req, res) => {
 
 router.get("/profile/:id", (req, res) => {
 	const id = req.params.id;
-	Users.findById(id, (err, user) => {
-		if (err) throw err;
-		res.json({
-			username: user.username,
-			profilePicture: user.profilePicture
-		});
-	});
+
+	Users.findById(id)
+		.select("username email")
+		.then((user) => {
+			res.status(200).json(user);
+		})
+		.catch(() => res.status(404).json("User not found"));
 });
 
 router.get("/:id", (req, res) => {

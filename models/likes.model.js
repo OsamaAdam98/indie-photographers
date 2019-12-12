@@ -15,9 +15,9 @@ const likeSchema = mongoose.Schema({
 		type: Date,
 		default: Date.now
 	},
-	state: {
-		type: Boolean,
-		default: false
+	customID: {
+		type: String,
+		unique: true
 	}
 });
 

@@ -66,21 +66,63 @@ router.post("/comment/:id", auth, (req, res) => {
 router.post("/like/:id", auth, (req, res) => {
 	const id = req.params.id;
 	const user = req.user.id;
+	const customID = `${user}${id}`;
 
 	const like = new Likes({
 		user,
-		post: id
+		post: id,
+		customID
 	});
 
 	like
 		.save()
 		.then(() => {
 			// Todo: make the like change state when called
-			Feed.findByIdAndUpdate(post, {$set: {likes: !likes}}, (err) => {
-				if (err) throw err;
-			});
+			Feed.findById(id)
+				.exec()
+				.then((post) => {
+					postLike = post.likes.filter((likeIterator) => {
+						likeIterator === like._id;
+					});
+					if (postLike.length === 0) {
+						Feed.findByIdAndUpdate(
+							post._id,
+							{$push: {likes: like._id}},
+							(err) => {
+								if (err) throw err;
+								res.status(200).json({like: true});
+							}
+						);
+					}
+				})
+				.catch((err) => res.status(400).json(err));
 		})
-		.catch((err) => res.status(400).json(err));
+		.catch((err) => {
+			if (err) {
+				Likes.find({customID})
+					.exec()
+					.then((like) => {
+						Feed.findById(like[0].post)
+							.exec()
+							.then((post) => {
+								Feed.findByIdAndUpdate(
+									post._id,
+									// prettier-ignore
+									{$pull: {likes: like[0]._id}},
+									{safe: true, upsert: true},
+									(err) => {
+										if (err) throw err;
+										Likes.findByIdAndDelete(like[0]._id)
+											.exec()
+											.then(() => res.status(200).json({like: false}))
+											.catch(() => res.status(404).json("like not found"));
+									}
+								);
+							});
+					})
+					.catch((err) => res.status(400).json(err));
+			}
+		});
 });
 
 router.delete("/delete/:id", auth, (req, res) => {

@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
+import axios from "axios";
 import PropTypes from "prop-types";
 import {makeStyles} from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -27,12 +28,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PostMedia(props) {
-	const {currentUser, handleDelete} = props;
-	const {user, post} = props.feedPost;
+	const {currentUser, handleDelete, feedPost} = props;
+	const {user} = feedPost;
 	const classes = useStyles();
 
 	const [anchorEl, setAnchorEl] = useState(null);
+	const [likes, setLikes] = useState(feedPost.likes.length);
+	const [liked, setLiked] = useState(
+		feedPost.likes.filter((like) => like.user === currentUser._id).length
+			? true
+			: false
+	);
+
 	const open = Boolean(anchorEl);
+
+	const handleLike = (id) => {
+		const token = localStorage.getItem("token");
+		axios
+			.post(`/api/feed/like/${id}`, null, {
+				headers: {
+					"x-auth-token": `${token}`
+				}
+			})
+			.then((res) => {
+				const {like} = res.data;
+				setLiked(like);
+				setLikes((prevNumber) => (like ? prevNumber + 1 : prevNumber - 1));
+			})
+			.catch((err) => console.log(err));
+	};
 
 	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -43,7 +67,7 @@ export default function PostMedia(props) {
 	};
 
 	const today = new Date();
-	let date = new Date(post.date);
+	let date = new Date(feedPost.date);
 
 	let hoursOffset = today.getHours() - date.getHours();
 	let daysOffset = today.getDate() - date.getDate();
@@ -52,7 +76,7 @@ export default function PostMedia(props) {
 		<Card className={classes.card}>
 			<CardHeader
 				avatar={
-					<Link to={`/profile/${user.id}`}>
+					<Link to={`/profile/${user._id}`}>
 						<Avatar
 							alt="user avatar"
 							src={user.profilePicture ? user.profilePicture : ""}
@@ -60,7 +84,7 @@ export default function PostMedia(props) {
 					</Link>
 				}
 				action={
-					currentUser._id === user.id ? (
+					currentUser._id === feedPost.user._id ? (
 						<>
 							<IconButton
 								aria-label="settings"
@@ -87,7 +111,7 @@ export default function PostMedia(props) {
 								onClose={handleClose}
 							>
 								<MenuItem>Edit</MenuItem>
-								<MenuItem onClick={() => handleDelete(post._id)}>
+								<MenuItem onClick={() => handleDelete(feedPost._id)}>
 									Delete
 								</MenuItem>
 							</Menu>
@@ -95,7 +119,7 @@ export default function PostMedia(props) {
 					) : null
 				}
 				title={
-					<Link to={`/profile/${user.id}`}>
+					<Link to={`/profile/${user._id}`}>
 						<div style={{fontWeight: "bold"}}>{user.username}</div>
 					</Link>
 				}
@@ -111,22 +135,28 @@ export default function PostMedia(props) {
 			/>
 			<CardContent>
 				<Typography variant="body2" component="p">
-					{post.msg}
+					{feedPost.msg}
 				</Typography>
 			</CardContent>
 
-			{post.photo ? (
+			{feedPost.photo ? (
 				<CardMedia
 					className={classes.media}
-					image={post.photo}
+					image={feedPost.photo}
 					title="feedPost image"
 				/>
 			) : (
 				""
 			)}
+			<Typography variant="body2" component="p" style={{marginLeft: "1rem"}}>
+				{likes ? (likes === 1 ? `${likes} like` : `${likes} likes`) : null}
+			</Typography>
 			<CardActions disableSpacing>
-				<IconButton aria-label="add to favorites">
-					<FavoriteIcon />
+				<IconButton
+					aria-label="add to favorites"
+					onClick={() => handleLike(feedPost._id)}
+				>
+					<FavoriteIcon color={liked ? "secondary" : "disabled"} />
 				</IconButton>
 				<IconButton aria-label="share">
 					<ShareIcon />

@@ -4,6 +4,7 @@ import PostModal from "../components/modals/FeedPost.modal";
 import PostMedia from "../components/PostMedia";
 import PostSkeleton from "../components/PostSkeleton";
 import {Grid, Box} from "@material-ui/core";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
 
 export default function Feed(props) {
 	const {isLogged, user} = props;
@@ -39,8 +40,8 @@ export default function Feed(props) {
 				const {data} = res;
 				setPosts((prevPosts) =>
 					[...prevPosts, ...data].sort((a, b) => {
-						let dateA = new Date(a.post.date);
-						let dateB = new Date(b.post.date);
+						let dateA = new Date(a.date);
+						let dateB = new Date(b.date);
 						return dateB - dateA;
 					})
 				);
@@ -70,7 +71,7 @@ export default function Feed(props) {
 	const postMedia = posts.map((feedPost, i) => {
 		if (posts.length === i + 1) {
 			return (
-				<div ref={lastElementRef} key={feedPost.post._id}>
+				<div ref={lastElementRef} key={feedPost._id}>
 					<PostMedia
 						feedPost={feedPost}
 						isLoading={isLoading}
@@ -82,7 +83,7 @@ export default function Feed(props) {
 			);
 		} else {
 			return (
-				<div key={feedPost.post._id}>
+				<div key={feedPost._id}>
 					<PostMedia
 						feedPost={feedPost}
 						isLoading={isLoading}
@@ -101,14 +102,18 @@ export default function Feed(props) {
 					<Box width="500px">
 						{postMedia}
 						{isLoading ? <PostSkeleton /> : null}
-						{!hasMore && !isLoading ? <h5>That's all</h5> : null}
+						{!hasMore && !isLoading ? (
+							<DoneAllIcon style={{marginRight: "50%", marginLeft: "50%"}} />
+						) : null}
 						<PostModal isLogged={isLogged} user={user} />
 					</Box>
 				) : (
 					<Box minWidth="100%">
 						{postMedia}
 						{isLoading ? <PostSkeleton /> : null}
-						{!hasMore && !isLoading ? <h5>That's all</h5> : null}
+						{!hasMore && !isLoading ? (
+							<DoneAllIcon style={{marginRight: "45%", marginLeft: "45%"}} />
+						) : null}
 						<PostModal isLogged={isLogged} user={user} />
 					</Box>
 				)}
