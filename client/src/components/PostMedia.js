@@ -16,6 +16,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import Likes from "./modals/Likes.modal";
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -148,9 +149,7 @@ export default function PostMedia(props) {
 			) : (
 				""
 			)}
-			<Typography variant="body2" component="p" style={{marginLeft: "1rem"}}>
-				{likes ? (likes === 1 ? `${likes} like` : `${likes} likes`) : null}
-			</Typography>
+			<Likes likes={likes} post={feedPost} />
 			<CardActions disableSpacing>
 				<IconButton
 					aria-label="add to favorites"
