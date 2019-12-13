@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 	const {page} = req.query;
 
 	Feed.find()
-		.sort({date: -1})
+		.sort({date: "desc"})
 		.limit(10)
 		.skip(page >= 1 ? 10 * (page - 1) : 0)
 		.populate("user comments likes", "-password -registerDate -__v -posts")
@@ -123,6 +123,18 @@ router.post("/like/:id", auth, (req, res) => {
 					.catch((err) => res.status(400).json(err));
 			}
 		});
+});
+
+router.get("/likes/:postID", (req, res) => {
+	const postID = req.params.postID;
+	Likes.find({post: postID})
+		.populate("user", "-password")
+		.sort({date: "desc"})
+		.exec()
+		.then((likes) => {
+			res.status(200).json(likes);
+		})
+		.catch(() => res.status(404).json("Post not found"));
 });
 
 router.delete("/delete/:id", auth, (req, res) => {

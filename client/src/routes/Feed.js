@@ -38,12 +38,13 @@ export default function Feed(props) {
 			.get(`/api/feed/?page=${page}`)
 			.then((res) => {
 				const {data} = res;
-				setPosts((prevPosts) =>
-					[...prevPosts, ...data].sort((a, b) => {
-						let dateA = new Date(a.date);
-						let dateB = new Date(b.date);
-						return dateB - dateA;
-					})
+				setPosts(
+					(prevPosts) => [...prevPosts, ...data]
+					// .sort((a, b) => {
+					// 	let dateA = new Date(a.date);
+					// 	let dateB = new Date(b.date);
+					// 	return dateB - dateA;
+					// })
 				);
 				setIsLoading(false);
 				setHasMore(data.length > 0);

@@ -17,15 +17,12 @@ export default function Likes(props) {
 
 	useEffect(() => {
 		if (post && show) {
-			post.likes.forEach((like) => {
-				axios
-					.get(`/api/users/profile/${like.user}`)
-					.then((res) => {
-						const {data} = res;
-						setUsers((prevUsers) => [...prevUsers, data]);
-					})
-					.catch((err) => console.log(err));
-			});
+			axios
+				.get(`/api/feed/likes/${post._id}`)
+				.then((res) => {
+					setUsers(res.data.map((data) => data.user));
+				})
+				.catch((err) => console.log(err));
 		}
 		return setUsers([]);
 	}, [post, show]);
