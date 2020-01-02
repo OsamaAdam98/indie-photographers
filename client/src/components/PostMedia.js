@@ -69,9 +69,26 @@ export default function PostMedia(props) {
 
 	const today = new Date();
 	let date = new Date(feedPost.date);
-
+	let yearOffset = today.getFullYear() - date.getFullYear();
+	let monthsOffset = today.getMonth() - date.getMonth();
 	let hoursOffset = today.getHours() - date.getHours();
 	let daysOffset = today.getDate() - date.getDate();
+	let minutesOffset = today.getMinutes() - date.getMinutes();
+
+	const daysInAMonth = (month, year) => {
+		return new Date(year, month, 0).getDate();
+	};
+
+	if (yearOffset) {
+		monthsOffset =
+			12 - date.getMonth() + today.getMonth() + 12 * (yearOffset - 1);
+	}
+	if (monthsOffset === 1 && daysOffset < 31) {
+		daysOffset =
+			daysInAMonth(date.getMonth(), date.getFullYear()) -
+			date.getDate() +
+			today.getDate();
+	}
 
 	return (
 		<Card className={classes.card}>
@@ -125,13 +142,21 @@ export default function PostMedia(props) {
 					</Link>
 				}
 				subheader={
-					!daysOffset && !hoursOffset
-						? "Posted just now"
-						: !daysOffset && hoursOffset
-						? `Posted ${hoursOffset} hours ago`
+					monthsOffset === 1
+						? `Posted ${daysOffset} days ago`
+						: monthsOffset
+						? `Posted ${monthsOffset} months ago`
 						: daysOffset === 1
 						? `Posted yesterday`
-						: `Posted ${daysOffset} days ago`
+						: daysOffset
+						? `Posted ${daysOffset} days ago`
+						: hoursOffset === 1
+						? "Posted about an hour ago"
+						: hoursOffset
+						? `Posted ${hoursOffset} hours ago`
+						: minutesOffset
+						? `Posted ${minutesOffset} minutes ago`
+						: `Posted just now`
 				}
 			/>
 			<CardContent>

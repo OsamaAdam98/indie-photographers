@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {useHistory} from "react-router-dom";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PostModal(props) {
 	const {isLogged, user} = props;
 
+	const history = useHistory();
 	const classes = useStyles();
 
 	const [show, setShow] = useState(false);
@@ -99,6 +101,7 @@ export default function PostModal(props) {
 				})
 				.then(() => {
 					handleClose();
+					history.push("/feed");
 				})
 				.catch((err) => console.log(err));
 		}
