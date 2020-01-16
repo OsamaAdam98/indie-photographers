@@ -7,7 +7,6 @@ import Home from "./routes/Home";
 import Marketplace from "./routes/Marketplace";
 import Profile from "./routes/Profile";
 import Feed from "./routes/Feed";
-import ExtProfile from "./routes/ExtProfile";
 import MenuAppBar from "./components/MenuAppBar";
 
 function App() {
@@ -55,12 +54,9 @@ function App() {
 						<Marketplace {...props} isLogged={isLogged} user={user} />
 					)}
 				/>
-				<Route exact path={["/profile", `/profile/${user._id}`]}>
-					<Profile user={user} setIsLogged={setIsLogged} />
-				</Route>
 				<Route
 					path="/profile/:id"
-					render={(props) => <ExtProfile {...props} user={user} />}
+					render={(props) => <Profile {...props} user={user} />}
 				/>
 				<Route
 					path="/feed"

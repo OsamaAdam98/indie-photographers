@@ -51,7 +51,7 @@ export default function ProfileAvatar(props) {
 				<MenuItem
 					onClick={() => {
 						handleClose();
-						history.push("/profile");
+						history.push(`/profile/${user._id}`);
 					}}
 				>
 					Profile

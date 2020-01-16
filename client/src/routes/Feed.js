@@ -35,14 +35,7 @@ export default function Feed(props) {
 			.get(`/api/feed/?page=${page}`)
 			.then((res) => {
 				const {data} = res;
-				setPosts(
-					(prevPosts) => [...prevPosts, ...data]
-					// .sort((a, b) => {
-					// 	let dateA = new Date(a.date);
-					// 	let dateB = new Date(b.date);
-					// 	return dateB - dateA;
-					// })
-				);
+				setPosts((prevPosts) => [...prevPosts, ...data]);
 				setIsLoading(false);
 				setHasMore(data.length > 0);
 			})
@@ -96,35 +89,19 @@ export default function Feed(props) {
 	return (
 		<>
 			<Grid container direction="column" alignItems="center" justify="center">
-				{width > 500 ? (
-					<Box width="500px">
-						{postMedia}
-						{isLoading ? <PostSkeleton /> : null}
-						{!hasMore && !isLoading ? (
-							<DoneAllIcon
-								style={{
-									marginRight: "50%",
-									marginLeft: "50%"
-								}}
-							/>
-						) : null}
-						<PostModal isLogged={isLogged} user={user} />
-					</Box>
-				) : (
-					<Box minWidth="100%">
-						{postMedia}
-						{isLoading ? <PostSkeleton /> : null}
-						{!hasMore && !isLoading ? (
-							<DoneAllIcon
-								style={{
-									marginRight: "45%",
-									marginLeft: "45%"
-								}}
-							/>
-						) : null}
-						<PostModal isLogged={isLogged} user={user} />
-					</Box>
-				)}
+				<Box maxWidth="500px" width={`${width > 500 ? `500px` : `100%`}`}>
+					{postMedia}
+					{isLoading ? <PostSkeleton /> : null}
+					{!hasMore && !isLoading ? (
+						<DoneAllIcon
+							style={{
+								marginRight: "50%",
+								marginLeft: "50%"
+							}}
+						/>
+					) : null}
+					<PostModal isLogged={isLogged} user={user} />
+				</Box>
 			</Grid>
 		</>
 	);
