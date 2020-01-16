@@ -3,21 +3,18 @@ import axios from "axios";
 import PostModal from "../components/modals/FeedPost.modal";
 import PostMedia from "../components/PostMedia";
 import PostSkeleton from "../components/PostSkeleton";
+import useWindowDimensions from "../components/utilities/WindowDimensions";
 import {Grid, Box} from "@material-ui/core";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 
 export default function Feed(props) {
 	const {isLogged, user} = props;
+	const {width} = useWindowDimensions();
 
 	const [posts, setPosts] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(false);
-	const [isDesktop, setIsDesktop] = useState(false);
-
-	useEffect(() => {
-		setIsDesktop(window.innerWidth > 500 ? true : false);
-	}, []);
 
 	const handleDelete = (id) => {
 		const token = localStorage.getItem("token");
@@ -99,12 +96,17 @@ export default function Feed(props) {
 	return (
 		<>
 			<Grid container direction="column" alignItems="center" justify="center">
-				{isDesktop ? (
+				{width > 500 ? (
 					<Box width="500px">
 						{postMedia}
 						{isLoading ? <PostSkeleton /> : null}
 						{!hasMore && !isLoading ? (
-							<DoneAllIcon style={{marginRight: "50%", marginLeft: "50%"}} />
+							<DoneAllIcon
+								style={{
+									marginRight: "50%",
+									marginLeft: "50%"
+								}}
+							/>
 						) : null}
 						<PostModal isLogged={isLogged} user={user} />
 					</Box>
@@ -113,7 +115,12 @@ export default function Feed(props) {
 						{postMedia}
 						{isLoading ? <PostSkeleton /> : null}
 						{!hasMore && !isLoading ? (
-							<DoneAllIcon style={{marginRight: "45%", marginLeft: "45%"}} />
+							<DoneAllIcon
+								style={{
+									marginRight: "45%",
+									marginLeft: "45%"
+								}}
+							/>
 						) : null}
 						<PostModal isLogged={isLogged} user={user} />
 					</Box>
