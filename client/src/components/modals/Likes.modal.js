@@ -50,8 +50,11 @@ export default function Likes(props) {
 
 	return (
 		<>
-			<Button onClick={handleShow} style={{marginLeft: "1rem"}}>
-				{likes ? (likes === 1 ? `${likes} like` : `${likes} likes`) : ""}
+			<Button
+				onClick={handleShow}
+				style={{marginLeft: "1rem", display: likes ? null : `none`}}
+			>
+				{likes === 1 ? `${likes} like` : `${likes} likes`}
 			</Button>
 			<Dialog
 				open={show}
