@@ -89,6 +89,12 @@ export default function PostMedia(props) {
 			date.getDate() +
 			today.getDate();
 	}
+	if (hoursOffset === 1) {
+		minutesOffset = 60 - date.getMinutes() + today.getMinutes();
+	} else if (hoursOffset) {
+		minutesOffset =
+			60 - date.getMinutes() + today.getMinutes() + hoursOffset * 60;
+	}
 
 	return (
 		<Card className={classes.card}>
@@ -142,8 +148,10 @@ export default function PostMedia(props) {
 					</Link>
 				}
 				subheader={
-					monthsOffset === 1
+					monthsOffset === 1 && daysOffset < 30
 						? `Posted ${daysOffset} days ago`
+						: monthsOffset === 1 && daysOffset > 30
+						? `Posted about a month ago`
 						: monthsOffset
 						? `Posted ${monthsOffset} months ago`
 						: daysOffset === 1
@@ -151,7 +159,7 @@ export default function PostMedia(props) {
 						: daysOffset
 						? `Posted ${daysOffset} days ago`
 						: hoursOffset === 1
-						? "Posted about an hour ago"
+						? `Posted ${minutesOffset} minutes ago`
 						: hoursOffset
 						? `Posted ${hoursOffset} hours ago`
 						: minutesOffset
