@@ -4,13 +4,9 @@ import PostModal from "../components/modals/FeedPost.modal";
 import PostMedia from "../components/PostMedia";
 import PostSkeleton from "../components/PostSkeleton";
 import useWindowDimensions from "../components/utilities/WindowDimensions";
-import {Grid, Box, Snackbar} from "@material-ui/core";
+import {Grid, Box} from "@material-ui/core";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
-import MuiAlert from "@material-ui/lab/Alert";
-
-function Alert(props) {
-	return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import SnackAlert from "../components/SnackAlert";
 
 export default function Feed(props) {
 	const {isLogged, user} = props;
@@ -23,14 +19,6 @@ export default function Feed(props) {
 	const [hasMore, setHasMore] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 	const [openError, setOpenError] = useState(false);
-
-	const handleClose = (event, reason) => {
-		if (reason === "clickaway") {
-			return;
-		}
-
-		setOpenError(false);
-	};
 
 	const handleDelete = (id) => {
 		const token = localStorage.getItem("token");
@@ -140,13 +128,12 @@ export default function Feed(props) {
 							}}
 						/>
 					) : null}
-					<Snackbar
-						open={openError}
-						autoHideDuration={6000}
-						onClose={handleClose}
-					>
-						<Alert severity="warning">{errorMsg}</Alert>
-					</Snackbar>
+					<SnackAlert
+						severity="warning"
+						openError={openError}
+						setOpenError={setOpenError}
+						errorMsg={errorMsg}
+					/>
 					<PostModal isLogged={isLogged} user={user} setNewPost={setNewPost} />
 				</Box>
 			</Grid>
