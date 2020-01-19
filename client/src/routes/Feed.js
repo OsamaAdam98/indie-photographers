@@ -4,8 +4,13 @@ import PostModal from "../components/modals/FeedPost.modal";
 import PostMedia from "../components/PostMedia";
 import PostSkeleton from "../components/PostSkeleton";
 import useWindowDimensions from "../components/utilities/WindowDimensions";
-import {Grid, Box} from "@material-ui/core";
+import {Grid, Box, Snackbar} from "@material-ui/core";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
+import MuiAlert from "@material-ui/lab/Alert";
+
+function Alert(props) {
+	return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default function Feed(props) {
 	const {isLogged, user} = props;
@@ -16,6 +21,16 @@ export default function Feed(props) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(false);
+	const [errorMsg, setErrorMsg] = useState("");
+	const [openError, setOpenError] = useState(false);
+
+	const handleClose = (event, reason) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		setOpenError(false);
+	};
 
 	const handleDelete = (id) => {
 		const token = localStorage.getItem("token");
@@ -39,8 +54,24 @@ export default function Feed(props) {
 				setPosts((prevPosts) => [...prevPosts, ...data]);
 				setIsLoading(false);
 				setHasMore(data.length > 0);
+				localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
+				localStorage.setItem("cachedPages", page);
+				setErrorMsg("");
+				setOpenError(false);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				console.log(err);
+				setErrorMsg("Can't connect to the internet!");
+				setOpenError(true);
+				const cachedPages = localStorage.getItem("cachedPages");
+				for (let i = 1; i <= cachedPages; i++) {
+					setPosts((prevPosts) => [
+						...prevPosts,
+						...JSON.parse(localStorage.getItem(`feedPage${i}`))
+					]);
+				}
+				setIsLoading(false);
+			});
 	}, [page]);
 
 	const observer = useRef();
@@ -109,6 +140,13 @@ export default function Feed(props) {
 							}}
 						/>
 					) : null}
+					<Snackbar
+						open={openError}
+						autoHideDuration={6000}
+						onClose={handleClose}
+					>
+						<Alert severity="warning">{errorMsg}</Alert>
+					</Snackbar>
 					<PostModal isLogged={isLogged} user={user} setNewPost={setNewPost} />
 				</Box>
 			</Grid>
