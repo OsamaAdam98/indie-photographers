@@ -123,8 +123,9 @@ export default function Feed(props) {
 					{!hasMore && !isLoading ? (
 						<DoneAllIcon
 							style={{
-								marginRight: "50%",
-								marginLeft: "50%"
+								position: "relative",
+								width: "100%",
+								textAlign: "center"
 							}}
 						/>
 					) : null}

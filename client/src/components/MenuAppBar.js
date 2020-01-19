@@ -12,7 +12,9 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1
 	},
 	appBar: {
-		zIndex: theme.zIndex.drawer + 1
+		zIndex: theme.zIndex.drawer + 1,
+		backgroundColor: "#212121",
+		color: "#FAFAFA"
 	},
 	menuButton: {
 		marginRight: theme.spacing(2)
@@ -21,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1
 	},
 	barMargin: {
-		marginBottom: "1rem"
+		marginBottom: "5rem"
 	},
 	toolbar: theme.mixins.toolbar
 }));
@@ -55,7 +57,7 @@ function MenuAppBar(props) {
 
 	return (
 		<div className={(classes.root, classes.barMargin)}>
-			<AppBar position="sticky" className={classes.appBar} color="primary">
+			<AppBar position="fixed" className={classes.appBar}>
 				<Toolbar>
 					<LeftDrawer user={user} />
 					<Typography variant="h6" className={classes.title}>
