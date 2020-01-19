@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PostModal(props) {
-	const {isLogged, user} = props;
+	const {isLogged, user, setNewPost} = props;
 
 	const classes = useStyles();
 
@@ -97,9 +97,10 @@ export default function PostModal(props) {
 						"x-auth-token": `${token}`
 					}
 				})
-				.then(() => {
+				.then((res) => {
+					setNewPost(res.data);
 					handleClose();
-					window.location.reload();
+					// window.location.reload();
 				})
 				.catch((err) => console.log(err));
 		}

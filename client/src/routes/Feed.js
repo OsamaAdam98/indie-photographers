@@ -12,6 +12,7 @@ export default function Feed(props) {
 	const {width} = useWindowDimensions();
 
 	const [posts, setPosts] = useState([]);
+	const [newPost, setNewPost] = useState("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(false);
@@ -90,6 +91,14 @@ export default function Feed(props) {
 		<>
 			<Grid container direction="column" alignItems="center" justify="center">
 				<Box maxWidth="500px" width={`${width > 500 ? `500px` : `100%`}`}>
+					{newPost && (
+						<PostMedia
+							feedPost={newPost}
+							isLoading={isLoading}
+							currentUser={user}
+							handleDelete={handleDelete}
+						/>
+					)}
 					{postMedia}
 					{isLoading ? <PostSkeleton /> : null}
 					{!hasMore && !isLoading ? (
@@ -100,7 +109,7 @@ export default function Feed(props) {
 							}}
 						/>
 					) : null}
-					<PostModal isLogged={isLogged} user={user} />
+					<PostModal isLogged={isLogged} user={user} setNewPost={setNewPost} />
 				</Box>
 			</Grid>
 		</>
