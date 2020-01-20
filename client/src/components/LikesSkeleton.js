@@ -1,17 +1,15 @@
 import React from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import {ListItem, ListItemText, ListItemAvatar} from "@material-ui/core";
-import useWindowDimensions from "./utilities/WindowDimensions";
 
 export default function LikesSkeleton(props) {
 	const {likes} = props;
-	const {width} = useWindowDimensions();
 	let skeleton = [];
 
 	for (let i = 0; i < likes; i++) {
 		skeleton = [
 			...skeleton,
-			<ListItem key={i} style={{width: width < 500 ? "auto" : "20rem"}}>
+			<ListItem key={i}>
 				<ListItemAvatar>
 					<Skeleton variant="circle" width={40} height={40} />
 				</ListItemAvatar>

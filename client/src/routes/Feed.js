@@ -29,7 +29,7 @@ export default function Feed(props) {
 				}
 			})
 			.then((res) => console.log(res))
-			.then(() => (window.location = "/feed/"))
+			.then(() => window.location.reload())
 			.catch((err) => console.log(err));
 	};
 

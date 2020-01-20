@@ -108,7 +108,7 @@ export default function PostMedia(props) {
 					</Link>
 				}
 				action={
-					currentUser._id === feedPost.user._id ? (
+					currentUser._id === feedPost.user._id || currentUser.admin ? (
 						<>
 							<IconButton
 								aria-label="settings"

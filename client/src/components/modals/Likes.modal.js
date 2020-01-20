@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {Button, Avatar, Divider} from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -24,36 +24,74 @@ export default function Likes(props) {
 	const [openError, setOpenError] = useState(false);
 	const {width} = useWindowDimensions();
 
-	useEffect(() => {
-		if (post && show) {
-			setIsLoading(true);
-			axios
-				.get(`/api/feed/likes/${post._id}`)
-				.then((res) => {
-					setUsers(res.data.map((data) => data.user));
-					localStorage.setItem(`${post._id}`, JSON.stringify(res.data));
+	const history = useHistory();
+
+	// useEffect(() => {
+	// 	if (post && show) {
+	// 		history.push("/feed/");
+	// 		setIsLoading(true);
+	// 		axios
+	// 			.get(`/api/feed/likes/${post._id}`)
+	// 			.then((res) => {
+	// 				setUsers(res.data.map((data) => data.user));
+	// 				localStorage.setItem(`${post._id}`, JSON.stringify(res.data));
+	// 				setIsLoading(false);
+	// 				setOpenError(false);
+	// 				setErrorMsg("");
+	// 			})
+	// 			.catch((err) => {
+	// 				console.log(err);
+	// 				let cachedData = JSON.parse(localStorage.getItem(`${post._id}`));
+	// 				if (cachedData) {
+	// 					setErrorMsg("Can't connect, fetching from cache.");
+	// 					setOpenError(true);
+	// 					setUsers(cachedData.map((data) => data.user));
+	// 					setIsLoading(false);
+	// 				} else {
+	// 					setErrorMsg("Can't connect to the internet!");
+	// 					setOpenError(true);
+	// 				}
+	// 			});
+	// 	}
+	// 	return setUsers([]);
+	// }, [post, show]);
+
+	const entering = () => {
+		history.push("/feed/");
+		setIsLoading(true);
+		axios
+			.get(`/api/feed/likes/${post._id}`)
+			.then((res) => {
+				setUsers(res.data.map((data) => data.user));
+				localStorage.setItem(`${post._id}`, JSON.stringify(res.data));
+				setIsLoading(false);
+				setOpenError(false);
+				setErrorMsg("");
+			})
+			.catch((err) => {
+				console.log(err);
+				let cachedData = JSON.parse(localStorage.getItem(`${post._id}`));
+				if (cachedData) {
+					setErrorMsg("Can't connect, fetching from cache.");
+					setOpenError(true);
+					setUsers(cachedData.map((data) => data.user));
 					setIsLoading(false);
-					setOpenError(false);
-					setErrorMsg("");
-				})
-				.catch((err) => {
-					console.log(err);
-					let cachedData = JSON.parse(localStorage.getItem(`${post._id}`));
-					if (cachedData) {
-						setErrorMsg("Can't connect, fetching from cache.");
-						setOpenError(true);
-						setUsers(cachedData.map((data) => data.user));
-						setIsLoading(false);
-					} else {
-						setErrorMsg("Can't connect to the internet!");
-						setOpenError(true);
-					}
-				});
-		}
+				} else {
+					setErrorMsg("Can't connect to the internet!");
+					setOpenError(true);
+				}
+			});
+	};
+	const exiting = () => {
 		return setUsers([]);
-	}, [post, show]);
+	};
 
 	const handleClose = () => {
+		setShow(false);
+		history.goBack();
+	};
+
+	const specialClose = () => {
 		setShow(false);
 	};
 
@@ -64,11 +102,14 @@ export default function Likes(props) {
 	const likedUsers = users.map((user) => {
 		return (
 			<Link to={`/profile/${user._id}`} key={user._id}>
-				<ListItem alignItems="flex-start">
+				<ListItem alignItems="center">
 					<ListItemAvatar>
 						<Avatar alt={user.username} src={user.profilePicture} />
 					</ListItemAvatar>
-					<ListItemText primary={user.username} />
+					<ListItemText
+						primary={user.username}
+						secondary={user.admin ? `Admin` : `User`}
+					/>
 				</ListItem>
 			</Link>
 		);
@@ -87,7 +128,12 @@ export default function Likes(props) {
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
 				maxWidth="xs"
+				fullWidth={true}
 				fullScreen={width < 500}
+				onEntering={entering}
+				onExiting={exiting}
+				onKeyPress={specialClose}
+				scroll="paper"
 			>
 				<DialogTitle
 					id="form-dialog-title"
