@@ -99,8 +99,14 @@ export default function PostModal(props) {
 				})
 				.then((res) => {
 					setNewPost(res.data);
+					localStorage.setItem(
+						`feedPage1`,
+						JSON.stringify([
+							res.data,
+							...JSON.parse(localStorage.getItem(`feedPage1`))
+						])
+					);
 					handleClose();
-					// window.location.reload();
 				})
 				.catch((err) => console.log(err));
 		}

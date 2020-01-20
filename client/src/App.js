@@ -17,6 +17,11 @@ function App() {
 
 	useEffect(() => {
 		const token = localStorage.getItem("token");
+		const userInfo = localStorage.getItem("userInfo");
+		if (userInfo && token) {
+			setUser(JSON.parse(userInfo));
+			setIsLogged(true);
+		}
 		if (isLogged) {
 			axios
 				.get("/api/auth/user", {
@@ -25,7 +30,10 @@ function App() {
 					}
 				})
 				.then((res) => {
-					setUser(res.data);
+					if (!userInfo || !token) {
+						setUser(res.data);
+					}
+					localStorage.setItem(`userInfo`, JSON.stringify(res.data));
 					setIsLogged(true);
 				})
 				.catch((err) => {
@@ -35,6 +43,7 @@ function App() {
 				});
 		} else {
 			localStorage.removeItem("token");
+			localStorage.removeItem("userInfo");
 		}
 	}, [isLogged]);
 
