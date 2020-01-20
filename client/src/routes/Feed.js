@@ -39,6 +39,7 @@ export default function Feed(props) {
 		if (cachedData) {
 			setPosts((prevPosts) => [...prevPosts, ...cachedData]);
 			setIsLoading(false);
+			setHasMore(cachedData.length > 0);
 		}
 		axios
 			.get(`/api/feed/?page=${page}`)

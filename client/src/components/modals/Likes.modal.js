@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
-import {Button, Avatar} from "@material-ui/core";
+import {Button, Avatar, Divider} from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -12,6 +12,7 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import LikesSkeleton from "../LikesSkeleton";
 import useWindowDimensions from "../utilities/WindowDimensions";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import SnackAlert from "../SnackAlert";
 import {IconButton} from "@material-ui/core";
 
 export default function Likes(props) {
@@ -19,23 +20,35 @@ export default function Likes(props) {
 	const [show, setShow] = useState(false);
 	const [users, setUsers] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [errorMsg, setErrorMsg] = useState("");
+	const [openError, setOpenError] = useState(false);
 	const {width} = useWindowDimensions();
 
 	useEffect(() => {
 		if (post && show) {
 			setIsLoading(true);
-			// let cachedData = JSON.parse(localStorage.getItem(`${post._id}`));
-			// if (cachedData) {
-			// 	setUsers(cachedData.map((data) => data.user));
-			// }
 			axios
 				.get(`/api/feed/likes/${post._id}`)
 				.then((res) => {
 					setUsers(res.data.map((data) => data.user));
-					// localStorage.setItem(`${post._id}`, JSON.stringify(res.data));
+					localStorage.setItem(`${post._id}`, JSON.stringify(res.data));
 					setIsLoading(false);
+					setOpenError(false);
+					setErrorMsg("");
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => {
+					console.log(err);
+					let cachedData = JSON.parse(localStorage.getItem(`${post._id}`));
+					if (cachedData) {
+						setErrorMsg("Can't connect, fetching from cache.");
+						setOpenError(true);
+						setUsers(cachedData.map((data) => data.user));
+						setIsLoading(false);
+					} else {
+						setErrorMsg("Can't connect to the internet!");
+						setOpenError(true);
+					}
+				});
 		}
 		return setUsers([]);
 	}, [post, show]);
@@ -93,10 +106,17 @@ export default function Likes(props) {
 				</DialogTitle>
 				<DialogContent>
 					<List>
+						<Divider />
 						{isLoading ? <LikesSkeleton likes={likes} /> : likedUsers}
 					</List>
 				</DialogContent>
 			</Dialog>
+			<SnackAlert
+				severity="warning"
+				openError={openError}
+				setOpenError={setOpenError}
+				errorMsg={errorMsg}
+			/>
 		</>
 	);
 }
