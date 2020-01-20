@@ -37,13 +37,16 @@ export default function Feed(props) {
 		setIsLoading(true);
 		axios
 			.get(`/api/feed/?page=${page}`)
+			.then(() => {
+				const cachedData = localStorage.getItem(`feedPage${page}`);
+				setPosts((prevPosts) => [...prevPosts, ...cachedData]);
+				setIsLoading(false);
+			})
 			.then((res) => {
 				const {data} = res;
-				setPosts((prevPosts) => [...prevPosts, ...data]);
-				setIsLoading(false);
 				setHasMore(data.length > 0);
 				localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
-				localStorage.setItem("cachedPages", page);
+				// localStorage.setItem("cachedPages", page);
 				setErrorMsg("");
 				setOpenError(false);
 			})
@@ -51,13 +54,13 @@ export default function Feed(props) {
 				console.log(err);
 				setErrorMsg("Can't connect to the internet!");
 				setOpenError(true);
-				const cachedPages = localStorage.getItem("cachedPages");
-				for (let i = 1; i <= cachedPages; i++) {
-					setPosts((prevPosts) => [
-						...prevPosts,
-						...JSON.parse(localStorage.getItem(`feedPage${i}`))
-					]);
-				}
+				// const cachedPages = localStorage.getItem("cachedPages");
+				// for (let i = 1; i <= cachedPages; i++) {
+				// 	setPosts((prevPosts) => [
+				// 		...prevPosts,
+				// 		...JSON.parse(localStorage.getItem(`feedPage${i}`))
+				// 	]);
+				// }
 				setIsLoading(false);
 			});
 	}, [page]);

@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
-import "../../css/modal.css";
 import FAB from "../FAB";
 import AddIcon from "@material-ui/icons/Add";
 
