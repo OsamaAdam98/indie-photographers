@@ -30,17 +30,18 @@ export default function Profile(props) {
 
 	useEffect(() => {
 		setIsloading(true);
+		let cachedProfile = localStorage.getItem(`${props.match.params.id}`);
+		if (cachedProfile) {
+			const {username, profilePicture} = JSON.parse(cachedProfile);
+			setUsername(username);
+			setPic(profilePicture);
+			setIsloading(false);
+		}
 		axios
 			.get(`/api/users/profile/${props.match.params.id}`)
 			.then((res) => {
 				const {data} = res;
-				let cachedProfile = localStorage.getItem(`${props.match.params.id}`);
-				if (cachedProfile) {
-					const {username, profilePicture} = JSON.parse(cachedProfile);
-					setUsername(username);
-					setPic(profilePicture);
-					setIsloading(false);
-				} else {
+				if (!cachedProfile) {
 					setUsername(data.username);
 					setPic(data.profilePicture);
 				}

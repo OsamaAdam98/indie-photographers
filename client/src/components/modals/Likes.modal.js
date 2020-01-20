@@ -17,14 +17,14 @@ export default function Likes(props) {
 
 	useEffect(() => {
 		if (post && show) {
+			let cachedData = JSON.parse(localStorage.getItem(`${post._id}`));
+			if (cachedData) {
+				setUsers(cachedData.map((data) => data.user));
+			}
 			axios
 				.get(`/api/feed/likes/${post._id}`)
 				.then((res) => {
-					let cachedData = JSON.parse(localStorage.getItem(`${post._id}`));
-					if (cachedData) {
-						setUsers(cachedData.map((data) => data.user));
-						console.log("cache-hit");
-					} else {
+					if (!cachedData) {
 						setUsers(res.data.map((data) => data.user));
 						localStorage.setItem(`${post._id}`, JSON.stringify(res.data));
 					}
