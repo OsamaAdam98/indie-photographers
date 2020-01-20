@@ -39,8 +39,10 @@ export default function Feed(props) {
 			.get(`/api/feed/?page=${page}`)
 			.then(() => {
 				const cachedData = localStorage.getItem(`feedPage${page}`);
-				setPosts((prevPosts) => [...prevPosts, ...cachedData]);
-				setIsLoading(false);
+				if (cachedData) {
+					setPosts((prevPosts) => [...prevPosts, ...cachedData]);
+					setIsLoading(false);
+				}
 			})
 			.then((res) => {
 				const {data} = res;
