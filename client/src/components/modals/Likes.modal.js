@@ -9,25 +9,31 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import LikesSkeleton from "../LikesSkeleton";
+import useWindowDimensions from "../utilities/WindowDimensions";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import {IconButton} from "@material-ui/core";
 
 export default function Likes(props) {
 	const {post, likes} = props;
 	const [show, setShow] = useState(false);
 	const [users, setUsers] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const {width} = useWindowDimensions();
 
 	useEffect(() => {
 		if (post && show) {
-			let cachedData = JSON.parse(localStorage.getItem(`${post._id}`));
-			if (cachedData) {
-				setUsers(cachedData.map((data) => data.user));
-			}
+			setIsLoading(true);
+			// let cachedData = JSON.parse(localStorage.getItem(`${post._id}`));
+			// if (cachedData) {
+			// 	setUsers(cachedData.map((data) => data.user));
+			// }
 			axios
 				.get(`/api/feed/likes/${post._id}`)
 				.then((res) => {
-					if (!cachedData) {
-						setUsers(res.data.map((data) => data.user));
-						localStorage.setItem(`${post._id}`, JSON.stringify(res.data));
-					}
+					setUsers(res.data.map((data) => data.user));
+					// localStorage.setItem(`${post._id}`, JSON.stringify(res.data));
+					setIsLoading(false);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -67,10 +73,28 @@ export default function Likes(props) {
 				open={show}
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
+				maxWidth="xs"
+				fullScreen={width < 500}
 			>
-				<DialogTitle id="form-dialog-title">Liked by</DialogTitle>
+				<DialogTitle
+					id="form-dialog-title"
+					style={{height: width > 500 ? "1rem" : "3.5rem"}}
+				>
+					<IconButton
+						style={{
+							marginRight: "1rem",
+							display: width < 500 ? `` : `none`
+						}}
+						onClick={handleClose}
+					>
+						<ArrowBackIosIcon />
+					</IconButton>
+					Liked by
+				</DialogTitle>
 				<DialogContent>
-					<List>{likedUsers}</List>
+					<List>
+						{isLoading ? <LikesSkeleton likes={likes} /> : likedUsers}
+					</List>
 				</DialogContent>
 			</Dialog>
 		</>
