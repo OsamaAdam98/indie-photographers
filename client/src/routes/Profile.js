@@ -30,12 +30,24 @@ export default function Profile(props) {
 
 	useEffect(() => {
 		setIsloading(true);
-		axios.get(`/api/users/profile/${props.match.params.id}`).then((res) => {
-			const {username, profilePicture} = res.data;
-			setUsername(username);
-			setPic(profilePicture);
-			setIsloading(false);
-		});
+		axios
+			.get(`/api/users/profile/${props.match.params.id}`)
+			.then((res) => {
+				const {data} = res;
+				let cachedProfile = localStorage.getItem(`${props.match.params.id}`);
+				if (cachedProfile) {
+					const {username, profilePicture} = JSON.parse(cachedProfile);
+					setUsername(username);
+					setPic(profilePicture);
+					setIsloading(false);
+				} else {
+					setUsername(data.username);
+					setPic(data.profilePicture);
+				}
+				setIsloading(false);
+				localStorage.setItem(`${props.match.params.id}`, JSON.stringify(data));
+			})
+			.catch((err) => console.log(err));
 		// eslint-disable-next-line
 	}, []);
 
