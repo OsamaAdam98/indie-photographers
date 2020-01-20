@@ -158,7 +158,7 @@ export default function PostMedia(props) {
 						? `Posted yesterday`
 						: daysOffset
 						? `Posted ${daysOffset} days ago`
-						: hoursOffset === 1
+						: hoursOffset === 1 && minutesOffset < 60
 						? `Posted ${minutesOffset} minutes ago`
 						: hoursOffset
 						? `Posted ${hoursOffset} hours ago`

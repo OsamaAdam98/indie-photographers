@@ -37,20 +37,22 @@ export default function Feed(props) {
 		setIsLoading(true);
 		axios
 			.get(`/api/feed/?page=${page}`)
-			.then(() => {
-				const cachedData = localStorage.getItem(`feedPage${page}`);
+			.then((res) => {
+				const {data} = res;
+				let cachedData = JSON.parse(localStorage.getItem(`feedPage${page}`));
 				if (cachedData) {
 					setPosts((prevPosts) => [...prevPosts, ...cachedData]);
 					setIsLoading(false);
+				} else {
+					setPosts((prevPosts) => [...prevPosts, ...data]);
 				}
-			})
-			.then((res) => {
-				const {data} = res;
 				setHasMore(data.length > 0);
 				localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
+
 				// localStorage.setItem("cachedPages", page);
 				setErrorMsg("");
 				setOpenError(false);
+				setIsLoading(false);
 			})
 			.catch((err) => {
 				console.log(err);
