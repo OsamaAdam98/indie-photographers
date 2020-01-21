@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
 import {Button, Avatar, Divider} from "@material-ui/core";
@@ -25,6 +25,10 @@ export default function Likes(props) {
 	const {width} = useWindowDimensions();
 
 	const history = useHistory();
+
+	useEffect(() => {
+		if (props.location.hash === "") setShow(false);
+	}, [props]);
 
 	// useEffect(() => {
 	// 	if (post && show) {
@@ -57,7 +61,7 @@ export default function Likes(props) {
 	// }, [post, show]);
 
 	const entering = () => {
-		history.push("/feed/");
+		window.location.hash = "modal";
 		setIsLoading(true);
 		axios
 			.get(`/api/feed/likes/${post._id}`)
@@ -83,16 +87,12 @@ export default function Likes(props) {
 			});
 	};
 	const exiting = () => {
-		return setUsers([]);
+		setUsers([]);
 	};
 
 	const handleClose = () => {
 		setShow(false);
-		history.goBack();
-	};
-
-	const specialClose = () => {
-		setShow(false);
+		if (props.location.hash === "#modal") history.goBack();
 	};
 
 	const handleShow = () => {
@@ -119,7 +119,7 @@ export default function Likes(props) {
 		<>
 			<Button
 				onClick={handleShow}
-				style={{marginLeft: "1rem", display: likes ? null : `none`}}
+				style={{marginLeft: "1rem", display: likes ? "" : `none`}}
 			>
 				{likes === 1 ? `${likes} like` : `${likes} likes`}
 			</Button>
@@ -132,7 +132,6 @@ export default function Likes(props) {
 				fullScreen={width < 500}
 				onEntering={entering}
 				onExiting={exiting}
-				onKeyPress={specialClose}
 				scroll="paper"
 			>
 				<DialogTitle

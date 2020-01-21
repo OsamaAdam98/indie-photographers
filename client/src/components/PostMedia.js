@@ -182,7 +182,7 @@ export default function PostMedia(props) {
 			) : (
 				""
 			)}
-			<Likes likes={likes} post={feedPost} />
+			<Likes likes={likes} post={feedPost} {...props} />
 			<CardActions disableSpacing>
 				<IconButton
 					aria-label="add to favorites"

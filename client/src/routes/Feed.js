@@ -94,6 +94,7 @@ export default function Feed(props) {
 			return (
 				<div ref={lastElementRef} key={feedPost._id}>
 					<PostMedia
+						{...props}
 						feedPost={feedPost}
 						isLoading={isLoading}
 						currentUser={user}
@@ -106,6 +107,7 @@ export default function Feed(props) {
 			return (
 				<div key={feedPost._id}>
 					<PostMedia
+						{...props}
 						feedPost={feedPost}
 						isLoading={isLoading}
 						currentUser={user}
