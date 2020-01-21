@@ -49,12 +49,9 @@ export default function LeftDrawer(props) {
 
 	const userProfile = (
 		<div>
-			<img
-				src="/accountBackground.png"
-				alt="account-background"
+			<div
 				style={{
-					objectFit: "cover",
-					objectPosition: "50% 50%",
+					backgroundColor: "#212121",
 					height: "100px",
 					width: "100%"
 				}}
@@ -95,9 +92,9 @@ export default function LeftDrawer(props) {
 				<ListItem button onClick={() => history.push("/feed/")}>
 					Feed
 				</ListItem>
-				<ListItem button onClick={() => history.push("/marketplace/")}>
+				{/* <ListItem button onClick={() => history.push("/marketplace/")}>
 					Store
-				</ListItem>
+				</ListItem> */}
 			</List>
 		</div>
 	);
