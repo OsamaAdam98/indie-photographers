@@ -6,8 +6,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
-import Image from "material-ui-image";
 import {Link} from "react-router-dom";
+import {Avatar} from "@material-ui/core";
 
 const drawerWidth = 280;
 
@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 	drawerPaper: {
 		width: drawerWidth
+	},
+	avatarLarge: {
+		width: theme.spacing(10),
+		height: theme.spacing(10)
 	}
 }));
 
@@ -44,24 +48,36 @@ export default function LeftDrawer(props) {
 	};
 
 	const userProfile = (
-		<Link
-			to={
-				user.profilePicture
-					? `/profile/${user._id}`
-					: `${window.location.pathname}`
-			}
-		>
-			<Image
-				src={
-					user.profilePicture
-						? user.profilePicture
-						: "https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-7.png"
-				}
-				aspectRatio={16 / 16}
-				disableSpinner={true}
-				disableTransition={true}
+		<div>
+			<img
+				src="/accountBackground.png"
+				alt="account-background"
+				style={{
+					objectFit: "cover",
+					objectPosition: "50% 50%",
+					height: "100px",
+					width: "100%"
+				}}
 			/>
-		</Link>
+			<Link
+				to={
+					user.profilePicture
+						? `/profile/${user._id}`
+						: `${window.location.pathname}`
+				}
+			>
+				<Avatar
+					src={user.profilePicture ? user.profilePicture : ""}
+					alt={user.username ? user.username : ""}
+					className={classes.avatarLarge}
+					style={{
+						position: "absolute",
+						top: "10px",
+						left: "10px"
+					}}
+				/>
+			</Link>
+		</div>
 	);
 
 	const sideList = () => (

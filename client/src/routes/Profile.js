@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
 	card: {
 		maxWidth: 345,
 		margin: theme.spacing(2)
+	},
+	cardMedia: {
+		maxHeight: 345
 	}
 }));
 
@@ -49,8 +52,7 @@ export default function Profile(props) {
 				localStorage.setItem(`${props.match.params.id}`, JSON.stringify(data));
 			})
 			.catch((err) => console.log(err));
-		// eslint-disable-next-line
-	}, []);
+	}, [props.match.params.id]);
 
 	if (isLoading) {
 		return (
@@ -71,12 +73,18 @@ export default function Profile(props) {
 			<Grid container direction="column" alignItems="center" justify="center">
 				<Box minWidth={`${width < 345 ? `100%` : ``}`}>
 					<Card className={classes.card}>
-						<CardMedia
-							component="img"
-							alt="Profile picture"
-							height="345"
-							image={pic}
-						/>
+						<CardMedia className={classes.cardMedia}>
+							<img
+								src={pic}
+								alt={username}
+								style={{
+									objectFit: "cover",
+									objectPosition: "50% 50%",
+									width: "100%",
+									height: "345px"
+								}}
+							/>
+						</CardMedia>
 						<CardActionArea>
 							<CardContent>
 								<Typography gutterBottom variant="h5" component="h2">
