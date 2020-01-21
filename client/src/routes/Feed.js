@@ -147,7 +147,12 @@ export default function Feed(props) {
 						setOpenError={setOpenError}
 						errorMsg={errorMsg}
 					/>
-					<PostModal isLogged={isLogged} user={user} setNewPost={setNewPost} />
+					<PostModal
+						isLogged={isLogged}
+						user={user}
+						setNewPost={setNewPost}
+						{...props}
+					/>
 				</Box>
 			</Grid>
 		</>

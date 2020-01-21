@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+import {useHistory} from "react-router-dom";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -32,6 +33,7 @@ export default function PostModal(props) {
 	const {isLogged, user, setNewPost} = props;
 
 	const classes = useStyles();
+	const history = useHistory();
 
 	const [show, setShow] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
@@ -39,6 +41,10 @@ export default function PostModal(props) {
 	const [photo, setPhoto] = useState("");
 	const [uploadProgress, setUploadProgress] = useState(0);
 	const [isUploading, setIsUploading] = useState(false);
+
+	useEffect(() => {
+		if (props.location.hash === "") setShow(false);
+	}, [props.location.hash]);
 
 	const onUpload = (e) => {
 		const files = e.target.files;
@@ -70,11 +76,13 @@ export default function PostModal(props) {
 	const handleClose = () => {
 		setShow(false);
 		setErrorMsg("");
+		if (props.location.hash === "#modal") history.goBack();
 	};
 
 	const handleShow = () => {
 		setShow(true);
 		setErrorMsg("");
+		window.location.hash = "modal";
 	};
 
 	const handleSubmit = (event) => {
