@@ -1,6 +1,7 @@
 {
 	"short_name": "Indie",
 	"name": "Indie Photographers",
+	"description": "A website for the independent photographers community",
 	"icons": [
 		{
 			"src": "favicon.ico",
@@ -13,7 +14,7 @@
 			"type": "image/png"
 		}
 	],
-	"start_url": "./index.html",
+	"start_url": "/feed/",
 	"display": "standalone",
 	"theme_color": "#000000",
 	"background_color": "#ffffff"
