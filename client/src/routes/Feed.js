@@ -59,7 +59,11 @@ export default function Feed(props) {
 				if (err) {
 					setErrorMsg("Can't connect to the internet!");
 					setOpenError(true);
-					setHasMore(cachedData.length > 0);
+					if (cachedData) {
+						setHasMore(cachedData.length > 0);
+					} else {
+						setHasMore(false);
+					}
 					// const cachedPages = localStorage.getItem("cachedPages");
 					// for (let i = 1; i <= cachedPages; i++) {
 					// 	setPosts((prevPosts) => [
