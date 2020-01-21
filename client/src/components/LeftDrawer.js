@@ -102,6 +102,7 @@ export default function LeftDrawer(props) {
 				open={state}
 				onClose={toggleDrawer(false)}
 				onOpen={toggleDrawer(true)}
+				swipeAreaWidth={80}
 				className={classes.drawer}
 				classes={{
 					paper: classes.drawerPaper
