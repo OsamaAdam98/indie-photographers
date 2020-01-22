@@ -14,6 +14,7 @@ import {
 	Button,
 	Typography
 } from "@material-ui/core";
+import PhotoPreview from "../components/modals/PhotoPreview.modal";
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -29,6 +30,11 @@ export default function Profile(props) {
 	const [username, setUsername] = useState("");
 	const [pic, setPic] = useState("");
 	const [isLoading, setIsloading] = useState(true);
+	const [show, setShow] = useState(false);
+
+	useEffect(() => {
+		if (props.location.hash === "") setShow(false);
+	}, [props.location.hash]);
 
 	const {width} = useWindowDimensions();
 
@@ -76,18 +82,18 @@ export default function Profile(props) {
 			<Grid container direction="column" alignItems="center" justify="center">
 				<Box minWidth={`${width < 345 ? `100%` : ``}`}>
 					<Card className={classes.card}>
-						<CardMedia className={classes.cardMedia}>
-							<img
-								src={pic}
-								alt={username}
-								style={{
-									objectFit: "cover",
-									objectPosition: "50% 50%",
-									width: "100%",
-									height: "345px"
-								}}
-							/>
-						</CardMedia>
+						<CardActionArea>
+							<CardMedia className={classes.cardMedia}>
+								<PhotoPreview
+									photo={pic}
+									username={username}
+									maxHeight={345}
+									show={show}
+									setShow={setShow}
+									{...props}
+								/>
+							</CardMedia>
+						</CardActionArea>
 						<CardActionArea>
 							<CardContent>
 								<Typography gutterBottom variant="h5" component="h2">
