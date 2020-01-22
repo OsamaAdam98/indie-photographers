@@ -11,12 +11,13 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import {CardActions} from "@material-ui/core";
+import {CardActions, CardActionArea} from "@material-ui/core";
 import ShareIcon from "@material-ui/icons/Share";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Likes from "./modals/Likes.modal";
+import PhotoPreview from "./modals/PhotoPreview.modal";
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -24,12 +25,20 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(2)
 	},
 	media: {
-		height: 250
+		maxHeight: 250
 	}
 }));
 
 export default function PostMedia(props) {
-	const {currentUser, handleDelete, feedPost} = props;
+	const {
+		currentUser,
+		handleDelete,
+		feedPost,
+		showLikes,
+		setShowLikes,
+		showPrev,
+		setShowPrev
+	} = props;
 	const {user} = feedPost;
 	const classes = useStyles();
 
@@ -174,15 +183,27 @@ export default function PostMedia(props) {
 			</CardContent>
 
 			{feedPost.photo ? (
-				<CardMedia
-					className={classes.media}
-					image={feedPost.photo}
-					title="feedPost image"
-				/>
+				<CardActionArea>
+					<CardMedia className={classes.media}>
+						<PhotoPreview
+							show={showPrev}
+							setShow={setShowPrev}
+							pic={feedPost.photo}
+							username={feedPost.username}
+							{...props}
+						/>
+					</CardMedia>
+				</CardActionArea>
 			) : (
 				""
 			)}
-			<Likes likes={likes} post={feedPost} {...props} />
+			<Likes
+				likes={likes}
+				post={feedPost}
+				show={showLikes}
+				setShow={setShowLikes}
+				{...props}
+			/>
 			<CardActions disableSpacing>
 				<IconButton
 					aria-label="add to favorites"

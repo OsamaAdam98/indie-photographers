@@ -6,6 +6,7 @@ import Marketplace from "./routes/Marketplace";
 import Profile from "./routes/Profile";
 import Feed from "./routes/Feed";
 import MenuAppBar from "./components/MenuAppBar";
+import SnackAlert from "./components/SnackAlert";
 
 function App() {
 	const [isLogged, setIsLogged] = useState(
@@ -13,6 +14,9 @@ function App() {
 	);
 	const [user, setUser] = useState({admin: false});
 
+	const [openError, setOpenError] = useState(false);
+	const [errorMsg, setErrorMsg] = useState("");
+	const [severity, setSeverity] = useState("");
 	const [pwa, setPwa] = useState();
 	const [showBtn, setShowBtn] = useState(
 		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -21,23 +25,37 @@ function App() {
 			!(
 				window.matchMedia("(display-mode: standalone)").matches ||
 				window.navigator.standalone === true
-			)
+			) &&
+			pwa
 	);
 
 	window.addEventListener("beforeinstallprompt", (event) => {
 		setPwa(event);
-		console.log("Event triggered");
 	});
 
 	window.addEventListener("appinstalled", (e) => {
 		setShowBtn(false);
+		setErrorMsg("App installed!");
+		setSeverity("success");
+		setOpenError(true);
 	});
 
 	const handleClick = () => {
-		pwa.prompt();
-		pwa.userChoice.then((choiceResult) => {
-			setPwa(null);
-		});
+		if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+			setErrorMsg(
+				`Please, open the share menu and select "Add to Home Screen"`
+			);
+			setSeverity("info");
+			setOpenError(true);
+		} else {
+			pwa.prompt();
+			pwa.userChoice.then((choiceResult) => {
+				setErrorMsg("App downloading in the background..");
+				setSeverity("info");
+				setOpenError(true);
+				setPwa(null);
+			});
+		}
 	};
 
 	useEffect(() => {
@@ -105,6 +123,12 @@ function App() {
 					render={(props) => (
 						<Feed {...props} isLogged={isLogged} user={user} />
 					)}
+				/>
+				<SnackAlert
+					severity={severity}
+					errorMsg={errorMsg}
+					setOpenError={setOpenError}
+					openError={openError}
 				/>
 			</>
 		</Router>

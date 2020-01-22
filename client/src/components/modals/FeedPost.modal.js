@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
@@ -9,9 +9,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FAB from "../FAB";
 import EditIcon from "@material-ui/icons/Edit";
-import {LinearProgress} from "@material-ui/core";
-import {PhotoCamera} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
+import useWindowDimensions from "../utilities/WindowDimensions";
 
 const useStyles = makeStyles((theme) => ({
 	input: {
@@ -23,66 +22,40 @@ const useStyles = makeStyles((theme) => ({
 	},
 	buttonStyle: {
 		width: "100%"
-	},
-	iconStyle: {
-		marginRight: "1rem"
 	}
 }));
 
 export default function PostModal(props) {
-	const {isLogged, user, setNewPost} = props;
+	const {
+		isLogged,
+		user,
+		setNewPost,
+		photo,
+		isUploading,
+		onUpload,
+		show,
+		setShow
+	} = props;
 
 	const classes = useStyles();
 	const history = useHistory();
+	const {height} = useWindowDimensions();
 
-	const [show, setShow] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 	const [msg, setMsg] = useState("");
-	const [photo, setPhoto] = useState("");
-	const [uploadProgress, setUploadProgress] = useState(0);
-	const [isUploading, setIsUploading] = useState(false);
-
-	useEffect(() => {
-		if (props.location.hash === "") setShow(false);
-	}, [props.location.hash]);
-
-	const onUpload = (e) => {
-		const files = e.target.files;
-		console.log("Clicked");
-
-		const formData = new FormData();
-		formData.append("file", files[0]);
-		formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET);
-		axios
-			.post(process.env.REACT_APP_CLOUDINARY_URL, formData, {
-				onUploadProgress: (progress) => {
-					setIsUploading(true);
-					setUploadProgress((progress.loaded / progress.total) * 100);
-					console.log((progress.loaded / progress.total) * 100);
-				}
-			})
-			.then((res) => {
-				setIsUploading(false);
-				const {secure_url} = res.data;
-				setPhoto(secure_url);
-			})
-			.catch((err) => {
-				if (err) setErrorMsg("Upload failed!");
-			});
-	};
 
 	const msgChange = (event) => setMsg(event.target.value);
 
 	const handleClose = () => {
 		setShow(false);
 		setErrorMsg("");
-		if (props.location.hash === "#modal") history.goBack();
+		if (props.location.hash === "#feed-post") history.goBack();
 	};
 
 	const handleShow = () => {
 		setShow(true);
 		setErrorMsg("");
-		window.location.hash = "modal";
+		window.location.hash = "feed-post";
 	};
 
 	const handleSubmit = (event) => {
@@ -96,28 +69,25 @@ export default function PostModal(props) {
 		};
 		const token = localStorage.getItem("token");
 
-		if (isUploading) {
-			setErrorMsg("Picture still uploading..");
-		} else {
-			axios
-				.post("/api/feed/add", subData, {
-					headers: {
-						"x-auth-token": `${token}`
-					}
-				})
-				.then((res) => {
-					setNewPost(res.data);
-					localStorage.setItem(
-						`feedPage1`,
-						JSON.stringify([
-							res.data,
-							...JSON.parse(localStorage.getItem(`feedPage1`))
-						])
-					);
-					handleClose();
-				})
-				.catch((err) => console.log(err));
-		}
+		axios
+			.post("/api/feed/add", subData, {
+				headers: {
+					"x-auth-token": `${token}`
+				}
+			})
+			.then((res) => {
+				setNewPost(res.data);
+				localStorage.setItem(
+					`feedPage1`,
+					JSON.stringify([
+						res.data,
+						...JSON.parse(localStorage.getItem(`feedPage1`))
+					])
+				);
+				handleClose();
+			})
+			.catch((err) => console.log(err));
+
 		event.preventDefault();
 	};
 
@@ -141,6 +111,8 @@ export default function PostModal(props) {
 				open={show}
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
+				fullWidth={true}
+				maxWidth="xs"
 			>
 				<form onSubmit={handleSubmit}>
 					<DialogTitle id="form-dialog-title">Post</DialogTitle>
@@ -154,8 +126,30 @@ export default function PostModal(props) {
 							value={msg}
 							onChange={msgChange}
 							autoFocus={true}
+							fullWidth={true}
 						/>
-						<div className={classes.buttonDivStyle}>
+						<img
+							src={photo}
+							alt="uploaded"
+							style={{
+								objectFit: "scale-down",
+								objectPosition: "50% 50%",
+								display: photo ? `flex` : `none`,
+								width: "100%",
+								alignItems: "center",
+								marginTop: "1rem",
+								maxHeight: `${height / 2}px`
+							}}
+						/>
+						{subError}
+					</DialogContent>
+					<DialogActions>
+						<div
+							style={{
+								position: "absolute",
+								left: "1rem"
+							}}
+						>
 							<input
 								accept="image/*"
 								className={classes.input}
@@ -165,24 +159,17 @@ export default function PostModal(props) {
 								onChange={onUpload}
 							/>
 							<label htmlFor="outlined-button-file">
-								<Button
-									variant="outlined"
-									color="primary"
-									component="span"
-									className={classes.buttonStyle}
-								>
-									<PhotoCamera className={classes.iconStyle} />
+								<Button component="span" color="primary" disabled={isUploading}>
 									Upload
 								</Button>
 							</label>
 						</div>
-						{isUploading ? (
-							<LinearProgress variant="determinate" value={uploadProgress} />
-						) : null}
-						{subError}
-					</DialogContent>
-					<DialogActions>
-						<Button onClick={handleSubmit} color="primary">
+
+						<Button
+							onClick={handleSubmit}
+							color="primary"
+							disabled={isUploading}
+						>
 							Post
 						</Button>
 						<Button onClick={handleClose}>Cancel</Button>

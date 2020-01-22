@@ -7,6 +7,7 @@ import useWindowDimensions from "../components/utilities/WindowDimensions";
 import {Grid, Box} from "@material-ui/core";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import SnackAlert from "../components/SnackAlert";
+import {LinearProgress} from "@material-ui/core";
 
 export default function Feed(props) {
 	const {isLogged, user} = props;
@@ -19,6 +20,62 @@ export default function Feed(props) {
 	const [hasMore, setHasMore] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 	const [openError, setOpenError] = useState(false);
+	const [severity, setSeverity] = useState("");
+	const [photo, setPhoto] = useState("");
+	const [uploadProgress, setUploadProgress] = useState(0);
+	const [isUploading, setIsUploading] = useState(false);
+	const [showLikes, setShowLikes] = useState(false);
+	const [showPrev, setShowPrev] = useState(false);
+	const [showPost, setShowPost] = useState(false);
+
+	const hideAll = () => {
+		setShowLikes(false);
+		setShowPost(false);
+		setShowPrev(false);
+	};
+
+	useEffect(() => {
+		if (props.location.hash === "") hideAll();
+	});
+
+	const config = {
+		onUploadProgress: (progressEvent) => {
+			setIsUploading(true);
+			let percentCompleted = Math.round(
+				(progressEvent.loaded * 100) / progressEvent.total
+			);
+			setUploadProgress(percentCompleted);
+		}
+	};
+
+	const onUpload = (e) => {
+		const files = e.target.files;
+		console.log("Clicked");
+		const formData = new FormData();
+		formData.append("file", files[0]);
+		formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET);
+
+		setErrorMsg(
+			"Uploading photo, we'll notify you when the upload is complete."
+		);
+		setSeverity("info");
+		setOpenError(true);
+
+		axios
+			.post(process.env.REACT_APP_CLOUDINARY_URL, formData, config)
+			.then((res) => {
+				setIsUploading(false);
+				const {secure_url} = res.data;
+				setPhoto(secure_url);
+				setErrorMsg("Upload complete!");
+				setSeverity("success");
+				setOpenError(true);
+			})
+			.catch((err) => {
+				setErrorMsg("Upload failed!");
+				console.log(err);
+			});
+	};
 
 	const handleDelete = (id) => {
 		const token = localStorage.getItem("token");
@@ -28,7 +85,11 @@ export default function Feed(props) {
 					"x-auth-token": `${token}`
 				}
 			})
-			.then((res) => console.log(res))
+			.then((res) => {
+				setErrorMsg("Post deleted!");
+				setSeverity("success");
+				setOpenError(true);
+			})
 			.then(() => window.location.reload())
 			.catch((err) => console.log(err));
 	};
@@ -58,6 +119,7 @@ export default function Feed(props) {
 			.catch((err) => {
 				if (err) {
 					setErrorMsg("Can't connect to the internet!");
+					setSeverity("warning");
 					setOpenError(true);
 					if (cachedData) {
 						setHasMore(cachedData.length > 0);
@@ -99,6 +161,10 @@ export default function Feed(props) {
 				<div ref={lastElementRef} key={feedPost._id}>
 					<PostMedia
 						{...props}
+						showLikes={showLikes}
+						setShowLikes={setShowLikes}
+						showPrev={showPrev}
+						setShowPrev={setShowPrev}
 						feedPost={feedPost}
 						isLoading={isLoading}
 						currentUser={user}
@@ -112,6 +178,10 @@ export default function Feed(props) {
 				<div key={feedPost._id}>
 					<PostMedia
 						{...props}
+						showLikes={showLikes}
+						setShowLikes={setShowLikes}
+						showPrev={showPrev}
+						setShowPrev={setShowPrev}
 						feedPost={feedPost}
 						isLoading={isLoading}
 						currentUser={user}
@@ -124,10 +194,27 @@ export default function Feed(props) {
 
 	return (
 		<>
+			<LinearProgress
+				variant="determinate"
+				value={uploadProgress}
+				color="secondary"
+				style={{
+					position: "fixed",
+					top: "0px",
+					width: "100%",
+					height: "4.4rem",
+					display: isUploading ? `` : `none`
+				}}
+			/>
+
 			<Grid container direction="column" alignItems="center" justify="center">
 				<Box maxWidth="500px" width={`${width > 500 ? `500px` : `100%`}`}>
 					{newPost && (
 						<PostMedia
+							showLikes={showLikes}
+							setShowLikes={setShowLikes}
+							showPrev={showPrev}
+							setShowPrev={setShowPrev}
 							feedPost={newPost}
 							isLoading={isLoading}
 							currentUser={user}
@@ -146,7 +233,7 @@ export default function Feed(props) {
 						/>
 					) : null}
 					<SnackAlert
-						severity="warning"
+						severity={severity}
 						openError={openError}
 						setOpenError={setOpenError}
 						errorMsg={errorMsg}
@@ -155,6 +242,12 @@ export default function Feed(props) {
 						isLogged={isLogged}
 						user={user}
 						setNewPost={setNewPost}
+						photo={photo}
+						setPhoto={setPhoto}
+						isUploading={isUploading}
+						onUpload={onUpload}
+						show={showPost}
+						setShow={setShowPost}
 						{...props}
 					/>
 				</Box>

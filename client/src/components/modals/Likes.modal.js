@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
 import {Button, Avatar, Divider} from "@material-ui/core";
@@ -16,8 +16,7 @@ import SnackAlert from "../SnackAlert";
 import {IconButton} from "@material-ui/core";
 
 export default function Likes(props) {
-	const {post, likes} = props;
-	const [show, setShow] = useState(false);
+	const {post, likes, show, setShow} = props;
 	const [users, setUsers] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [errorMsg, setErrorMsg] = useState("");
@@ -25,10 +24,6 @@ export default function Likes(props) {
 	const {width} = useWindowDimensions();
 
 	const history = useHistory();
-
-	useEffect(() => {
-		if (props.location.hash === "") setShow(false);
-	}, [props]);
 
 	// useEffect(() => {
 	// 	if (post && show) {
@@ -61,7 +56,7 @@ export default function Likes(props) {
 	// }, [post, show]);
 
 	const entering = () => {
-		window.location.hash = "modal";
+		window.location.hash = "likes";
 		setIsLoading(true);
 		axios
 			.get(`/api/feed/likes/${post._id}`)
@@ -92,7 +87,7 @@ export default function Likes(props) {
 
 	const handleClose = () => {
 		setShow(false);
-		if (props.location.hash === "#modal") history.goBack();
+		if (props.location.hash === "#likes") history.goBack();
 	};
 
 	const handleShow = () => {
@@ -119,7 +114,11 @@ export default function Likes(props) {
 		<>
 			<Button
 				onClick={handleShow}
-				style={{marginLeft: "1rem", display: likes ? "" : `none`}}
+				style={{
+					marginLeft: "1rem",
+					marginTop: "1rem",
+					display: likes ? "" : `none`
+				}}
 			>
 				{likes === 1 ? `${likes} like` : `${likes} likes`}
 			</Button>
