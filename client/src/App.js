@@ -17,7 +17,11 @@ function App() {
 	const [showBtn, setShowBtn] = useState(
 		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 			navigator.userAgent
-		)
+		) &&
+			!(
+				window.matchMedia("(display-mode: standalone)").matches ||
+				window.navigator.standalone === true
+			)
 	);
 
 	window.addEventListener("beforeinstallprompt", (event) => {
