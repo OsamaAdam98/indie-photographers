@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function MenuAppBar(props) {
-	const {isLogged, setIsLogged, user, setUser} = props;
+	const {isLogged, setIsLogged, user, setUser, showBtn, handleClick} = props;
 	const {pathname} = props.location;
 
 	const [position, setPosition] = useState("");
@@ -59,7 +59,7 @@ function MenuAppBar(props) {
 		<div className={(classes.root, classes.barMargin)}>
 			<AppBar position="fixed" className={classes.appBar}>
 				<Toolbar>
-					<LeftDrawer user={user} />
+					<LeftDrawer user={user} showBtn={showBtn} handleClick={handleClick} />
 					<Typography variant="h6" className={classes.title}>
 						{position}
 					</Typography>

@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function LeftDrawer(props) {
-	const {user} = props;
+	const {user, showBtn, handleClick} = props;
 	const history = useHistory();
 
 	const classes = useStyles();
@@ -85,6 +85,27 @@ export default function LeftDrawer(props) {
 			onKeyDown={toggleDrawer(false)}
 		>
 			{userProfile}
+			<ListItem
+				button
+				onClick={handleClick}
+				style={{
+					backgroundColor: "#3f50b5",
+					display: showBtn ? "" : "none"
+				}}
+			>
+				<div
+					style={{
+						width: "100%",
+						height: "3rem",
+						textAlign: "center",
+						verticalAlign: "center",
+						lineHeight: "3rem",
+						color: "#ffffff"
+					}}
+				>
+					INSTALL APP
+				</div>
+			</ListItem>
 			<List>
 				<ListItem button onClick={() => history.push("/")}>
 					Home

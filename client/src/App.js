@@ -13,6 +13,29 @@ function App() {
 	);
 	const [user, setUser] = useState({admin: false});
 
+	const [pwa, setPwa] = useState();
+	const [showBtn, setShowBtn] = useState(
+		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+			navigator.userAgent
+		)
+	);
+
+	window.addEventListener("beforeinstallprompt", (event) => {
+		setPwa(event);
+		console.log("Event triggered");
+	});
+
+	window.addEventListener("appinstalled", (e) => {
+		setShowBtn(false);
+	});
+
+	const handleClick = () => {
+		pwa.prompt();
+		pwa.userChoice.then((choiceResult) => {
+			setPwa(null);
+		});
+	};
+
 	useEffect(() => {
 		const token = localStorage.getItem("token");
 		const userInfo = localStorage.getItem("userInfo");
@@ -53,8 +76,16 @@ function App() {
 					setIsLogged={setIsLogged}
 					user={user}
 					setUser={setUser}
+					showBtn={showBtn}
+					handleClick={handleClick}
 				/>
-				<Route exact path="/" component={Home} />
+				<Route
+					exact
+					path="/"
+					render={(props) => (
+						<Home {...props} showBtn={showBtn} handleClick={handleClick} />
+					)}
+				/>
 				<Route
 					path="/marketplace"
 					render={(props) => (
