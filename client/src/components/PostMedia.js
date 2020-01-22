@@ -2,20 +2,23 @@ import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
-import {makeStyles} from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import {CardActions, CardActionArea} from "@material-ui/core";
+import {
+	CardActions,
+	CardActionArea,
+	Menu,
+	MenuItem,
+	makeStyles,
+	Card,
+	CardHeader,
+	CardContent,
+	CardMedia,
+	Avatar,
+	Typography,
+	IconButton
+} from "@material-ui/core";
 import ShareIcon from "@material-ui/icons/Share";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import Likes from "./modals/Likes.modal";
 import PhotoPreview from "./modals/PhotoPreview.modal";
 

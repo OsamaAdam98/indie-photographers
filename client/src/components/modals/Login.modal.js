@@ -1,13 +1,15 @@
 import React, {useState} from "react";
 import axios from "axios";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import FBButton from "../FBButton";
 import ProfileAvatar from "../ProfileAvatar";
+import {
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
+	TextField,
+	Button
+} from "@material-ui/core";
 
 export default function Login(props) {
 	const {isLogged, setIsLogged, setUser, user} = props;

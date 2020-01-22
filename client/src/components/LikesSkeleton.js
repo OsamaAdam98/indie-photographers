@@ -1,5 +1,5 @@
 import React from "react";
-import Skeleton from "@material-ui/lab/Skeleton";
+import {Skeleton} from "@material-ui/lab";
 import {ListItem, ListItemText, ListItemAvatar} from "@material-ui/core";
 
 export default function LikesSkeleton(props) {

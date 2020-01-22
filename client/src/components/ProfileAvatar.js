@@ -1,9 +1,6 @@
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
-import Avatar from "@material-ui/core/Avatar";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import IconButton from "@material-ui/core/IconButton";
+import {Avatar, Menu, MenuItem, IconButton} from "@material-ui/core";
 
 export default function ProfileAvatar(props) {
 	const {user, setIsLogged} = props;

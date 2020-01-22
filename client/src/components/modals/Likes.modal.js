@@ -1,19 +1,23 @@
 import React, {useState} from "react";
 import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
-import {Button, Avatar, Divider} from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import LikesSkeleton from "../LikesSkeleton";
 import useWindowDimensions from "../utilities/WindowDimensions";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import SnackAlert from "../SnackAlert";
-import {IconButton} from "@material-ui/core";
+import {
+	IconButton,
+	List,
+	ListItem,
+	ListItemText,
+	ListItemAvatar,
+	Dialog,
+	DialogContent,
+	DialogTitle,
+	Button,
+	Avatar,
+	Divider
+} from "@material-ui/core";
 
 export default function Likes(props) {
 	const {post, likes, show, setShow} = props;

@@ -1,8 +1,6 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
-import {makeStyles, useTheme} from "@material-ui/core/styles";
-import Zoom from "@material-ui/core/Zoom";
-import Fab from "@material-ui/core/Fab";
+import {Fab, Zoom, makeStyles, useTheme} from "@material-ui/core";
 import {green} from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({

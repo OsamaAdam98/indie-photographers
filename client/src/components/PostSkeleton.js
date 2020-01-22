@@ -1,13 +1,15 @@
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
-import IconButton from "@material-ui/core/IconButton";
-import Skeleton from "@material-ui/lab/Skeleton";
-import {CardActions} from "@material-ui/core";
 import ShareIcon from "@material-ui/icons/Share";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import {Skeleton} from "@material-ui/lab";
+import {
+	CardActions,
+	Card,
+	CardHeader,
+	CardContent,
+	IconButton,
+	makeStyles
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
 	card: {

@@ -4,10 +4,9 @@ import PostModal from "../components/modals/FeedPost.modal";
 import PostMedia from "../components/PostMedia";
 import PostSkeleton from "../components/PostSkeleton";
 import useWindowDimensions from "../components/utilities/WindowDimensions";
-import {Grid, Box} from "@material-ui/core";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import SnackAlert from "../components/SnackAlert";
-import {LinearProgress} from "@material-ui/core";
+import {LinearProgress, Grid, Box} from "@material-ui/core";
 
 export default function Feed(props) {
 	const {isLogged, user} = props;
