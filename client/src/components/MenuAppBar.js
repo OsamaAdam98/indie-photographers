@@ -52,7 +52,7 @@ function MenuAppBar(props) {
 					<Link to="/">
 						<Avatar
 							alt="indie photographers"
-							src="/logo.png"
+							src={process.env.PUBLIC_URL + `/logo.png`}
 							style={{
 								marginRight: "1rem"
 							}}

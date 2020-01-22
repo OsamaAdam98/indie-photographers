@@ -36,7 +36,8 @@ export default function PostModal(props) {
 		isUploading,
 		onUpload,
 		show,
-		setShow
+		setShow,
+		offline
 	} = props;
 
 	const classes = useStyles();
@@ -98,6 +99,7 @@ export default function PostModal(props) {
 	const subButton = isLogged ? (
 		<FAB
 			handleClick={handleShow}
+			offline={offline}
 			currentLocation="/feed/"
 			icon={<EditIcon />}
 		/>

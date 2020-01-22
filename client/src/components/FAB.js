@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function FAB(props) {
+	const {offline} = props;
 	const classes = useStyles();
 	const theme = useTheme();
 
@@ -41,6 +42,7 @@ function FAB(props) {
 			in={props.location.pathname === props.currentLocation}
 			timeout={transitionDuration}
 			style={{
+				display: offline ? "none" : "",
 				transitionDelay: `${
 					props.location.pathname === props.currentLocation
 						? transitionDuration.exit

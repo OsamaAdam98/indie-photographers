@@ -53,6 +53,9 @@ function BottomBar(props) {
 				<BottomNavigationAction
 					value={`/profile/${user._id}`}
 					icon={<AccountCircleIcon />}
+					style={{
+						display: localStorage.getItem("token") ? "" : "none"
+					}}
 				/>
 				<BottomNavigationAction
 					value="install"

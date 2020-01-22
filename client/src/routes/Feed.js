@@ -26,6 +26,7 @@ export default function Feed(props) {
 	const [showLikes, setShowLikes] = useState(false);
 	const [showPrev, setShowPrev] = useState(false);
 	const [showPost, setShowPost] = useState(false);
+	const [offline, setOffline] = useState(false);
 
 	const hideAll = () => {
 		setShowLikes(false);
@@ -113,12 +114,14 @@ export default function Feed(props) {
 				// localStorage.setItem("cachedPages", page);
 				setErrorMsg("");
 				setOpenError(false);
+				setOffline(false);
 				setIsLoading(false);
 			})
 			.catch((err) => {
 				if (err) {
 					setErrorMsg("Can't connect to the internet!");
 					setSeverity("warning");
+					setOffline(true);
 					setOpenError(true);
 					if (cachedData) {
 						setHasMore(cachedData.length > 0);
@@ -248,6 +251,7 @@ export default function Feed(props) {
 						onUpload={onUpload}
 						show={showPost}
 						setShow={setShowPost}
+						offline={offline}
 						{...props}
 					/>
 				</Box>

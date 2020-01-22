@@ -19,7 +19,15 @@ export default function SnackAlert(props) {
 
 	return (
 		<>
-			<Snackbar open={openError} autoHideDuration={6000} onClose={handleClose}>
+			<Snackbar
+				open={openError}
+				autoHideDuration={6000}
+				onClose={handleClose}
+				style={{
+					position: "fixed",
+					bottom: "70px"
+				}}
+			>
 				<Alert severity={severity}>{errorMsg}</Alert>
 			</Snackbar>
 		</>
