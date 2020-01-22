@@ -29,13 +29,13 @@ function App() {
 			!(
 				window.matchMedia("(display-mode: standalone)").matches ||
 				window.navigator.standalone === true
-			)
+			) &&
+			pwa
 	);
 
 	window.addEventListener("beforeinstallprompt", (event) => {
 		event.preventDefault();
 		setPwa(event);
-		setShowBtn(true);
 	});
 
 	window.addEventListener("appinstalled", (e) => {
@@ -55,11 +55,9 @@ function App() {
 		} else {
 			pwa.prompt();
 			pwa.userChoice.then((choiceResult) => {
-				if (choiceResult.outcome === "accepted") {
-					setErrorMsg("App downloading in the background..");
-					setSeverity("info");
-					setOpenError(true);
-				}
+				setErrorMsg("App downloading in the background..");
+				setSeverity("info");
+				setOpenError(true);
 				setPwa(null);
 			});
 		}
