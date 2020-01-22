@@ -43,16 +43,18 @@ export default function PostModal(props) {
 
 	const [errorMsg, setErrorMsg] = useState("");
 	const [msg, setMsg] = useState("");
+	const [selfShow, setSelfShow] = useState(false);
 
 	const msgChange = (event) => setMsg(event.target.value);
 
 	const handleClose = () => {
-		setShow(false);
+		setSelfShow(false);
 		setErrorMsg("");
 		if (props.location.hash === "#feed-post") history.goBack();
 	};
 
 	const handleShow = () => {
+		setSelfShow(true);
 		setShow(true);
 		setErrorMsg("");
 		window.location.hash = "feed-post";
@@ -108,7 +110,7 @@ export default function PostModal(props) {
 		<>
 			{subButton}
 			<Dialog
-				open={show}
+				open={show && selfShow}
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
 				fullWidth={true}

@@ -21,42 +21,13 @@ export default function Likes(props) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [errorMsg, setErrorMsg] = useState("");
 	const [openError, setOpenError] = useState(false);
+	const [selfShow, setSelfShow] = useState(false);
 	const {width} = useWindowDimensions();
 
 	const history = useHistory();
 
-	// useEffect(() => {
-	// 	if (post && show) {
-	// 		history.push("/feed/");
-	// 		setIsLoading(true);
-	// 		axios
-	// 			.get(`/api/feed/likes/${post._id}`)
-	// 			.then((res) => {
-	// 				setUsers(res.data.map((data) => data.user));
-	// 				localStorage.setItem(`${post._id}`, JSON.stringify(res.data));
-	// 				setIsLoading(false);
-	// 				setOpenError(false);
-	// 				setErrorMsg("");
-	// 			})
-	// 			.catch((err) => {
-	// 				console.log(err);
-	// 				let cachedData = JSON.parse(localStorage.getItem(`${post._id}`));
-	// 				if (cachedData) {
-	// 					setErrorMsg("Can't connect, fetching from cache.");
-	// 					setOpenError(true);
-	// 					setUsers(cachedData.map((data) => data.user));
-	// 					setIsLoading(false);
-	// 				} else {
-	// 					setErrorMsg("Can't connect to the internet!");
-	// 					setOpenError(true);
-	// 				}
-	// 			});
-	// 	}
-	// 	return setUsers([]);
-	// }, [post, show]);
-
 	const entering = () => {
-		window.location.hash = "likes";
+		handleShow();
 		setIsLoading(true);
 		axios
 			.get(`/api/feed/likes/${post._id}`)
@@ -81,17 +52,20 @@ export default function Likes(props) {
 				}
 			});
 	};
+
 	const exiting = () => {
 		setUsers([]);
 	};
 
 	const handleClose = () => {
-		setShow(false);
+		setSelfShow(false);
 		if (props.location.hash === "#likes") history.goBack();
 	};
 
 	const handleShow = () => {
+		setSelfShow(true);
 		setShow(true);
+		window.location.hash = "likes";
 	};
 
 	const likedUsers = users.map((user) => {
@@ -123,7 +97,7 @@ export default function Likes(props) {
 				{likes === 1 ? `${likes} like` : `${likes} likes`}
 			</Button>
 			<Dialog
-				open={show}
+				open={show && selfShow}
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
 				maxWidth="xs"

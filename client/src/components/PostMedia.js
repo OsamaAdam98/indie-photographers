@@ -188,8 +188,7 @@ export default function PostMedia(props) {
 						<PhotoPreview
 							show={showPrev}
 							setShow={setShowPrev}
-							pic={feedPost.photo}
-							username={feedPost.username}
+							post={feedPost}
 							{...props}
 						/>
 					</CardMedia>

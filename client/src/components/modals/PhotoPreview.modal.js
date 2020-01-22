@@ -1,24 +1,32 @@
-import React from "react";
+import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
-import Dialog from "@material-ui/core/Dialog";
+import {Dialog} from "@material-ui/core";
+import useWindowDimensions from "../utilities/WindowDimensions";
 
 export default function PhotoPreview(props) {
-	const {pic, username, show, setShow} = props;
+	const {post, show, setShow} = props;
+	const {user, photo} = post;
+	const {username} = user;
+	const {height, width} = useWindowDimensions();
+
+	const [selfShow, setSelfShow] = useState(false);
+
 	const history = useHistory();
 
 	const handleShow = () => {
+		setSelfShow(true);
 		setShow(true);
 		window.location.hash = "photo-preview";
 	};
 
 	const handleClose = () => {
-		setShow(false);
+		setSelfShow(false);
 		if (props.location.hash === "#photo-preview") history.goBack();
 	};
 
 	const imagePreview = (
 		<img
-			src={pic}
+			src={photo}
 			alt={`by, ${username}`}
 			onClick={handleShow}
 			style={{
@@ -32,13 +40,13 @@ export default function PhotoPreview(props) {
 
 	const fullImage = (
 		<img
-			src={pic}
-			alt={`by, ${username}`}
+			src={photo}
+			alt={`max width and height`}
 			style={{
 				objectFit: "scale-down",
 				objectPosition: "50% 50%",
-				maxWidth: "100%",
-				maxHeight: "100%"
+				maxWidth: `${0.8 * width}px`,
+				maxHeight: `${0.8 * height}px`
 			}}
 		/>
 	);
@@ -46,7 +54,7 @@ export default function PhotoPreview(props) {
 	return (
 		<>
 			{imagePreview}
-			<Dialog open={show} onClose={handleClose}>
+			<Dialog open={show && selfShow} onClose={handleClose}>
 				{fullImage}
 			</Dialog>
 		</>
