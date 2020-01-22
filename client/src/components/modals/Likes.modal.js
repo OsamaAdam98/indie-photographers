@@ -108,7 +108,7 @@ export default function Likes(props) {
 				fullWidth={true}
 				fullScreen={width < 500}
 				onEntering={entering}
-				onExiting={exiting}
+				onExit={exiting}
 				scroll="paper"
 			>
 				<DialogTitle
