@@ -1,7 +1,6 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
 import {Fab, Zoom, makeStyles, useTheme} from "@material-ui/core";
-import {green} from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -10,18 +9,11 @@ const useStyles = makeStyles((theme) => ({
 		position: "relative",
 		minHeight: 200
 	},
-	fabGreen: {
-		color: theme.palette.common.white,
-		backgroundColor: green[500],
-		"&:hover": {
-			backgroundColor: green[600]
-		}
-	},
 	customFab: {
 		margin: 0,
 		top: "auto",
 		right: 20,
-		bottom: 20,
+		bottom: 70,
 		left: "auto",
 		position: "fixed"
 	}
@@ -37,7 +29,7 @@ function FAB(props) {
 	};
 
 	const fab = {
-		color: "secondary",
+		color: "primary",
 		className: classes.customFab,
 		icon: props.icon,
 		label: "Edit"

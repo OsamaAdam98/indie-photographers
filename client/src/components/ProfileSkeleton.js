@@ -15,7 +15,7 @@ export default function ProfileSkeleton() {
 	const classes = useStyles();
 
 	return (
-		<>
+		<div>
 			<Card className={classes.card}>
 				<Skeleton variant="rect" className={classes.media} />
 				<CardContent>
@@ -33,6 +33,6 @@ export default function ProfileSkeleton() {
 					}
 				</CardContent>
 			</Card>
-		</>
+		</div>
 	);
 }

@@ -227,7 +227,8 @@ export default function Feed(props) {
 							style={{
 								position: "relative",
 								width: "100%",
-								textAlign: "center"
+								textAlign: "center",
+								marginBottom: "3rem"
 							}}
 						/>
 					) : null}

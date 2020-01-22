@@ -7,13 +7,17 @@ import Profile from "./routes/Profile";
 import Feed from "./routes/Feed";
 import MenuAppBar from "./components/MenuAppBar";
 import SnackAlert from "./components/SnackAlert";
+import BottomBar from "./components/BottomBar";
+import useWindowDimensions from "./components/utilities/WindowDimensions";
 
 function App() {
 	const [isLogged, setIsLogged] = useState(
 		localStorage.getItem("token") ? true : false
 	);
-	const [user, setUser] = useState({admin: false});
 
+	const {width} = useWindowDimensions();
+
+	const [user, setUser] = useState({admin: false});
 	const [openError, setOpenError] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 	const [severity, setSeverity] = useState("");
@@ -101,6 +105,7 @@ function App() {
 					showBtn={showBtn}
 					handleClick={handleClick}
 				/>
+
 				<Route
 					exact
 					path="/"
@@ -130,6 +135,9 @@ function App() {
 					setOpenError={setOpenError}
 					openError={openError}
 				/>
+				{width < 500 && (
+					<BottomBar user={user} showBtn={showBtn} handleClick={handleClick} />
+				)}
 			</>
 		</Router>
 	);

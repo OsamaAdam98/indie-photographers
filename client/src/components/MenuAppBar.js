@@ -1,8 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {withRouter} from "react-router-dom";
+import React from "react";
+import {withRouter, Link} from "react-router-dom";
 import Login from "./modals/Login.modal";
 import LeftDrawer from "./LeftDrawer";
-import {makeStyles, AppBar, Toolbar, Typography} from "@material-ui/core";
+import {
+	makeStyles,
+	AppBar,
+	Toolbar,
+	Typography,
+	Avatar
+} from "@material-ui/core";
+import useWindowDimensions from "./utilities/WindowDimensions";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -27,28 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 function MenuAppBar(props) {
 	const {isLogged, setIsLogged, user, setUser, showBtn, handleClick} = props;
-	const {pathname} = props.location;
-
-	const [position, setPosition] = useState("");
-
-	useEffect(() => {
-		switch (pathname) {
-			case "/":
-				setPosition("Home");
-				break;
-			case "/feed/":
-				setPosition("Feed");
-				break;
-			case "/marketplace/":
-				setPosition("Store");
-				break;
-			case "/profile":
-				setPosition("Profile");
-				break;
-			default:
-				setPosition("User Profile");
-		}
-	}, [pathname]);
+	const {width} = useWindowDimensions();
 
 	const classes = useStyles();
 
@@ -56,9 +42,24 @@ function MenuAppBar(props) {
 		<div className={(classes.root, classes.barMargin)}>
 			<AppBar position="fixed" className={classes.appBar}>
 				<Toolbar>
-					<LeftDrawer user={user} showBtn={showBtn} handleClick={handleClick} />
+					{width > 500 && (
+						<LeftDrawer
+							user={user}
+							showBtn={showBtn}
+							handleClick={handleClick}
+						/>
+					)}
+					<Link to="/">
+						<Avatar
+							alt="indie photographers"
+							src="/logo.png"
+							style={{
+								marginRight: "1rem"
+							}}
+						/>
+					</Link>
 					<Typography variant="h6" className={classes.title}>
-						{position}
+						Indie
 					</Typography>
 					<Login
 						user={user}

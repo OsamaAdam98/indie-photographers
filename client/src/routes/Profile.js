@@ -18,7 +18,7 @@ import PhotoPreview from "../components/modals/PhotoPreview.modal";
 
 const useStyles = makeStyles((theme) => ({
 	card: {
-		maxWidth: 345,
+		maxWidth: 500,
 		margin: theme.spacing(2)
 	},
 	cardMedia: {
