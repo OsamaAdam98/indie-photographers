@@ -47,7 +47,14 @@ function BottomBar(props) {
 				bottom: 0
 			}}
 		>
-			<BottomNavigation value={value} onChange={handleChange}>
+			<BottomNavigation
+				value={value}
+				onChange={handleChange}
+				style={{
+					boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)",
+					backgroundColor: "#fafafa"
+				}}
+			>
 				<BottomNavigationAction value="/" icon={<HomeIcon />} />
 				<BottomNavigationAction value="/feed/" icon={<ViewDayIcon />} />
 				<BottomNavigationAction
