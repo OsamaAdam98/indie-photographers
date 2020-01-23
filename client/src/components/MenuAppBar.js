@@ -10,6 +10,7 @@ import {
 	Avatar
 } from "@material-ui/core";
 import useWindowDimensions from "./utilities/WindowDimensions";
+import logo from "../logo.png";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -52,7 +53,7 @@ function MenuAppBar(props) {
 					<Link to="/">
 						<Avatar
 							alt="indie photographers"
-							src={process.env.PUBLIC_URL + `/logo.png`}
+							src={logo}
 							style={{
 								marginRight: "1rem"
 							}}
