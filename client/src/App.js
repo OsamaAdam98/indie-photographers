@@ -9,6 +9,7 @@ import MenuAppBar from "./components/MenuAppBar";
 import SnackAlert from "./components/SnackAlert";
 import BottomBar from "./components/BottomBar";
 import useWindowDimensions from "./components/utilities/WindowDimensions";
+import "./css/style.css";
 
 function App() {
 	const [isLogged, setIsLogged] = useState(
