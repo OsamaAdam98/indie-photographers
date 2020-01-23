@@ -15,9 +15,7 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1
 	},
 	appBar: {
-		zIndex: theme.zIndex.drawer + 1,
-		backgroundColor: "#212121",
-		color: "#FAFAFA"
+		zIndex: theme.zIndex.drawer + 1
 	},
 	menuButton: {
 		marginRight: theme.spacing(2)
@@ -39,7 +37,7 @@ function MenuAppBar(props) {
 
 	return (
 		<div className={(classes.root, classes.barMargin)}>
-			<AppBar position="fixed" className={classes.appBar}>
+			<AppBar position="fixed" className={classes.appBar} color="inherit">
 				<Toolbar>
 					{width > 500 && (
 						<LeftDrawer

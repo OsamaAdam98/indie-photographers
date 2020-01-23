@@ -53,9 +53,9 @@ export default function LeftDrawer(props) {
 		<div>
 			<div
 				style={{
-					backgroundColor: "#212121",
 					height: "100px",
-					width: "100%"
+					width: "100%",
+					backgroundColor: "#212121"
 				}}
 			/>
 			<Link
@@ -91,7 +91,6 @@ export default function LeftDrawer(props) {
 				button
 				onClick={handleClick}
 				style={{
-					backgroundColor: "#3f50b5",
 					display: showBtn ? "" : "none"
 				}}
 			>
@@ -101,8 +100,7 @@ export default function LeftDrawer(props) {
 						height: "3rem",
 						textAlign: "center",
 						verticalAlign: "center",
-						lineHeight: "3rem",
-						color: "#ffffff"
+						lineHeight: "3rem"
 					}}
 				>
 					INSTALL APP

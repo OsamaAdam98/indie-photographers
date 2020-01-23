@@ -1,14 +1,16 @@
 import React from "react";
-import {Button} from "@material-ui/core";
+import {Button, Typography, Container} from "@material-ui/core";
 
 export default function Home(props) {
 	const {showBtn, handleClick} = props;
 
 	if (showBtn) {
 		return (
-			<div className="container">
-				<h1 className="display-4">Hello,</h1>
-				<p className="lead">Install the app to browse offline!</p>
+			<Container>
+				<Typography variant="h1">Hello,</Typography>
+				<Typography variant="body1">
+					Install the app to browse offline!
+				</Typography>
 				<Button
 					size="large"
 					variant="contained"
@@ -17,14 +19,16 @@ export default function Home(props) {
 				>
 					Install
 				</Button>
-			</div>
+			</Container>
 		);
 	} else {
 		return (
-			<div className="container">
-				<h1 className="display-4">Hello,</h1>
-				<p className="lead">This app is currently in development.</p>
-			</div>
+			<Container>
+				<Typography variant="h1">Hello,</Typography>
+				<Typography variant="body1">
+					This app is currently in development.
+				</Typography>
+			</Container>
 		);
 	}
 }

@@ -1,28 +1,34 @@
 import React, {useState, useEffect} from "react";
 import {useHistory, withRouter} from "react-router-dom";
-import {BottomNavigation, BottomNavigationAction} from "@material-ui/core";
+import {
+	// BottomNavigation,
+	// BottomNavigationAction,
+	Avatar,
+	Tab,
+	Tabs,
+	Paper
+} from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import ViewDayIcon from "@material-ui/icons/ViewDay";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
 function BottomBar(props) {
 	const {user, showBtn, handleClick} = props;
-	const [value, setValue] = useState("");
+	const [value, setValue] = useState(0);
 
 	useEffect(() => {
 		switch (props.location.pathname) {
 			case "/feed/":
-				setValue("/feed/");
+				setValue(1);
 				break;
 			case `/profile/${user._id}`:
-				setValue(`/profile/${user._id}`);
+				setValue(2);
 				break;
 			case "/":
-				setValue("/");
+				setValue(0);
 				break;
 			default:
-				setValue("");
+				setValue(false);
 				break;
 		}
 	}, [props.location.pathname, user._id]);
@@ -31,10 +37,22 @@ function BottomBar(props) {
 
 	const handleChange = (event, val) => {
 		setValue(val);
-		if (val === "install") {
-			handleClick();
-		} else {
-			history.push(val);
+
+		switch (val) {
+			case 0:
+				history.push("/");
+				break;
+			case 1:
+				history.push("/feed/");
+				break;
+			case 2:
+				history.push(`/profile/${user._id}`);
+				break;
+			case 3:
+				handleClick();
+				break;
+			default:
+				break;
 		}
 	};
 
@@ -47,19 +65,27 @@ function BottomBar(props) {
 				bottom: 0
 			}}
 		>
-			<BottomNavigation
+			{/* <BottomNavigation
 				value={value}
 				onChange={handleChange}
 				style={{
-					boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)",
-					backgroundColor: "#fafafa"
+					boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)"
 				}}
+				color="inherit"
 			>
 				<BottomNavigationAction value="/" icon={<HomeIcon />} />
 				<BottomNavigationAction value="/feed/" icon={<ViewDayIcon />} />
 				<BottomNavigationAction
 					value={`/profile/${user._id}`}
-					icon={<AccountCircleIcon />}
+					icon={
+						<Avatar
+							src={user.profilePicture}
+							style={{
+								width: 24,
+								height: 24
+							}}
+						/>
+					}
 					style={{
 						display: localStorage.getItem("token") ? "" : "none"
 					}}
@@ -71,7 +97,42 @@ function BottomBar(props) {
 						display: showBtn ? "" : "none"
 					}}
 				/>
-			</BottomNavigation>
+			</BottomNavigation> */}
+			<Paper square>
+				<Tabs
+					value={value}
+					onChange={handleChange}
+					variant="fullWidth"
+					indicatorColor="primary"
+					textColor="primary"
+					aria-label="icon tabs example"
+				>
+					<Tab icon={<HomeIcon />} aria-label="phone" />
+					<Tab icon={<ViewDayIcon />} aria-label="favorite" />
+					<Tab
+						icon={
+							<Avatar
+								src={user.profilePicture}
+								style={{
+									width: 24,
+									height: 24
+								}}
+							/>
+						}
+						aria-label="person"
+						style={{
+							display: user.username ? "" : "none"
+						}}
+					/>
+					<Tab
+						icon={<GetAppIcon />}
+						aria-label="favorite"
+						style={{
+							display: showBtn ? "" : "none"
+						}}
+					/>
+				</Tabs>
+			</Paper>
 		</div>
 	);
 }

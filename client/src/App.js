@@ -4,7 +4,6 @@ import {BrowserRouter as Router, Route} from "react-router-dom";
 import "./css/style.css";
 import {
 	Home,
-	Marketplace,
 	Profile,
 	Feed,
 	MenuAppBar,
@@ -121,12 +120,6 @@ function App() {
 					path="/"
 					render={(props) => (
 						<Home {...props} showBtn={showBtn} handleClick={handleClick} />
-					)}
-				/>
-				<Route
-					path="/marketplace"
-					render={(props) => (
-						<Marketplace {...props} isLogged={isLogged} user={user} />
 					)}
 				/>
 				<Route

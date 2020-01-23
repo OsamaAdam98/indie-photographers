@@ -1,10 +1,9 @@
 import React, {useState} from "react";
-import {useHistory} from "react-router-dom";
-import {Avatar, Menu, MenuItem, IconButton} from "@material-ui/core";
+import {Menu, MenuItem, IconButton} from "@material-ui/core";
+import SettingsIcon from "@material-ui/icons/Settings";
 
 export default function ProfileAvatar(props) {
-	const {user, setIsLogged} = props;
-	const history = useHistory();
+	const {setIsLogged} = props;
 
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
@@ -26,9 +25,7 @@ export default function ProfileAvatar(props) {
 				onClick={handleMenu}
 				color="inherit"
 			>
-				<Avatar src={user.profilePicture} alt="profile">
-					{user.username ? user.username : `U`}
-				</Avatar>
+				<SettingsIcon />
 			</IconButton>
 			<Menu
 				id="simple-menu"
@@ -45,14 +42,7 @@ export default function ProfileAvatar(props) {
 				open={open}
 				onClose={handleClose}
 			>
-				<MenuItem
-					onClick={() => {
-						handleClose();
-						history.push(`/profile/${user._id}`);
-					}}
-				>
-					Profile
-				</MenuItem>
+				<MenuItem>Settings</MenuItem>
 				<MenuItem
 					onClick={() => {
 						handleClose();
