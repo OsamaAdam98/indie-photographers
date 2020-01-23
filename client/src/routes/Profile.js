@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	cardMedia: {
 		maxHeight: 345
+	},
+	box: {
+		marginBottom: "3rem"
 	}
 }));
 
@@ -67,11 +70,11 @@ export default function Profile(props) {
 		return (
 			<Grid container direction="column" alignItems="center" justify="center">
 				{width > 345 ? (
-					<Box width="345px">
+					<Box width="345px" className={classes.box}>
 						<ProfileSkeleton />
 					</Box>
 				) : (
-					<Box minWidth="100%">
+					<Box minWidth="100%" className={classes.box}>
 						<ProfileSkeleton />
 					</Box>
 				)}
@@ -80,7 +83,7 @@ export default function Profile(props) {
 	} else {
 		return (
 			<Grid container direction="column" alignItems="center" justify="center">
-				<Box minWidth={`${width < 345 ? `100%` : ``}`}>
+				<Box minWidth={`${width < 345 ? `100%` : ``}`} className={classes.box}>
 					<Card className={classes.card}>
 						<CardActionArea>
 							<CardMedia className={classes.cardMedia}>
