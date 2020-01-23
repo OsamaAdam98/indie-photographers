@@ -1,15 +1,17 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {BrowserRouter as Router, Route} from "react-router-dom";
-import Home from "./routes/Home";
-import Marketplace from "./routes/Marketplace";
-import Profile from "./routes/Profile";
-import Feed from "./routes/Feed";
-import MenuAppBar from "./components/MenuAppBar";
-import SnackAlert from "./components/SnackAlert";
-import BottomBar from "./components/BottomBar";
-import useWindowDimensions from "./components/utilities/WindowDimensions";
 import "./css/style.css";
+import {
+	Home,
+	Marketplace,
+	Profile,
+	Feed,
+	MenuAppBar,
+	SnackAlert,
+	BottomBar,
+	useWindowDimensions
+} from "./components";
 
 function App() {
 	const [isLogged, setIsLogged] = useState(

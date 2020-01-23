@@ -1,7 +1,5 @@
 import React from "react";
 import {withRouter, Link} from "react-router-dom";
-import Login from "./modals/Login.modal";
-import LeftDrawer from "./LeftDrawer";
 import {
 	makeStyles,
 	AppBar,
@@ -9,8 +7,8 @@ import {
 	Typography,
 	Avatar
 } from "@material-ui/core";
-import useWindowDimensions from "./utilities/WindowDimensions";
 import logo from "../logo.png";
+import {useWindowDimensions, LeftDrawer, Login} from ".";
 
 const useStyles = makeStyles((theme) => ({
 	root: {

@@ -1,7 +1,5 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
-import ProfileSkeleton from "../components/ProfileSkeleton";
-import useWindowDimensions from "../components/utilities/WindowDimensions";
 import {
 	Grid,
 	Box,
@@ -14,7 +12,11 @@ import {
 	Button,
 	Typography
 } from "@material-ui/core";
-import PhotoPreview from "../components/modals/PhotoPreview.modal";
+import {
+	ProfileSkeleton,
+	useWindowDimensions,
+	PhotoPreview
+} from "../components";
 
 const useStyles = makeStyles((theme) => ({
 	card: {

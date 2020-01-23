@@ -1,8 +1,6 @@
 import React, {useState} from "react";
 import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
-import LikesSkeleton from "../LikesSkeleton";
-import useWindowDimensions from "../utilities/WindowDimensions";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import SnackAlert from "../SnackAlert";
 import {
@@ -18,6 +16,7 @@ import {
 	Avatar,
 	Divider
 } from "@material-ui/core";
+import {useWindowDimensions, LikesSkeleton} from "..";
 
 export default function Likes(props) {
 	const {post, likes, show, setShow} = props;

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 import {Dialog} from "@material-ui/core";
-import useWindowDimensions from "../utilities/WindowDimensions";
+import {useWindowDimensions} from "..";
 
 export default function PhotoPreview(props) {
 	const {photo, username, show, setShow, maxHeight} = props;

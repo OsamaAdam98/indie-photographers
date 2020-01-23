@@ -1,12 +1,14 @@
 import React, {useState, useEffect, useRef, useCallback} from "react";
 import axios from "axios";
-import PostModal from "../components/modals/FeedPost.modal";
-import PostMedia from "../components/PostMedia";
-import PostSkeleton from "../components/PostSkeleton";
-import useWindowDimensions from "../components/utilities/WindowDimensions";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
-import SnackAlert from "../components/SnackAlert";
 import {LinearProgress, Grid, Box} from "@material-ui/core";
+import {
+	PostMedia,
+	PostModal,
+	PostSkeleton,
+	SnackAlert,
+	useWindowDimensions
+} from "../components";
 
 export default function Feed(props) {
 	const {isLogged, user} = props;
