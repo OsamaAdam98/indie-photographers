@@ -117,7 +117,11 @@ export default function Feed(props) {
 	};
 
 	const getNewPosts = (newPosts, cachedData) => {
-		return newPosts.filter((newPost) => newPost.date > cachedData[0].date);
+		if (newPosts && cachedData) {
+			return newPosts.filter((newPost) => newPost.date > cachedData[0].date);
+		} else {
+			return null;
+		}
 	};
 
 	useEffect(() => {
@@ -133,10 +137,12 @@ export default function Feed(props) {
 			.then((res) => {
 				const {data} = res;
 
-				setNewPost((prevPosts) => [
-					...prevPosts,
-					...getNewPosts(data, cachedData)
-				]);
+				if (getNewPosts(data, cachedData)) {
+					setNewPost((prevPosts) => [
+						...prevPosts,
+						...getNewPosts(data, cachedData)
+					]);
+				}
 
 				if (!cachedData) {
 					setPosts((prevPosts) => [...prevPosts, ...data]);
