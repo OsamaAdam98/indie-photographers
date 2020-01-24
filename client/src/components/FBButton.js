@@ -17,7 +17,8 @@ const useStyles = makeStyles((theme) => ({
 		"&:hover": {
 			backgroundColor: "#4F6FBF"
 		},
-		borderRadius: 2
+		borderRadius: 2,
+		justifyContent: "left"
 	},
 	fbIcon: {
 		position: "absolute",
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 	fbType: {
 		fontSize: 14,
 		postion: "relative",
-		left: 30
+		marginLeft: 30
 	},
 	btnDiv: {
 		height: 42,
