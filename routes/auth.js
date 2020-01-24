@@ -98,6 +98,67 @@ router.post("/facebook-login", (req, res) => {
 	});
 });
 
+router.post("/google-login", (req, res) => {
+	const {email, name} = req.body.profileObj;
+	const {imageUrl} = req.body.profileObj;
+
+	Users.findOne({email}).then((user) => {
+		if (user) {
+			jwt.sign({id: user._id}, process.env.jwtSecret, (err, token) => {
+				if (err) throw err;
+				res.json({
+					token,
+					user: {
+						id: user._id,
+						username: user.username,
+						email: user.email,
+						profilePicture: user.profilePicture,
+						admin: user.admin
+					}
+				});
+			});
+		} else {
+			const newUser = new Users({
+				username: name,
+				email: email,
+				password: req.body.tokenObj.access_token,
+				profilePicture: imageUrl
+			});
+
+			bcrypt.genSalt(10, (err, salt) => {
+				if (err) throw err;
+				bcrypt.hash(newUser.password, salt, (err, hash) => {
+					if (err) throw err;
+					newUser.password = hash;
+					newUser
+						.save()
+						.then((user) => {
+							jwt.sign(
+								{id: user._id},
+								process.env.jwtSecret,
+								{expiresIn: 3600},
+								(err, token) => {
+									if (err) throw err;
+									res.json({
+										token,
+										user: {
+											id: user._id,
+											username: user.username,
+											email: user.email,
+											admin: user.admin,
+											profilePicture: user.profilePicture
+										}
+									});
+								}
+							);
+						})
+						.catch((err) => res.status(400).json(err));
+				});
+			});
+		}
+	});
+});
+
 // user data
 
 router.get("/user", auth, (req, res) => {

@@ -12,7 +12,10 @@ router.get("/", (req, res) => {
 		.sort({date: "desc"})
 		.limit(10)
 		.skip(page >= 1 ? 10 * (page - 1) : 0)
-		.populate("user comments likes", "-password -registerDate -__v -posts")
+		.populate(
+			"user comments likes",
+			"-password -registerDate -__v -posts -email"
+		)
 		.exec()
 		.then((result) => res.status(200).json(result))
 		.catch((err) => res.status(500).json(err));

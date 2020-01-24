@@ -6,12 +6,27 @@ import {
 	DialogContent,
 	DialogTitle,
 	TextField,
-	Button
+	Button,
+	makeStyles,
+	Grid
 } from "@material-ui/core";
-import {FBButton, ProfileAvatar} from "..";
+import {FBButton, ProfileAvatar, GoogleBtn} from "..";
+
+const useStyles = makeStyles((theme) => ({
+	root: {
+		"& > *": {
+			margin: theme.spacing(1)
+		}
+	},
+	textField: {
+		marginBottom: theme.spacing(1)
+	}
+}));
 
 export default function Login(props) {
 	const {isLogged, setIsLogged, setUser, user} = props;
+
+	const classes = useStyles();
 
 	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("");
@@ -72,11 +87,6 @@ export default function Login(props) {
 		<ProfileAvatar user={user} setIsLogged={setIsLogged} />
 	);
 
-	const loginError = errorMsg ? (
-		<div className="alert alert-danger" role="alert">
-			{errorMsg}
-		</div>
-	) : null;
 	return (
 		<>
 			{loginButton}
@@ -85,13 +95,13 @@ export default function Login(props) {
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
 			>
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={handleSubmit} className={classes.root}>
 					<DialogTitle id="form-dialog-title">Login</DialogTitle>
 
 					<DialogContent>
 						<TextField
-							autoFocus
-							margin="dense"
+							className={classes.textField}
+							variant="outlined"
 							id="name"
 							label="Email Address"
 							type="email"
@@ -100,24 +110,33 @@ export default function Login(props) {
 							onChange={emailChange}
 						/>
 						<TextField
-							autoFocus
-							margin="dense"
+							className={classes.textField}
+							variant="outlined"
 							id="password"
 							label="Password"
 							type="password"
 							fullWidth
 							value={password}
 							onChange={passwordChange}
+							error={errorMsg ? true : false}
+							helperText={errorMsg}
 						/>
-
-						<div>
-							<FBButton
-								setUser={setUser}
-								handleClose={handleClose}
-								setIsLogged={setIsLogged}
-							/>
-						</div>
-						{loginError}
+						<Grid container direction="row" spacing={1}>
+							<Grid item xs>
+								<FBButton
+									setUser={setUser}
+									handleClose={handleClose}
+									setIsLogged={setIsLogged}
+								/>
+							</Grid>
+							<Grid item xs>
+								<GoogleBtn
+									setUser={setUser}
+									handleClose={handleClose}
+									setIsLogged={setIsLogged}
+								/>
+							</Grid>
+						</Grid>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={handleSubmit} color="primary">

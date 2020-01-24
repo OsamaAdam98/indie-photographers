@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 function BottomBar(props) {
 	const {user, showBtn, handleClick} = props;
-	const [value, setValue] = useState(0);
+	const [value, setValue] = useState(false);
 
 	const classes = useStyles();
 

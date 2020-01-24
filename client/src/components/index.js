@@ -16,6 +16,7 @@ import LeftDrawer from "./LeftDrawer";
 import Login from "./modals/Login.modal";
 import PhotoPreview from "./modals/PhotoPreview.modal";
 import ProfileSkeleton from "./ProfileSkeleton";
+import GoogleBtn from "./GoogleBtn";
 
 export {
 	Home,
@@ -35,5 +36,6 @@ export {
 	LeftDrawer,
 	Login,
 	PhotoPreview,
-	ProfileSkeleton
+	ProfileSkeleton,
+	GoogleBtn
 };

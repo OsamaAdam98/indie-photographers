@@ -113,7 +113,6 @@ export default function Feed(props) {
 				}
 				setHasMore(data.length > 0);
 				localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
-				// localStorage.setItem("cachedPages", page);
 				setErrorMsg("");
 				setOpenError(false);
 				setOffline(false);
@@ -130,13 +129,6 @@ export default function Feed(props) {
 					} else {
 						setHasMore(false);
 					}
-					// const cachedPages = localStorage.getItem("cachedPages");
-					// for (let i = 1; i <= cachedPages; i++) {
-					// 	setPosts((prevPosts) => [
-					// 		...prevPosts,
-					// 		...JSON.parse(localStorage.getItem(`feedPage${i}`))
-					// 	]);
-					// }
 					setIsLoading(false);
 				}
 			});
