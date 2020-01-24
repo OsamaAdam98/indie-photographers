@@ -1,17 +1,10 @@
 import React, {useState, useEffect} from "react";
 import {useHistory, withRouter} from "react-router-dom";
-import {
-	// BottomNavigation,
-	// BottomNavigationAction,
-	Avatar,
-	Tab,
-	Tabs,
-	Paper,
-	makeStyles
-} from "@material-ui/core";
+import {Avatar, Tab, Tabs, Paper, makeStyles} from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import ViewDayIcon from "@material-ui/icons/ViewDay";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import SettingsIcon from "@material-ui/icons/Settings";
 
 const useStyles = makeStyles((theme) => ({
 	tabs: {
@@ -64,6 +57,9 @@ function BottomBar(props) {
 			case 3:
 				handleClick();
 				break;
+			case 4:
+				history.push("/settings");
+				break;
 			default:
 				break;
 		}
@@ -78,39 +74,6 @@ function BottomBar(props) {
 				bottom: 0
 			}}
 		>
-			{/* <BottomNavigation
-				value={value}
-				onChange={handleChange}
-				style={{
-					boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)"
-				}}
-				color="inherit"
-			>
-				<BottomNavigationAction value="/" icon={<HomeIcon />} />
-				<BottomNavigationAction value="/feed/" icon={<ViewDayIcon />} />
-				<BottomNavigationAction
-					value={`/profile/${user._id}`}
-					icon={
-						<Avatar
-							src={user.profilePicture}
-							style={{
-								width: 24,
-								height: 24
-							}}
-						/>
-					}
-					style={{
-						display: localStorage.getItem("token") ? "" : "none"
-					}}
-				/>
-				<BottomNavigationAction
-					value="install"
-					icon={<GetAppIcon />}
-					style={{
-						display: showBtn ? "" : "none"
-					}}
-				/>
-			</BottomNavigation> */}
 			<Paper square>
 				<Tabs
 					value={value}
@@ -143,6 +106,13 @@ function BottomBar(props) {
 						aria-label="Install app"
 						style={{
 							display: showBtn ? "" : "none"
+						}}
+					/>
+					<Tab
+						icon={<SettingsIcon />}
+						aria-label="Settings"
+						style={{
+							display: user.username ? "none" : ""
 						}}
 					/>
 				</Tabs>
