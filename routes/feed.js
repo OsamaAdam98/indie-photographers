@@ -138,7 +138,7 @@ router.get("/likes/:postID", (req, res) => {
 	const postID = req.params.postID;
 	Likes.find({post: postID})
 		.populate("user", "-password")
-		.sort({date: "desc"})
+		.sort({date: "asc"})
 		.exec()
 		.then((likes) => {
 			res.status(200).json(likes);

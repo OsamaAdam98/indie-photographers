@@ -100,7 +100,11 @@ router.post("/facebook-login", (req, res) => {
 
 router.post("/google-login", (req, res) => {
 	const {email, name} = req.body.profileObj;
-	const {imageUrl} = req.body.profileObj.replace("s96-c", "s384-c", true);
+	const imageUrl = req.body.profileObj.imageUrl.replace(
+		"s96-c",
+		"s384-c",
+		true
+	);
 
 	Users.findOne({email}).then((user) => {
 		if (user) {

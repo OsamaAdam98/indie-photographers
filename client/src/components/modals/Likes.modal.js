@@ -72,19 +72,30 @@ export default function Likes(props) {
 	};
 
 	const likedUsers = users.map((user) => {
-		return (
-			<Link to={`/profile/${user._id}`} key={user._id} className="text-link">
-				<ListItem alignItems="center">
+		if (user) {
+			return (
+				<Link to={`/profile/${user._id}`} key={user._id} className="text-link">
+					<ListItem alignItems="center">
+						<ListItemAvatar>
+							<Avatar alt={user.username} src={user.profilePicture} />
+						</ListItemAvatar>
+						<ListItemText
+							primary={user.username}
+							secondary={user.admin ? `Admin` : `User`}
+						/>
+					</ListItem>
+				</Link>
+			);
+		} else {
+			return (
+				<ListItem alignItems="center" key="">
 					<ListItemAvatar>
-						<Avatar alt={user.username} src={user.profilePicture} />
+						<Avatar alt="Deleted User" src="" />
 					</ListItemAvatar>
-					<ListItemText
-						primary={user.username}
-						secondary={user.admin ? `Admin` : `User`}
-					/>
+					<ListItemText primary="Deleted User" secondary="Deleted" />
 				</ListItem>
-			</Link>
-		);
+			);
+		}
 	});
 
 	return (

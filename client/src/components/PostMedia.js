@@ -108,121 +108,125 @@ export default function PostMedia(props) {
 			60 - date.getMinutes() + today.getMinutes() + hoursOffset * 60;
 	}
 
-	return (
-		<Card className={classes.card}>
-			<CardHeader
-				avatar={
-					<Link to={`/profile/${user._id}`}>
-						<Avatar
-							alt="user avatar"
-							src={user.profilePicture ? user.profilePicture : ""}
-						/>
-					</Link>
-				}
-				action={
-					currentUser._id === feedPost.user._id || currentUser.admin ? (
-						<>
-							<IconButton
-								aria-label="settings"
-								aria-controls="menu-appbar"
-								aria-haspopup="true"
-								onClick={handleMenu}
-								color="inherit"
-							>
-								<MoreVertIcon />
-							</IconButton>
-							<Menu
-								id="simple-menu"
-								anchorEl={anchorEl}
-								anchorOrigin={{
-									vertical: "top",
-									horizontal: "right"
-								}}
-								keepMounted
-								transformOrigin={{
-									vertical: "top",
-									horizontal: "right"
-								}}
-								open={open}
-								onClose={handleClose}
-							>
-								<MenuItem>Edit</MenuItem>
-								<MenuItem onClick={() => handleDelete(feedPost._id)}>
-									Delete
-								</MenuItem>
-							</Menu>
-						</>
-					) : null
-				}
-				title={
-					<Link to={`/profile/${user._id}`} className="text-link">
-						<Typography variant="subtitle1" color="inherit">
-							{user.username}
-						</Typography>
-					</Link>
-				}
-				subheader={
-					monthsOffset === 1 && daysOffset < 30
-						? `Posted ${daysOffset} days ago`
-						: monthsOffset === 1 && daysOffset > 30
-						? `Posted about a month ago`
-						: monthsOffset
-						? `Posted ${monthsOffset} months ago`
-						: daysOffset === 1
-						? `Posted yesterday`
-						: daysOffset
-						? `Posted ${daysOffset} days ago`
-						: hoursOffset === 1 && minutesOffset < 60
-						? `Posted ${minutesOffset} minutes ago`
-						: hoursOffset
-						? `Posted ${hoursOffset} hours ago`
-						: minutesOffset
-						? `Posted ${minutesOffset} minutes ago`
-						: `Posted just now`
-				}
-			/>
-			<CardContent>
-				<Typography variant="body2" component="p">
-					{feedPost.msg}
-				</Typography>
-			</CardContent>
+	if (user) {
+		return (
+			<Card className={classes.card}>
+				<CardHeader
+					avatar={
+						<Link to={`/profile/${user._id}`}>
+							<Avatar
+								alt="user avatar"
+								src={user.profilePicture ? user.profilePicture : ""}
+							/>
+						</Link>
+					}
+					action={
+						currentUser._id === feedPost.user._id || currentUser.admin ? (
+							<>
+								<IconButton
+									aria-label="settings"
+									aria-controls="menu-appbar"
+									aria-haspopup="true"
+									onClick={handleMenu}
+									color="inherit"
+								>
+									<MoreVertIcon />
+								</IconButton>
+								<Menu
+									id="simple-menu"
+									anchorEl={anchorEl}
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "right"
+									}}
+									keepMounted
+									transformOrigin={{
+										vertical: "top",
+										horizontal: "right"
+									}}
+									open={open}
+									onClose={handleClose}
+								>
+									<MenuItem>Edit</MenuItem>
+									<MenuItem onClick={() => handleDelete(feedPost._id)}>
+										Delete
+									</MenuItem>
+								</Menu>
+							</>
+						) : null
+					}
+					title={
+						<Link to={`/profile/${user._id}`} className="text-link">
+							<Typography variant="subtitle1" color="inherit">
+								{user.username}
+							</Typography>
+						</Link>
+					}
+					subheader={
+						monthsOffset === 1 && daysOffset < 30
+							? `Posted ${daysOffset} days ago`
+							: monthsOffset === 1 && daysOffset > 30
+							? `Posted about a month ago`
+							: monthsOffset
+							? `Posted ${monthsOffset} months ago`
+							: daysOffset === 1
+							? `Posted yesterday`
+							: daysOffset
+							? `Posted ${daysOffset} days ago`
+							: hoursOffset === 1 && minutesOffset < 60
+							? `Posted ${minutesOffset} minutes ago`
+							: hoursOffset
+							? `Posted ${hoursOffset} hours ago`
+							: minutesOffset
+							? `Posted ${minutesOffset} minutes ago`
+							: `Posted just now`
+					}
+				/>
+				<CardContent>
+					<Typography variant="body2" component="p">
+						{feedPost.msg}
+					</Typography>
+				</CardContent>
 
-			{feedPost.photo ? (
-				<CardActionArea>
-					<CardMedia className={classes.media}>
-						<PhotoPreview
-							show={showPrev}
-							setShow={setShowPrev}
-							photo={feedPost.photo}
-							username={feedPost.user.username}
-							maxHeight={250}
-							{...props}
-						/>
-					</CardMedia>
-				</CardActionArea>
-			) : (
-				""
-			)}
-			<Likes
-				likes={likes}
-				post={feedPost}
-				show={showLikes}
-				setShow={setShowLikes}
-				{...props}
-			/>
-			<CardActions disableSpacing>
-				<IconButton
-					aria-label="add to favorites"
-					onClick={() => handleLike(feedPost._id)}
-				>
-					<FavoriteIcon color={liked ? "secondary" : "disabled"} />
-				</IconButton>
-				<IconButton aria-label="share">
-					<ShareIcon />
-				</IconButton>
-			</CardActions>
-		</Card>
-	);
+				{feedPost.photo ? (
+					<CardActionArea>
+						<CardMedia className={classes.media}>
+							<PhotoPreview
+								show={showPrev}
+								setShow={setShowPrev}
+								photo={feedPost.photo}
+								username={feedPost.user.username}
+								maxHeight={250}
+								{...props}
+							/>
+						</CardMedia>
+					</CardActionArea>
+				) : (
+					""
+				)}
+				<Likes
+					likes={likes}
+					post={feedPost}
+					show={showLikes}
+					setShow={setShowLikes}
+					{...props}
+				/>
+				<CardActions disableSpacing>
+					<IconButton
+						aria-label="add to favorites"
+						onClick={() => handleLike(feedPost._id)}
+					>
+						<FavoriteIcon color={liked ? "secondary" : "disabled"} />
+					</IconButton>
+					<IconButton aria-label="share">
+						<ShareIcon />
+					</IconButton>
+				</CardActions>
+			</Card>
+		);
+	} else {
+		return null;
+	}
 }
 
 PostMedia.propTypes = {
