@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	buttonStyle: {
 		width: "100%"
+	},
+	cancel: {
+		color: theme.palette.error.light
 	}
 }));
 
@@ -178,7 +181,9 @@ export default function PostModal(props) {
 						>
 							Post
 						</Button>
-						<Button onClick={handleClose}>Cancel</Button>
+						<Button onClick={handleClose} className={classes.cancel}>
+							Cancel
+						</Button>
 					</DialogActions>
 				</form>
 			</Dialog>

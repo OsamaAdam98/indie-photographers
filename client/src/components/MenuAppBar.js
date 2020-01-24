@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1
 	},
 	barMargin: {
-		marginBottom: "5rem"
+		marginBottom: "4rem"
 	},
 	toolbar: theme.mixins.toolbar
 }));
@@ -55,7 +55,7 @@ function MenuAppBar(props) {
 							}}
 						/>
 					</Link>
-					<Typography variant="h6" className={classes.title}>
+					<Typography variant="h5" className={classes.title}>
 						Indie
 					</Typography>
 					<Login

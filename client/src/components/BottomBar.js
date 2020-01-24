@@ -6,15 +6,28 @@ import {
 	Avatar,
 	Tab,
 	Tabs,
-	Paper
+	Paper,
+	makeStyles
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import ViewDayIcon from "@material-ui/icons/ViewDay";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
+const useStyles = makeStyles((theme) => ({
+	tabs: {
+		backgroundColor: theme.palette.background.paper,
+		position: "fixed",
+		bottom: 0,
+		width: "100%",
+		boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)"
+	}
+}));
+
 function BottomBar(props) {
 	const {user, showBtn, handleClick} = props;
 	const [value, setValue] = useState(0);
+
+	const classes = useStyles();
 
 	useEffect(() => {
 		switch (props.location.pathname) {
@@ -106,9 +119,10 @@ function BottomBar(props) {
 					indicatorColor="primary"
 					textColor="primary"
 					aria-label="icon tabs example"
+					className={classes.tabs}
 				>
-					<Tab icon={<HomeIcon />} aria-label="phone" />
-					<Tab icon={<ViewDayIcon />} aria-label="favorite" />
+					<Tab icon={<HomeIcon />} aria-label="Home" />
+					<Tab icon={<ViewDayIcon />} aria-label="Feed" />
 					<Tab
 						icon={
 							<Avatar
@@ -126,7 +140,7 @@ function BottomBar(props) {
 					/>
 					<Tab
 						icon={<GetAppIcon />}
-						aria-label="favorite"
+						aria-label="Install app"
 						style={{
 							display: showBtn ? "" : "none"
 						}}

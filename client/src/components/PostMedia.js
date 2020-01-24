@@ -156,11 +156,7 @@ export default function PostMedia(props) {
 				}
 				title={
 					<Link to={`/profile/${user._id}`} className="text-link">
-						<Typography
-							variant="subtitle1"
-							className="nav-link"
-							color="inherit"
-						>
+						<Typography variant="subtitle1" color="inherit">
 							{user.username}
 						</Typography>
 					</Link>

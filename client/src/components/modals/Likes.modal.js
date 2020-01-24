@@ -73,7 +73,7 @@ export default function Likes(props) {
 
 	const likedUsers = users.map((user) => {
 		return (
-			<Link to={`/profile/${user._id}`} key={user._id}>
+			<Link to={`/profile/${user._id}`} key={user._id} className="text-link">
 				<ListItem alignItems="center">
 					<ListItemAvatar>
 						<Avatar alt={user.username} src={user.profilePicture} />
