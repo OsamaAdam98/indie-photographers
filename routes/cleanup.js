@@ -15,20 +15,26 @@ router.get("/user/:id", auth, (req, res) => {
 					.exec()
 					.then(() => {
 						console.log("Deleted posts");
-						res.status(200).json("deleted");
+						Likes.deleteMany({user: id})
+							.exec()
+							.then(() => {
+								console.log("Deleted likes");
+								Comments.deleteMany({user: id})
+									.exec()
+									.then(() => {
+										console.log("Deleted comments");
+										Users.findByIdAndDelete(id)
+											.exec()
+											.then(() => {
+												console.log("Deleted user");
+												res.status(200).json("deleted");
+											})
+											.catch((err) => console.log(err));
+									})
+									.catch((err) => console.log(err));
+							})
+							.catch((err) => console.log(err));
 					})
-					.catch((err) => console.log(err));
-				Likes.deleteMany({user: id})
-					.exec()
-					.then(() => console.log("Deleted likes"))
-					.catch((err) => console.log(err));
-				Comments.deleteMany({user: id})
-					.exec()
-					.then(() => console.log("Deleted comments"))
-					.catch((err) => console.log(err));
-				Users.findByIdAndDelete(id)
-					.exec()
-					.then(() => console.log("Deleted user"))
 					.catch((err) => console.log(err));
 			} else {
 				res.status(401).json("Unauthorized");

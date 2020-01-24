@@ -148,7 +148,7 @@ router.get("/likes/:postID", (req, res) => {
 
 router.delete("/delete/:id", auth, (req, res) => {
 	Feed.findByIdAndDelete(req.params.id)
-		.then(() => res.json(`item deleted`))
+		.then(() => res.json(`Post deleted!`))
 		.catch((err) => res.status(400).json(err));
 });
 

@@ -84,7 +84,7 @@ export default function PostModal(props) {
 				}
 			})
 			.then((res) => {
-				setNewPost(res.data);
+				setNewPost([res.data]);
 				localStorage.setItem(
 					`feedPage1`,
 					JSON.stringify([

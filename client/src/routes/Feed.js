@@ -15,7 +15,7 @@ export default function Feed(props) {
 	const {width} = useWindowDimensions();
 
 	const [posts, setPosts] = useState([]);
-	const [newPost, setNewPost] = useState("");
+	const [newPost, setNewPost] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(false);
@@ -79,8 +79,27 @@ export default function Feed(props) {
 			});
 	};
 
+	const updatePage = (cachedData, page, id) => {
+		localStorage.setItem(
+			`feedPage${page}`,
+			JSON.stringify(cachedData.filter((data) => data._id !== id))
+		);
+		if (page !== 1) {
+			localStorage.setItem(
+				`feedPage1`,
+				JSON.stringify(
+					JSON.parse(localStorage.getItem("feedPage1")).filter(
+						(data) => data._id !== id
+					)
+				)
+			);
+		}
+	};
+
 	const handleDelete = (id) => {
 		const token = localStorage.getItem("token");
+		const cachedData = JSON.parse(localStorage.getItem(`feedPage${page}`));
+
 		axios
 			.delete(`/api/feed/delete/${id}`, {
 				headers: {
@@ -88,12 +107,17 @@ export default function Feed(props) {
 				}
 			})
 			.then((res) => {
-				setErrorMsg("Post deleted!");
+				updatePage(cachedData, page, id);
+				setErrorMsg(res.data);
 				setSeverity("success");
 				setOpenError(true);
 			})
 			.then(() => window.location.reload())
 			.catch((err) => console.log(err));
+	};
+
+	const getNewPosts = (newPosts, cachedData) => {
+		return newPosts.filter((newPost) => newPost.date > cachedData[0].date);
 	};
 
 	useEffect(() => {
@@ -108,9 +132,16 @@ export default function Feed(props) {
 			.get(`/api/feed/?page=${page}`)
 			.then((res) => {
 				const {data} = res;
+
+				setNewPost((prevPosts) => [
+					...prevPosts,
+					...getNewPosts(data, cachedData)
+				]);
+
 				if (!cachedData) {
 					setPosts((prevPosts) => [...prevPosts, ...data]);
 				}
+
 				setHasMore(data.length > 0);
 				localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
 				setErrorMsg("");
@@ -124,6 +155,7 @@ export default function Feed(props) {
 					setSeverity("warning");
 					setOffline(true);
 					setOpenError(true);
+					console.log(err);
 					if (cachedData) {
 						setHasMore(cachedData.length > 0);
 					} else {
@@ -188,6 +220,22 @@ export default function Feed(props) {
 		}
 	});
 
+	const newPosts = newPost
+		? newPost.map((incoming) => (
+				<PostMedia
+					showLikes={showLikes}
+					setShowLikes={setShowLikes}
+					showPrev={showPrev}
+					setShowPrev={setShowPrev}
+					feedPost={incoming}
+					isLoading={isLoading}
+					currentUser={user}
+					handleDelete={handleDelete}
+					key={incoming._id}
+				/>
+		  ))
+		: null;
+
 	return (
 		<>
 			<LinearProgress
@@ -205,18 +253,7 @@ export default function Feed(props) {
 
 			<Grid container direction="column" alignItems="center" justify="center">
 				<Box maxWidth="500px" width={`${width > 500 ? `500px` : `100%`}`}>
-					{newPost && (
-						<PostMedia
-							showLikes={showLikes}
-							setShowLikes={setShowLikes}
-							showPrev={showPrev}
-							setShowPrev={setShowPrev}
-							feedPost={newPost}
-							isLoading={isLoading}
-							currentUser={user}
-							handleDelete={handleDelete}
-						/>
-					)}
+					{newPost && newPosts}
 					{postMedia}
 					{isLoading ? <PostSkeleton /> : null}
 					{!hasMore && !isLoading ? (

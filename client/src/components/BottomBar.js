@@ -30,6 +30,9 @@ function BottomBar(props) {
 			case `/profile/${user._id}`:
 				setValue(2);
 				break;
+			case "/settings":
+				setValue(4);
+				break;
 			case "/":
 				setValue(0);
 				break;
@@ -49,6 +52,12 @@ function BottomBar(props) {
 				history.push("/");
 				break;
 			case 1:
+				if (props.location.pathname === "/feed/")
+					window.scroll({
+						top: 0,
+						left: 0,
+						behavior: "smooth"
+					});
 				history.push("/feed/");
 				break;
 			case 2:
