@@ -17,6 +17,7 @@ import Login from "./modals/Login.modal";
 import PhotoPreview from "./modals/PhotoPreview.modal";
 import ProfileSkeleton from "./ProfileSkeleton";
 import GoogleBtn from "./GoogleBtn";
+import Settings from "../routes/Settings";
 
 export {
 	Home,
@@ -37,5 +38,6 @@ export {
 	Login,
 	PhotoPreview,
 	ProfileSkeleton,
-	GoogleBtn
+	GoogleBtn,
+	Settings
 };

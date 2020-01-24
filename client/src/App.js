@@ -2,6 +2,9 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import "./css/style.css";
+import {MuiThemeProvider, createMuiTheme} from "@material-ui/core";
+import {yellow} from "@material-ui/core/colors";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import {
 	Home,
 	Profile,
@@ -9,7 +12,8 @@ import {
 	MenuAppBar,
 	SnackAlert,
 	BottomBar,
-	useWindowDimensions
+	useWindowDimensions,
+	Settings
 } from "./components";
 
 function App() {
@@ -25,6 +29,25 @@ function App() {
 	const [severity, setSeverity] = useState("");
 	const [pwa, setPwa] = useState();
 	const [showBtn, setShowBtn] = useState(false);
+	const [isLight, setIsLight] = useState(
+		JSON.parse(localStorage.getItem("theme")) ? true : false
+	);
+
+	const theme = {
+		darkTheme: {
+			palette: {
+				type: "dark",
+				primary: {
+					main: yellow[600]
+				}
+			}
+		},
+		lightTheme: {
+			palette: {
+				type: "light"
+			}
+		}
+	};
 
 	window.addEventListener("beforeinstallprompt", (event) => {
 		event.preventDefault();
@@ -104,45 +127,64 @@ function App() {
 	}, [isLogged]);
 
 	return (
-		<Router>
-			<>
-				<MenuAppBar
-					isLogged={isLogged}
-					setIsLogged={setIsLogged}
-					user={user}
-					setUser={setUser}
-					showBtn={showBtn}
-					handleClick={handleClick}
-				/>
+		<MuiThemeProvider
+			theme={
+				isLight
+					? createMuiTheme(theme.lightTheme)
+					: createMuiTheme(theme.darkTheme)
+			}
+		>
+			<CssBaseline />
+			<Router>
+				<>
+					<MenuAppBar
+						isLogged={isLogged}
+						setIsLogged={setIsLogged}
+						user={user}
+						setUser={setUser}
+						showBtn={showBtn}
+						handleClick={handleClick}
+					/>
 
-				<Route
-					exact
-					path="/"
-					render={(props) => (
-						<Home {...props} showBtn={showBtn} handleClick={handleClick} />
+					<Route
+						exact
+						path="/"
+						render={(props) => (
+							<Home {...props} showBtn={showBtn} handleClick={handleClick} />
+						)}
+					/>
+					<Route
+						path="/profile/:id"
+						render={(props) => <Profile {...props} user={user} />}
+					/>
+					<Route
+						path="/feed"
+						render={(props) => (
+							<Feed {...props} isLogged={isLogged} user={user} />
+						)}
+					/>
+					<Route
+						path="/settings"
+						render={(props) => (
+							<Settings {...props} isLight={isLight} setIsLight={setIsLight} />
+						)}
+					/>
+					<SnackAlert
+						severity={severity}
+						errorMsg={errorMsg}
+						setOpenError={setOpenError}
+						openError={openError}
+					/>
+					{width < 500 && (
+						<BottomBar
+							user={user}
+							showBtn={showBtn}
+							handleClick={handleClick}
+						/>
 					)}
-				/>
-				<Route
-					path="/profile/:id"
-					render={(props) => <Profile {...props} user={user} />}
-				/>
-				<Route
-					path="/feed"
-					render={(props) => (
-						<Feed {...props} isLogged={isLogged} user={user} />
-					)}
-				/>
-				<SnackAlert
-					severity={severity}
-					errorMsg={errorMsg}
-					setOpenError={setOpenError}
-					openError={openError}
-				/>
-				{width < 500 && (
-					<BottomBar user={user} showBtn={showBtn} handleClick={handleClick} />
-				)}
-			</>
-		</Router>
+				</>
+			</Router>
+		</MuiThemeProvider>
 	);
 }
 

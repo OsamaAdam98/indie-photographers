@@ -1,9 +1,12 @@
 import React, {useState} from "react";
+import {useHistory} from "react-router-dom";
 import {Menu, MenuItem, IconButton} from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
 
 export default function ProfileAvatar(props) {
 	const {setIsLogged} = props;
+
+	const history = useHistory();
 
 	const [anchorEl, setAnchorEl] = useState(null);
 	const open = Boolean(anchorEl);
@@ -42,7 +45,14 @@ export default function ProfileAvatar(props) {
 				open={open}
 				onClose={handleClose}
 			>
-				<MenuItem>Settings</MenuItem>
+				<MenuItem
+					onClick={() => {
+						handleClose();
+						history.push("/settings");
+					}}
+				>
+					Settings
+				</MenuItem>
 				<MenuItem
 					onClick={() => {
 						handleClose();
