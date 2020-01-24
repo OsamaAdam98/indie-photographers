@@ -8,6 +8,7 @@ const marketRoute = require("./routes/marketplace");
 const usersRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const feedRoute = require("./routes/feed");
+const cleanupRoute = require("./routes/cleanup");
 
 require("dotenv").config();
 
@@ -37,6 +38,7 @@ app.use("/api/items", marketRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/feed", feedRoute);
+app.use("/api/cleanup", cleanupRoute);
 
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static("client/build"));
