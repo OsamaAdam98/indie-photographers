@@ -23,9 +23,6 @@ const useStyles = makeStyles((theme) => ({
 	cardMedia: {
 		maxHeight: 345
 	},
-	box: {
-		marginBottom: "3rem"
-	},
 	placeHolderMedia: {
 		height: 345
 	}
@@ -37,7 +34,7 @@ export default function ProfileCard(props) {
 
 	return (
 		<Grid container direction="column" alignItems="center" justify="center">
-			<Box minWidth={`${width < 345 ? `100%` : ``}`} className={classes.box}>
+			<Box minWidth={`${width < 345 ? `100%` : ``}`}>
 				<Card className={classes.card}>
 					<CardActionArea>
 						<CardMedia className={classes.cardMedia}>
