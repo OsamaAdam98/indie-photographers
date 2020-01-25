@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {useHistory} from "react-router-dom";
 import axios from "axios";
 import {
 	Dialog,
@@ -24,11 +25,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login(props) {
-	const {isLogged, setIsLogged, setUser, user} = props;
+	const {isLogged, setIsLogged, setUser, user, show, setShow} = props;
 
 	const classes = useStyles();
+	const history = useHistory();
 
-	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
@@ -36,10 +37,12 @@ export default function Login(props) {
 	const handleClose = () => {
 		setShow(false);
 		setErrorMsg("");
+		if (props.location.hash === "#login-window") history.goBack();
 	};
 
 	const handleShow = () => {
 		setShow(true);
+		window.location.hash = "login-window";
 		setErrorMsg("");
 	};
 

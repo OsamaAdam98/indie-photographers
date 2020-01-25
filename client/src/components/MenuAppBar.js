@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {withRouter, Link} from "react-router-dom";
 import {
 	makeStyles,
@@ -33,7 +33,13 @@ function MenuAppBar(props) {
 	const {isLogged, setIsLogged, user, setUser, showBtn, handleClick} = props;
 	const {width} = useWindowDimensions();
 
+	const [show, setShow] = useState(false);
+
 	const classes = useStyles();
+
+	useEffect(() => {
+		if (props.location.hash === "") setShow(false);
+	}, [props.location.hash]);
 
 	return (
 		<div className={(classes.root, classes.barMargin)}>
@@ -63,6 +69,9 @@ function MenuAppBar(props) {
 						isLogged={isLogged}
 						setIsLogged={setIsLogged}
 						setUser={setUser}
+						show={show}
+						setShow={setShow}
+						{...props}
 					/>
 				</Toolbar>
 			</AppBar>

@@ -44,6 +44,7 @@ export default function Profile(props) {
 				username={username}
 				show={show}
 				setShow={setShow}
+				{...props}
 			/>
 		</Suspense>
 	);
