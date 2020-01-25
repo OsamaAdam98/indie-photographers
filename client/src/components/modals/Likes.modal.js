@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from "react";
-import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import SnackAlert from "../SnackAlert";
 import {
 	IconButton,
 	List,
@@ -12,22 +10,36 @@ import {
 	Dialog,
 	DialogContent,
 	DialogTitle,
-	Button,
 	Avatar,
-	Divider
+	Divider,
+	Tooltip,
+	makeStyles
 } from "@material-ui/core";
-import {useWindowDimensions, LikesSkeleton} from "..";
+import {AvatarGroup} from "@material-ui/lab";
+import {useWindowDimensions} from "..";
+
+const useStyles = makeStyles((theme) => ({
+	avGrp: {
+		marginLeft: theme.spacing(3),
+		marginTop: theme.spacing(2),
+		maxWidth: theme.spacing(9),
+		"&:hover": {
+			cursor: "pointer"
+		}
+	},
+	avatar: {
+		height: theme.spacing(5),
+		width: theme.spacing(5)
+	}
+}));
 
 export default function Likes(props) {
-	const {post, likes, show, setShow} = props;
-	const [users, setUsers] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [errorMsg, setErrorMsg] = useState("");
-	const [openError, setOpenError] = useState(false);
+	const {users, show, setShow} = props;
 	const [selfShow, setSelfShow] = useState(false);
 	const {width} = useWindowDimensions();
 
 	const history = useHistory();
+	const classes = useStyles();
 
 	useEffect(() => {
 		if (props.location.hash === "") handleClose();
@@ -36,33 +48,6 @@ export default function Likes(props) {
 
 	const entering = () => {
 		handleShow();
-		setIsLoading(true);
-		axios
-			.get(`/api/feed/likes/${post._id}`)
-			.then((res) => {
-				setUsers(res.data.map((data) => data.user));
-				localStorage.setItem(`${post._id}`, JSON.stringify(res.data));
-				setIsLoading(false);
-				setOpenError(false);
-				setErrorMsg("");
-			})
-			.catch((err) => {
-				console.log(err);
-				let cachedData = JSON.parse(localStorage.getItem(`${post._id}`));
-				if (cachedData) {
-					setErrorMsg("Can't connect, fetching from cache.");
-					setOpenError(true);
-					setUsers(cachedData.map((data) => data.user));
-					setIsLoading(false);
-				} else {
-					setErrorMsg("Can't connect to the internet!");
-					setOpenError(true);
-				}
-			});
-	};
-
-	const exiting = () => {
-		setUsers([]);
 	};
 
 	const handleClose = () => {
@@ -103,18 +88,40 @@ export default function Likes(props) {
 		}
 	});
 
+	const likeGroup = users && (
+		<AvatarGroup className={classes.avGrp} onClick={handleShow}>
+			{users[0] && (
+				<Avatar
+					className={classes.avatar}
+					alt={users[0].username}
+					src={users[0].profilePicture}
+				/>
+			)}
+			{users[1] && (
+				<Avatar
+					className={classes.avatar}
+					alt={users[1].username}
+					src={users[1].profilePicture}
+				/>
+			)}
+			{users[2] && (
+				<Avatar
+					className={classes.avatar}
+					alt={users[2].username}
+					src={users[2].profilePicture}
+				/>
+			)}
+			{users.length > 2 && (
+				<Tooltip title={users.map((user) => user.username)}>
+					<Avatar className={classes.avatar}>{`+${users.length - 3}`}</Avatar>
+				</Tooltip>
+			)}
+		</AvatarGroup>
+	);
+
 	return (
 		<>
-			<Button
-				onClick={handleShow}
-				style={{
-					marginLeft: "1rem",
-					marginTop: "1rem",
-					display: likes ? "" : `none`
-				}}
-			>
-				{likes === 1 ? `${likes} like` : `${likes} likes`}
-			</Button>
+			{likeGroup}
 			<Dialog
 				open={show && selfShow}
 				onClose={handleClose}
@@ -123,7 +130,6 @@ export default function Likes(props) {
 				fullWidth={true}
 				fullScreen={width < 500}
 				onEntering={entering}
-				onExit={exiting}
 				scroll="paper"
 			>
 				<DialogTitle
@@ -144,16 +150,10 @@ export default function Likes(props) {
 				<DialogContent>
 					<List>
 						<Divider />
-						{isLoading ? <LikesSkeleton likes={likes} /> : likedUsers}
+						{likedUsers}
 					</List>
 				</DialogContent>
 			</Dialog>
-			<SnackAlert
-				severity="warning"
-				openError={openError}
-				setOpenError={setOpenError}
-				errorMsg={errorMsg}
-			/>
 		</>
 	);
 }

@@ -13,6 +13,13 @@ const useStyles = makeStyles((theme) => ({
 		bottom: 0,
 		width: "100%",
 		boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)"
+	},
+	bottomBar: {
+		position: "fixed",
+		width: "100%",
+		height: 50,
+		bottom: 0,
+		zIndex: theme.zIndex.appBar
 	}
 }));
 
@@ -75,14 +82,7 @@ function BottomBar(props) {
 	};
 
 	return (
-		<div
-			style={{
-				position: "fixed",
-				width: "100%",
-				height: 50,
-				bottom: 0
-			}}
-		>
+		<div className={classes.bottomBar}>
 			<Paper square>
 				<Tabs
 					value={value}

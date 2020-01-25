@@ -16,6 +16,13 @@ router.get("/", (req, res) => {
 			"user comments likes",
 			"-password -registerDate -__v -posts -email"
 		)
+		.populate({
+			path: "likes",
+			populate: {
+				path: "user",
+				model: "users"
+			}
+		})
 		.exec()
 		.then((result) => res.status(200).json(result))
 		.catch((err) => res.status(500).json(err));

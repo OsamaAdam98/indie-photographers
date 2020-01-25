@@ -50,7 +50,7 @@ export default function PostMedia(props) {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [likes, setLikes] = useState(feedPost.likes.length);
 	const [liked, setLiked] = useState(
-		feedPost.likes.filter((like) => like.user === currentUser._id).length
+		feedPost.likes.filter((like) => like.user._id === currentUser._id).length
 			? true
 			: false
 	);
@@ -211,14 +211,14 @@ export default function PostMedia(props) {
 				)}
 				<Likes
 					likes={likes}
-					post={feedPost}
+					users={feedPost && feedPost.likes.map((like) => like.user)}
 					show={showLikes}
 					setShow={setShowLikes}
 					{...props}
 				/>
 				<CardActions disableSpacing>
 					<IconButton
-						aria-label="add to favorites"
+						aria-label="love"
 						onClick={() => handleLike(feedPost._id)}
 					>
 						<FavoriteIcon color={liked ? "secondary" : "disabled"} />

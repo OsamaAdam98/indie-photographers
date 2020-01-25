@@ -64,7 +64,7 @@ export default function Feed(props) {
 
 	useEffect(() => {
 		if (props.location.hash === "") hideAll();
-	});
+	}, [props.location.hash]);
 
 	const config = {
 		onUploadProgress: (progressEvent) => {
@@ -168,7 +168,6 @@ export default function Feed(props) {
 			.get(`/api/feed/?page=${page}`)
 			.then((res) => {
 				const {data} = res;
-
 				if (getNewPosts(data, cachedData)) {
 					setNewPost((prevPosts) => [
 						...prevPosts,
