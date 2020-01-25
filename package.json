@@ -20,7 +20,7 @@
 		"express": "^4.17.1",
 		"heroku-ssl-redirect": "0.0.4",
 		"jsonwebtoken": "^8.5.1",
-		"mongoose": "^5.8.7"
+		"mongoose": "^5.8.9"
 	},
 	"devDependencies": {
 		"concurrently": "^5.0.2"

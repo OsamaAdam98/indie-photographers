@@ -56,7 +56,7 @@ function BottomBar(props) {
 					window.scroll({
 						top: 0,
 						left: 0,
-						behavior: "smooth"
+						behavior: "auto"
 					});
 				history.push("/feed/");
 				break;
@@ -94,7 +94,9 @@ function BottomBar(props) {
 					className={classes.tabs}
 				>
 					<Tab icon={<HomeIcon />} aria-label="Home" />
+
 					<Tab icon={<ViewDayIcon />} aria-label="Feed" />
+
 					<Tab
 						icon={
 							<Avatar
@@ -110,18 +112,20 @@ function BottomBar(props) {
 							display: user.username ? "" : "none"
 						}}
 					/>
-					<Tab
-						icon={<GetAppIcon />}
-						aria-label="Install app"
-						style={{
-							display: showBtn ? "" : "none"
-						}}
-					/>
+
 					<Tab
 						icon={<SettingsIcon />}
 						aria-label="Settings"
 						style={{
 							display: user.username ? "none" : ""
+						}}
+					/>
+
+					<Tab
+						icon={<GetAppIcon />}
+						aria-label="Install app"
+						style={{
+							display: showBtn ? "" : "none"
 						}}
 					/>
 				</Tabs>
