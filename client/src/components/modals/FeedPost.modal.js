@@ -3,7 +3,6 @@ import {useHistory} from "react-router-dom";
 import axios from "axios";
 import FAB from "../FAB";
 import EditIcon from "@material-ui/icons/Edit";
-import {makeStyles} from "@material-ui/styles";
 import useWindowDimensions from "../utilities/WindowDimensions";
 import {
 	Dialog,
@@ -11,22 +10,13 @@ import {
 	DialogTitle,
 	DialogContent,
 	TextField,
-	Button
+	Button,
+	makeStyles
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
 	input: {
 		display: "none"
-	},
-	buttonDivStyle: {
-		width: "100%",
-		marginTop: "1rem"
-	},
-	buttonStyle: {
-		width: "100%"
-	},
-	cancel: {
-		color: theme.palette.error.light
 	}
 }));
 
@@ -181,9 +171,7 @@ export default function PostModal(props) {
 						>
 							Post
 						</Button>
-						<Button onClick={handleClose} className={classes.cancel}>
-							Cancel
-						</Button>
+						<Button onClick={handleClose}>Cancel</Button>
 					</DialogActions>
 				</form>
 			</Dialog>

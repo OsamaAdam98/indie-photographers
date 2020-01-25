@@ -5,7 +5,7 @@ import {useWindowDimensions} from "..";
 
 export default function PhotoPreview(props) {
 	const {photo, username, show, setShow, maxHeight} = props;
-	const {height} = useWindowDimensions();
+	const {height, width} = useWindowDimensions();
 
 	const [selfShow, setSelfShow] = useState(false);
 
@@ -43,7 +43,7 @@ export default function PhotoPreview(props) {
 			style={{
 				objectFit: "contain",
 				objectPosition: "50% 50%",
-				maxWidth: "100%",
+				maxWidth: `${width}px`,
 				maxHeight: `${0.9 * height}px`
 			}}
 		/>
