@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
 import {Dialog} from "@material-ui/core";
 import {useWindowDimensions} from "..";
@@ -10,6 +10,11 @@ export default function PhotoPreview(props) {
 	const [selfShow, setSelfShow] = useState(false);
 
 	const history = useHistory();
+
+	useEffect(() => {
+		if (props.location.hash === "") handleClose();
+		// eslint-disable-next-line
+	}, [props.location.hash]);
 
 	const handleShow = () => {
 		setSelfShow(true);

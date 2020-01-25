@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
 import {
@@ -33,6 +33,11 @@ export default function Login(props) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
+
+	useEffect(() => {
+		if (props.location.hash === "") handleClose();
+		// eslint-disable-next-line
+	}, [props.location.hash]);
 
 	const handleClose = () => {
 		setShow(false);

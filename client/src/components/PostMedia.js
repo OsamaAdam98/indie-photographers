@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, lazy, Suspense} from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -19,8 +19,10 @@ import {
 } from "@material-ui/core";
 import ShareIcon from "@material-ui/icons/Share";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import Likes from "./modals/Likes.modal";
-import PhotoPreview from "./modals/PhotoPreview.modal";
+import {Skeleton} from "@material-ui/lab";
+
+const PhotoPreview = lazy(() => import("./modals/PhotoPreview.modal"));
+const Likes = lazy(() => import("./modals/Likes.modal"));
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -189,27 +191,33 @@ export default function PostMedia(props) {
 				</CardContent>
 				{feedPost.photo ? (
 					<CardActionArea>
-						<CardMedia className={classes.media}>
-							<PhotoPreview
-								show={showPrev}
-								setShow={setShowPrev}
-								photo={feedPost.photo}
-								username={feedPost.user.username}
-								maxHeight={250}
-								{...props}
-							/>
-						</CardMedia>
+						<Suspense
+							fallback={<Skeleton variant="rect" className={classes.media} />}
+						>
+							<CardMedia className={classes.media}>
+								<PhotoPreview
+									show={showPrev}
+									setShow={setShowPrev}
+									photo={feedPost.photo}
+									username={feedPost.user.username}
+									maxHeight={250}
+									{...props}
+								/>
+							</CardMedia>
+						</Suspense>
 					</CardActionArea>
 				) : (
 					""
 				)}
-				<Likes
-					likes={likes}
-					post={feedPost}
-					show={showLikes}
-					setShow={setShowLikes}
-					{...props}
-				/>
+				<Suspense fallback={<div />}>
+					<Likes
+						likes={likes}
+						post={feedPost}
+						show={showLikes}
+						setShow={setShowLikes}
+						{...props}
+					/>
+				</Suspense>
 				<CardActions disableSpacing>
 					<IconButton
 						aria-label="add to favorites"

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -28,6 +28,11 @@ export default function Likes(props) {
 	const {width} = useWindowDimensions();
 
 	const history = useHistory();
+
+	useEffect(() => {
+		if (props.location.hash === "") handleClose();
+		// eslint-disable-next-line
+	}, [props.location.hash]);
 
 	const entering = () => {
 		handleShow();

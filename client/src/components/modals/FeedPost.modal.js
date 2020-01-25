@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
 import FAB from "../FAB";
@@ -40,6 +40,11 @@ export default function PostModal(props) {
 	const [errorMsg, setErrorMsg] = useState("");
 	const [msg, setMsg] = useState("");
 	const [selfShow, setSelfShow] = useState(false);
+
+	useEffect(() => {
+		if (props.location.hash === "") handleClose();
+		// eslint-disable-next-line
+	}, [props.location.hash]);
 
 	const msgChange = (event) => setMsg(event.target.value);
 

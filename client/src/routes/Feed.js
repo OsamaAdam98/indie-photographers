@@ -246,6 +246,7 @@ export default function Feed(props) {
 					currentUser={user}
 					handleDelete={handleDelete}
 					key={incoming._id}
+					{...props}
 				/>
 		  ))
 		: null;
