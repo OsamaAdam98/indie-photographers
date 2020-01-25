@@ -187,7 +187,6 @@ export default function PostMedia(props) {
 						{feedPost.msg}
 					</Typography>
 				</CardContent>
-
 				{feedPost.photo ? (
 					<CardActionArea>
 						<CardMedia className={classes.media}>

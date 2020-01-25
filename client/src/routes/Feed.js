@@ -1,14 +1,22 @@
-import React, {useState, useEffect, useRef, useCallback} from "react";
+import React, {
+	useState,
+	useEffect,
+	useRef,
+	useCallback,
+	lazy,
+	Suspense
+} from "react";
 import axios from "axios";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import {LinearProgress, Grid, Box} from "@material-ui/core";
 import {
-	PostMedia,
 	PostModal,
 	PostSkeleton,
 	SnackAlert,
 	useWindowDimensions
 } from "../components";
+
+const PostMedia = lazy(() => import("../components/PostMedia"));
 
 export default function Feed(props) {
 	const {isLogged, user} = props;
@@ -259,16 +267,16 @@ export default function Feed(props) {
 
 			<Grid container direction="column" alignItems="center" justify="center">
 				<Box maxWidth="500px" width={`${width > 500 ? `500px` : `100%`}`}>
-					{newPost && newPosts}
-					{postMedia}
-					{isLoading ? <PostSkeleton /> : null}
+					<Suspense fallback={<PostSkeleton />}>
+						{newPost && newPosts}
+						{postMedia}
+					</Suspense>
 					{!hasMore && !isLoading ? (
 						<DoneAllIcon
 							style={{
 								position: "relative",
 								width: "100%",
-								textAlign: "center",
-								marginBottom: "4rem"
+								textAlign: "center"
 							}}
 						/>
 					) : null}

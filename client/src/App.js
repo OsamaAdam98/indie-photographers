@@ -182,6 +182,11 @@ function App() {
 							handleClick={handleClick}
 						/>
 					)}
+					<div
+						style={{
+							height: 48
+						}}
+					/>
 				</>
 			</Router>
 		</MuiThemeProvider>

@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(2)
 	},
 	media: {
-		height: 200
+		height: 345
 	}
 }));
 export default function ProfileSkeleton() {

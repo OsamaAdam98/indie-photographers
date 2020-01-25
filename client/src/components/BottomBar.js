@@ -31,7 +31,7 @@ function BottomBar(props) {
 				setValue(2);
 				break;
 			case "/settings":
-				setValue(4);
+				setValue(3);
 				break;
 			case "/":
 				setValue(0);
@@ -64,10 +64,10 @@ function BottomBar(props) {
 				history.push(`/profile/${user._id}`);
 				break;
 			case 3:
-				handleClick();
+				history.push("/settings");
 				break;
 			case 4:
-				history.push("/settings");
+				handleClick();
 				break;
 			default:
 				break;
