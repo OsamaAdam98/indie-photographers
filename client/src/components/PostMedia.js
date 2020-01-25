@@ -20,9 +20,9 @@ import {
 import ShareIcon from "@material-ui/icons/Share";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import {Skeleton} from "@material-ui/lab";
+import {Likes} from "./index";
 
 const PhotoPreview = lazy(() => import("./modals/PhotoPreview.modal"));
-const Likes = lazy(() => import("./modals/Likes.modal"));
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -209,15 +209,13 @@ export default function PostMedia(props) {
 				) : (
 					""
 				)}
-				<Suspense fallback={<div />}>
-					<Likes
-						likes={likes}
-						post={feedPost}
-						show={showLikes}
-						setShow={setShowLikes}
-						{...props}
-					/>
-				</Suspense>
+				<Likes
+					likes={likes}
+					post={feedPost}
+					show={showLikes}
+					setShow={setShowLikes}
+					{...props}
+				/>
 				<CardActions disableSpacing>
 					<IconButton
 						aria-label="add to favorites"

@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import axios from "axios";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
-import {LinearProgress, Grid, Box} from "@material-ui/core";
+import {LinearProgress, Grid, Box, makeStyles} from "@material-ui/core";
 import {
 	PostModal,
 	PostSkeleton,
@@ -18,9 +18,27 @@ import {
 
 const PostMedia = lazy(() => import("../components/PostMedia"));
 
+const useStyles = makeStyles({
+	progress: {
+		position: "fixed",
+		bottom: 0,
+		width: "100%",
+		height: 4
+	},
+	"@media (max-width: 500px)": {
+		progress: {
+			position: "fixed",
+			bottom: 48,
+			width: "100%",
+			height: 4
+		}
+	}
+});
+
 export default function Feed(props) {
 	const {isLogged, user} = props;
 	const {width} = useWindowDimensions();
+	const classes = useStyles();
 
 	const [posts, setPosts] = useState([]);
 	const [newPost, setNewPost] = useState([]);
@@ -87,26 +105,33 @@ export default function Feed(props) {
 			});
 	};
 
-	const updatePage = (cachedData, page, id) => {
-		localStorage.setItem(
-			`feedPage${page}`,
-			JSON.stringify(cachedData.filter((data) => data._id !== id))
-		);
-		if (page !== 1) {
-			localStorage.setItem(
-				`feedPage1`,
-				JSON.stringify(
-					JSON.parse(localStorage.getItem("feedPage1")).filter(
-						(data) => data._id !== id
-					)
-				)
-			);
-		}
+	const cleanupDelete = (id) => {
+		let index = 1;
+		let targetHit;
+		let cachedData;
+		do {
+			cachedData = JSON.parse(localStorage.getItem(`feedPage${index}`));
+			if (cachedData) {
+				targetHit = cachedData.filter((data) => data._id === id) ? true : false;
+				if (targetHit) {
+					setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
+					setNewPost((prevPosts) =>
+						prevPosts.filter((post) => post._id !== id)
+					);
+
+					localStorage.setItem(
+						`feedPage${index}`,
+						JSON.stringify(cachedData.filter((data) => data._id !== id))
+					);
+					break;
+				}
+				index++;
+			} else break;
+		} while (cachedData);
 	};
 
 	const handleDelete = (id) => {
 		const token = localStorage.getItem("token");
-		const cachedData = JSON.parse(localStorage.getItem(`feedPage${page}`));
 
 		axios
 			.delete(`/api/feed/delete/${id}`, {
@@ -115,12 +140,11 @@ export default function Feed(props) {
 				}
 			})
 			.then((res) => {
-				updatePage(cachedData, page, id);
+				cleanupDelete(id);
 				setErrorMsg(res.data);
 				setSeverity("success");
 				setOpenError(true);
 			})
-			.then(() => window.location.reload())
 			.catch((err) => console.log(err));
 	};
 
@@ -252,56 +276,49 @@ export default function Feed(props) {
 		: null;
 
 	return (
-		<>
-			<LinearProgress
-				variant="determinate"
-				value={uploadProgress}
-				color="secondary"
-				style={{
-					position: "fixed",
-					top: "0px",
-					width: "100%",
-					height: "4.4rem",
-					display: isUploading ? `` : `none`
-				}}
-			/>
-
-			<Grid container direction="column" alignItems="center" justify="center">
-				<Box maxWidth="500px" width={`${width > 500 ? `500px` : `100%`}`}>
-					<Suspense fallback={<PostSkeleton />}>
-						{newPost && newPosts}
-						{postMedia}
-					</Suspense>
-					{!hasMore && !isLoading ? (
-						<DoneAllIcon
-							style={{
-								position: "relative",
-								width: "100%",
-								textAlign: "center"
-							}}
-						/>
-					) : null}
-					<SnackAlert
-						severity={severity}
-						openError={openError}
-						setOpenError={setOpenError}
-						errorMsg={errorMsg}
+		<Grid container direction="column" alignItems="center" justify="center">
+			<Box maxWidth="500px" width={`${width > 500 ? `500px` : `100%`}`}>
+				<Suspense fallback={<PostSkeleton />}>
+					{newPost && newPosts}
+					{postMedia}
+				</Suspense>
+				{!hasMore && !isLoading ? (
+					<DoneAllIcon
+						style={{
+							position: "relative",
+							width: "100%",
+							textAlign: "center"
+						}}
 					/>
-					<PostModal
-						isLogged={isLogged}
-						user={user}
-						setNewPost={setNewPost}
-						photo={photo}
-						setPhoto={setPhoto}
-						isUploading={isUploading}
-						onUpload={onUpload}
-						show={showPost}
-						setShow={setShowPost}
-						offline={offline}
-						{...props}
-					/>
-				</Box>
-			</Grid>
-		</>
+				) : null}
+				<SnackAlert
+					severity={severity}
+					openError={openError}
+					setOpenError={setOpenError}
+					errorMsg={errorMsg}
+				/>
+				<PostModal
+					isLogged={isLogged}
+					user={user}
+					setNewPost={setNewPost}
+					photo={photo}
+					setPhoto={setPhoto}
+					isUploading={isUploading}
+					onUpload={onUpload}
+					show={showPost}
+					setShow={setShowPost}
+					offline={offline}
+					{...props}
+				/>
+			</Box>
+			{isUploading && (
+				<LinearProgress
+					variant="determinate"
+					value={uploadProgress}
+					color="primary"
+					className={classes.progress}
+				/>
+			)}
+		</Grid>
 	);
 }
