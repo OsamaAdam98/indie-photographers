@@ -145,7 +145,6 @@ function App() {
 						showBtn={showBtn}
 						handleClick={handleClick}
 					/>
-
 					<Route
 						exact
 						path="/"
@@ -184,7 +183,8 @@ function App() {
 					)}
 					<div
 						style={{
-							height: 48
+							height: 48,
+							display: width < 500 ? "" : "none"
 						}}
 					/>
 				</>

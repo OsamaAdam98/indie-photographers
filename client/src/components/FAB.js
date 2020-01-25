@@ -16,6 +16,16 @@ const useStyles = makeStyles((theme) => ({
 		bottom: 70,
 		left: "auto",
 		position: "fixed"
+	},
+	"@media (min-width: 500px)": {
+		customFab: {
+			margin: 0,
+			top: "auto",
+			right: 20,
+			bottom: 20,
+			left: "auto",
+			position: "fixed"
+		}
 	}
 }));
 

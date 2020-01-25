@@ -5,7 +5,9 @@ import {
 	AppBar,
 	Toolbar,
 	Typography,
-	Avatar
+	Avatar,
+	useScrollTrigger,
+	Slide
 } from "@material-ui/core";
 import logo from "../logo.png";
 import {useWindowDimensions, LeftDrawer, Login} from ".";
@@ -29,6 +31,17 @@ const useStyles = makeStyles((theme) => ({
 	toolbar: theme.mixins.toolbar
 }));
 
+function HideOnScroll(props) {
+	const {children} = props;
+	const trigger = useScrollTrigger();
+
+	return (
+		<Slide appear={false} direction="down" in={!trigger}>
+			{children}
+		</Slide>
+	);
+}
+
 function MenuAppBar(props) {
 	const {isLogged, setIsLogged, user, setUser, showBtn, handleClick} = props;
 	const {width} = useWindowDimensions();
@@ -43,38 +56,40 @@ function MenuAppBar(props) {
 
 	return (
 		<div className={(classes.root, classes.barMargin)}>
-			<AppBar position="fixed" className={classes.appBar} color="inherit">
-				<Toolbar>
-					{width > 500 && (
-						<LeftDrawer
+			<HideOnScroll {...props}>
+				<AppBar position="fixed" className={classes.appBar} color="inherit">
+					<Toolbar>
+						{width > 500 && (
+							<LeftDrawer
+								user={user}
+								showBtn={showBtn}
+								handleClick={handleClick}
+							/>
+						)}
+						<Link to="/">
+							<Avatar
+								alt="indie photographers"
+								src={logo}
+								style={{
+									marginRight: "1rem"
+								}}
+							/>
+						</Link>
+						<Typography variant="h5" className={classes.title}>
+							Indie
+						</Typography>
+						<Login
 							user={user}
-							showBtn={showBtn}
-							handleClick={handleClick}
+							isLogged={isLogged}
+							setIsLogged={setIsLogged}
+							setUser={setUser}
+							show={show}
+							setShow={setShow}
+							{...props}
 						/>
-					)}
-					<Link to="/">
-						<Avatar
-							alt="indie photographers"
-							src={logo}
-							style={{
-								marginRight: "1rem"
-							}}
-						/>
-					</Link>
-					<Typography variant="h5" className={classes.title}>
-						Indie
-					</Typography>
-					<Login
-						user={user}
-						isLogged={isLogged}
-						setIsLogged={setIsLogged}
-						setUser={setUser}
-						show={show}
-						setShow={setShow}
-						{...props}
-					/>
-				</Toolbar>
-			</AppBar>
+					</Toolbar>
+				</AppBar>
+			</HideOnScroll>
 		</div>
 	);
 }
