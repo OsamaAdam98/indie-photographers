@@ -70,12 +70,12 @@ export default function Login(props) {
 						localStorage.setItem("token", token);
 						setEmail("");
 						setPassword("");
-						handleClose();
 						setIsLogged(true);
 					}
 					if (user) {
 						setUser(user);
 					}
+					handleClose();
 				})
 				.catch((err) => {
 					console.log(err);

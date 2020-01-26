@@ -45,7 +45,6 @@ export default function PostMedia(props) {
 	const classes = useStyles();
 
 	const [anchorEl, setAnchorEl] = useState(null);
-	const [likes, setLikes] = useState(feedPost.likes.length);
 	const [liked, setLiked] = useState(
 		feedPost.likes.filter((like) => like.user._id === currentUser._id).length
 			? true
@@ -53,6 +52,52 @@ export default function PostMedia(props) {
 	);
 
 	const open = Boolean(anchorEl);
+
+	const likeCleanup = (id, like) => {
+		let index = 1;
+		let targetHit = false;
+		let cachedData;
+
+		do {
+			cachedData = JSON.parse(localStorage.getItem(`feedPage${index}`));
+			if (cachedData !== null) {
+				targetHit = cachedData.filter((post) => post._id === id).length
+					? true
+					: false;
+				if (targetHit) {
+					if (!like) {
+						cachedData = cachedData.map((post) => {
+							if (post._id === id) {
+								post.likes = post.likes.filter(
+									(like) => like.user._id !== currentUser._id
+								);
+							}
+							return post;
+						});
+					} else {
+						cachedData = cachedData.map((post) => {
+							if (post._id === id) {
+								post.likes = [
+									...post.likes,
+									{
+										user: currentUser
+									}
+								];
+							}
+							return post;
+						});
+					}
+
+					localStorage.setItem(`feedPage${index}`, JSON.stringify(cachedData));
+					break;
+				} else {
+					index++;
+				}
+			} else {
+				break;
+			}
+		} while (true);
+	};
 
 	const handleLike = (id) => {
 		const token = localStorage.getItem("token");
@@ -65,7 +110,7 @@ export default function PostMedia(props) {
 			.then((res) => {
 				const {like} = res.data;
 				setLiked(like);
-				setLikes((prevNumber) => (like ? prevNumber + 1 : prevNumber - 1));
+				likeCleanup(id, like);
 			})
 			.catch((err) => console.log(err));
 	};
@@ -203,10 +248,11 @@ export default function PostMedia(props) {
 					""
 				)}
 				<Likes
-					likes={likes}
+					liked={liked}
 					users={feedPost && feedPost.likes.map((like) => like.user)}
 					show={showLikes}
 					setShow={setShowLikes}
+					currentUser={currentUser}
 					{...props}
 				/>
 				<CardActions disableSpacing>

@@ -112,7 +112,9 @@ export default function Feed(props) {
 		do {
 			cachedData = JSON.parse(localStorage.getItem(`feedPage${index}`));
 			if (cachedData) {
-				targetHit = cachedData.filter((data) => data._id === id) ? true : false;
+				targetHit = cachedData.filter((data) => data._id === id).length
+					? true
+					: false;
 				if (targetHit) {
 					setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
 					setNewPost((prevPosts) =>
@@ -127,7 +129,7 @@ export default function Feed(props) {
 				}
 				index++;
 			} else break;
-		} while (cachedData);
+		} while (true);
 	};
 
 	const handleDelete = (id) => {
@@ -164,6 +166,7 @@ export default function Feed(props) {
 			setIsLoading(false);
 			setHasMore(cachedData.length > 0);
 		}
+
 		axios
 			.get(`/api/feed/?page=${page}`)
 			.then((res) => {

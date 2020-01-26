@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Likes(props) {
-	const {users, show, setShow} = props;
+	const {users, show, setShow, liked, currentUser} = props;
 	const [selfShow, setSelfShow] = useState(false);
 	const {width} = useWindowDimensions();
 
@@ -91,21 +91,28 @@ export default function Likes(props) {
 	const likeGroup = users && (
 		<Tooltip title={users.map((user) => user.username)}>
 			<AvatarGroup className={classes.avGrp} onClick={handleShow}>
-				{users[0] && (
+				{liked && (
+					<Avatar
+						className={classes.avatar}
+						alt={currentUser.username}
+						src={currentUser.profilePicture}
+					/>
+				)}
+				{users[0] && users[0]._id !== currentUser._id && (
 					<Avatar
 						className={classes.avatar}
 						alt={users[0].username}
 						src={users[0].profilePicture}
 					/>
 				)}
-				{users[1] && (
+				{users[1] && users[1]._id !== currentUser._id && (
 					<Avatar
 						className={classes.avatar}
 						alt={users[1].username}
 						src={users[1].profilePicture}
 					/>
 				)}
-				{users[2] && (
+				{users[2] && users[2]._id !== currentUser._id && (
 					<Avatar
 						className={classes.avatar}
 						alt={users[2].username}
