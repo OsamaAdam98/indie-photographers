@@ -45,6 +45,7 @@ export default function PostMedia(props) {
 	const classes = useStyles();
 
 	const [anchorEl, setAnchorEl] = useState(null);
+	const [post, setPost] = useState(feedPost);
 	const [liked, setLiked] = useState(
 		feedPost.likes.filter((like) => like.user._id === currentUser._id).length
 			? true
@@ -71,6 +72,7 @@ export default function PostMedia(props) {
 								post.likes = post.likes.filter(
 									(like) => like.user._id !== currentUser._id
 								);
+								setPost(post);
 							}
 							return post;
 						});
@@ -83,6 +85,7 @@ export default function PostMedia(props) {
 										user: currentUser
 									}
 								];
+								setPost(post);
 							}
 							return post;
 						});
@@ -249,7 +252,7 @@ export default function PostMedia(props) {
 				)}
 				<Likes
 					liked={liked}
-					users={feedPost && feedPost.likes.map((like) => like.user)}
+					users={post && post.likes.map((like) => like.user)}
 					show={showLikes}
 					setShow={setShowLikes}
 					currentUser={currentUser}

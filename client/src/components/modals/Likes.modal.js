@@ -12,8 +12,8 @@ import {
 	DialogTitle,
 	Avatar,
 	Divider,
-	Tooltip,
-	makeStyles
+	makeStyles,
+	Badge
 } from "@material-ui/core";
 import {AvatarGroup} from "@material-ui/lab";
 import {useWindowDimensions} from "..";
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 	avGrp: {
 		marginLeft: theme.spacing(3),
 		marginTop: theme.spacing(2),
-		maxWidth: theme.spacing(6),
+		maxWidth: theme.spacing(9),
 		"&:hover": {
 			cursor: "pointer"
 		}
@@ -30,6 +30,11 @@ const useStyles = makeStyles((theme) => ({
 	avatar: {
 		height: theme.spacing(3),
 		width: theme.spacing(3)
+	},
+	badge: {
+		"&:hover": {
+			cursor: "pointer"
+		}
 	}
 }));
 
@@ -89,7 +94,17 @@ export default function Likes(props) {
 	});
 
 	const likeGroup = users && (
-		<Tooltip title={users.map((user) => user.username)}>
+		<Badge
+			anchorOrigin={{
+				vertical: "bottom",
+				horizontal: "right"
+			}}
+			badgeContent={users.length + (liked ? 1 : 0) > 3 ? users.length - 3 : 0}
+			color="primary"
+			max={99}
+			onClick={handleShow}
+			className={classes.badge}
+		>
 			<AvatarGroup className={classes.avGrp} onClick={handleShow}>
 				{liked && (
 					<Avatar
@@ -112,15 +127,17 @@ export default function Likes(props) {
 						src={users[1].profilePicture}
 					/>
 				)}
-				{users[2] && users[2]._id !== currentUser._id && (
-					<Avatar
-						className={classes.avatar}
-						alt={users[2].username}
-						src={users[2].profilePicture}
-					/>
-				)}
+				{users[2] &&
+					users[2]._id !== currentUser._id &&
+					users.length + (liked ? 1 : 0) < 4 && (
+						<Avatar
+							className={classes.avatar}
+							alt={users[2].username}
+							src={users[2].profilePicture}
+						/>
+					)}
 			</AvatarGroup>
-		</Tooltip>
+		</Badge>
 	);
 
 	return (
