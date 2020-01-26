@@ -131,7 +131,6 @@ export default function PostModal(props) {
 							onChange={msgChange}
 							autoFocus={true}
 							fullWidth={true}
-							dir="auto"
 						/>
 						<img
 							src={photo}
@@ -159,7 +158,6 @@ export default function PostModal(props) {
 								accept="image/*"
 								className={classes.input}
 								id="outlined-button-file"
-								multiple
 								type="file"
 								onChange={onUpload}
 							/>
