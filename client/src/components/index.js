@@ -19,6 +19,8 @@ import ProfileSkeleton from "./ProfileSkeleton";
 import GoogleBtn from "./GoogleBtn";
 import Settings from "../routes/Settings";
 import Likes from "./modals/Likes.modal";
+import LightSwitch from "./LightSwitch";
+import ProfileCard from "./ProfileCard";
 
 export {
 	Home,
@@ -41,5 +43,7 @@ export {
 	ProfileSkeleton,
 	GoogleBtn,
 	Settings,
-	Likes
+	Likes,
+	LightSwitch,
+	ProfileCard
 };

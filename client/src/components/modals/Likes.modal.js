@@ -22,14 +22,14 @@ const useStyles = makeStyles((theme) => ({
 	avGrp: {
 		marginLeft: theme.spacing(3),
 		marginTop: theme.spacing(2),
-		maxWidth: theme.spacing(9),
+		maxWidth: theme.spacing(6),
 		"&:hover": {
 			cursor: "pointer"
 		}
 	},
 	avatar: {
-		height: theme.spacing(5),
-		width: theme.spacing(5)
+		height: theme.spacing(3),
+		width: theme.spacing(3)
 	}
 }));
 
@@ -89,34 +89,31 @@ export default function Likes(props) {
 	});
 
 	const likeGroup = users && (
-		<AvatarGroup className={classes.avGrp} onClick={handleShow}>
-			{users[0] && (
-				<Avatar
-					className={classes.avatar}
-					alt={users[0].username}
-					src={users[0].profilePicture}
-				/>
-			)}
-			{users[1] && (
-				<Avatar
-					className={classes.avatar}
-					alt={users[1].username}
-					src={users[1].profilePicture}
-				/>
-			)}
-			{users[2] && (
-				<Avatar
-					className={classes.avatar}
-					alt={users[2].username}
-					src={users[2].profilePicture}
-				/>
-			)}
-			{users.length > 2 && (
-				<Tooltip title={users.map((user) => user.username)}>
-					<Avatar className={classes.avatar}>{`+${users.length - 3}`}</Avatar>
-				</Tooltip>
-			)}
-		</AvatarGroup>
+		<Tooltip title={users.map((user) => user.username)}>
+			<AvatarGroup className={classes.avGrp} onClick={handleShow}>
+				{users[0] && (
+					<Avatar
+						className={classes.avatar}
+						alt={users[0].username}
+						src={users[0].profilePicture}
+					/>
+				)}
+				{users[1] && (
+					<Avatar
+						className={classes.avatar}
+						alt={users[1].username}
+						src={users[1].profilePicture}
+					/>
+				)}
+				{users[2] && (
+					<Avatar
+						className={classes.avatar}
+						alt={users[2].username}
+						src={users[2].profilePicture}
+					/>
+				)}
+			</AvatarGroup>
+		</Tooltip>
 	);
 
 	return (

@@ -1,4 +1,4 @@
-import React, {useState, lazy, Suspense} from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -19,10 +19,7 @@ import {
 } from "@material-ui/core";
 import ShareIcon from "@material-ui/icons/Share";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import {Skeleton} from "@material-ui/lab";
-import {Likes} from "./index";
-
-const PhotoPreview = lazy(() => import("./modals/PhotoPreview.modal"));
+import {Likes, PhotoPreview} from "./index";
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -191,20 +188,16 @@ export default function PostMedia(props) {
 				</CardContent>
 				{feedPost.photo ? (
 					<CardActionArea>
-						<Suspense
-							fallback={<Skeleton variant="rect" className={classes.media} />}
-						>
-							<CardMedia className={classes.media}>
-								<PhotoPreview
-									show={showPrev}
-									setShow={setShowPrev}
-									photo={feedPost.photo}
-									username={feedPost.user.username}
-									maxHeight={250}
-									{...props}
-								/>
-							</CardMedia>
-						</Suspense>
+						<CardMedia className={classes.media}>
+							<PhotoPreview
+								show={showPrev}
+								setShow={setShowPrev}
+								photo={feedPost.photo}
+								username={feedPost.user.username}
+								maxHeight={250}
+								{...props}
+							/>
+						</CardMedia>
 					</CardActionArea>
 				) : (
 					""

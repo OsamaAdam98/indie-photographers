@@ -49,7 +49,7 @@ export default function LeftDrawer(props) {
 		setState(open);
 	};
 
-	const userProfile = (
+	const UserProfile = () => (
 		<div>
 			<div
 				style={{
@@ -79,14 +79,14 @@ export default function LeftDrawer(props) {
 		</div>
 	);
 
-	const sideList = () => (
+	const SideList = () => (
 		<div
 			className={classes.list}
 			role="presentation"
 			onClick={toggleDrawer(false)}
 			onKeyDown={toggleDrawer(false)}
 		>
-			{userProfile}
+			<UserProfile />
 			<ListItem
 				button
 				onClick={handleClick}
@@ -113,9 +113,6 @@ export default function LeftDrawer(props) {
 				<ListItem button onClick={() => history.push("/feed/")}>
 					Feed
 				</ListItem>
-				{/* <ListItem button onClick={() => history.push("/marketplace/")}>
-					Store
-				</ListItem> */}
 			</List>
 		</div>
 	);
@@ -141,7 +138,7 @@ export default function LeftDrawer(props) {
 					paper: classes.drawerPaper
 				}}
 			>
-				{sideList()}
+				<SideList />
 			</SwipeableDrawer>
 		</>
 	);

@@ -1,9 +1,7 @@
-import React, {useState, useEffect, lazy, Suspense} from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
 
-import {ProfileSkeleton, useWindowDimensions} from "../components";
-
-const ProfileCard = lazy(() => import("../components/ProfileCard"));
+import {useWindowDimensions, ProfileCard} from "../components";
 
 export default function Profile(props) {
 	const [username, setUsername] = useState("");
@@ -37,15 +35,13 @@ export default function Profile(props) {
 	}, [props.match.params.id]);
 
 	return (
-		<Suspense fallback={<ProfileSkeleton />}>
-			<ProfileCard
-				width={width}
-				pic={pic}
-				username={username}
-				show={show}
-				setShow={setShow}
-				{...props}
-			/>
-		</Suspense>
+		<ProfileCard
+			width={width}
+			pic={pic}
+			username={username}
+			show={show}
+			setShow={setShow}
+			{...props}
+		/>
 	);
 }

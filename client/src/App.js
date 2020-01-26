@@ -144,6 +144,8 @@ function App() {
 						setUser={setUser}
 						showBtn={showBtn}
 						handleClick={handleClick}
+						isLight={isLight}
+						setIsLight={setIsLight}
 					/>
 					<Route
 						exact

@@ -10,7 +10,7 @@ import {
 	Slide
 } from "@material-ui/core";
 import logo from "../logo.png";
-import {useWindowDimensions, LeftDrawer, Login} from ".";
+import {useWindowDimensions, LeftDrawer, Login, LightSwitch} from ".";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -43,7 +43,16 @@ function HideOnScroll(props) {
 }
 
 function MenuAppBar(props) {
-	const {isLogged, setIsLogged, user, setUser, showBtn, handleClick} = props;
+	const {
+		isLogged,
+		setIsLogged,
+		user,
+		setUser,
+		showBtn,
+		handleClick,
+		isLight,
+		setIsLight
+	} = props;
 	const {width} = useWindowDimensions();
 
 	const [show, setShow] = useState(false);
@@ -78,6 +87,9 @@ function MenuAppBar(props) {
 						<Typography variant="h5" className={classes.title}>
 							Indie
 						</Typography>
+						{width > 500 && (
+							<LightSwitch isLight={isLight} setIsLight={setIsLight} />
+						)}
 						<Login
 							user={user}
 							isLogged={isLogged}

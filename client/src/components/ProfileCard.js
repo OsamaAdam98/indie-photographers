@@ -1,5 +1,4 @@
-import React, {lazy, Suspense} from "react";
-import {Skeleton} from "@material-ui/lab";
+import React from "react";
 import {
 	Grid,
 	Box,
@@ -12,8 +11,7 @@ import {
 	Typography,
 	makeStyles
 } from "@material-ui/core";
-
-const PhotoPreview = lazy(() => import("./modals/PhotoPreview.modal"));
+import {PhotoPreview} from "./index";
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -38,23 +36,14 @@ export default function ProfileCard(props) {
 				<Card className={classes.card}>
 					<CardActionArea>
 						<CardMedia className={classes.cardMedia}>
-							<Suspense
-								fallback={
-									<Skeleton
-										variant="rect"
-										className={classes.placeHolderMedia}
-									/>
-								}
-							>
-								<PhotoPreview
-									photo={pic}
-									username={username}
-									maxHeight={345}
-									show={show}
-									setShow={setShow}
-									{...props}
-								/>
-							</Suspense>
+							<PhotoPreview
+								photo={pic}
+								username={username}
+								maxHeight={345}
+								show={show}
+								setShow={setShow}
+								{...props}
+							/>
 						</CardMedia>
 					</CardActionArea>
 					<CardActionArea>

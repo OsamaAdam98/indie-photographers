@@ -12,13 +12,7 @@ const useStyles = makeStyles((theme) => ({
 		position: "fixed",
 		bottom: 0,
 		width: "100%",
-		boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)"
-	},
-	bottomBar: {
-		position: "fixed",
-		width: "100%",
-		height: 50,
-		bottom: 0,
+		boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)",
 		zIndex: theme.zIndex.appBar
 	}
 }));
@@ -82,55 +76,53 @@ function BottomBar(props) {
 	};
 
 	return (
-		<div className={classes.bottomBar}>
-			<Paper square>
-				<Tabs
-					value={value}
-					onChange={handleChange}
-					variant="fullWidth"
-					indicatorColor="primary"
-					textColor="primary"
-					aria-label="icon tabs example"
-					className={classes.tabs}
-				>
-					<Tab icon={<HomeIcon />} aria-label="Home" />
+		<Paper square>
+			<Tabs
+				value={value}
+				onChange={handleChange}
+				variant="fullWidth"
+				indicatorColor="primary"
+				textColor="primary"
+				aria-label="icon tabs example"
+				className={classes.tabs}
+			>
+				<Tab icon={<HomeIcon />} aria-label="Home" />
 
-					<Tab icon={<ViewDayIcon />} aria-label="Feed" />
+				<Tab icon={<ViewDayIcon />} aria-label="Feed" />
 
-					<Tab
-						icon={
-							<Avatar
-								src={user.profilePicture}
-								style={{
-									width: 24,
-									height: 24
-								}}
-							/>
-						}
-						aria-label="person"
-						style={{
-							display: user.username ? "" : "none"
-						}}
-					/>
+				<Tab
+					icon={
+						<Avatar
+							src={user.profilePicture}
+							style={{
+								width: 24,
+								height: 24
+							}}
+						/>
+					}
+					aria-label="person"
+					style={{
+						display: user.username ? "" : "none"
+					}}
+				/>
 
-					<Tab
-						icon={<SettingsIcon />}
-						aria-label="Settings"
-						style={{
-							display: user.username ? "none" : ""
-						}}
-					/>
+				<Tab
+					icon={<SettingsIcon />}
+					aria-label="Settings"
+					style={{
+						display: user.username ? "none" : ""
+					}}
+				/>
 
-					<Tab
-						icon={<GetAppIcon />}
-						aria-label="Install app"
-						style={{
-							display: showBtn ? "" : "none"
-						}}
-					/>
-				</Tabs>
-			</Paper>
-		</div>
+				<Tab
+					icon={<GetAppIcon />}
+					aria-label="Install app"
+					style={{
+						display: showBtn ? "" : "none"
+					}}
+				/>
+			</Tabs>
+		</Paper>
 	);
 }
 
