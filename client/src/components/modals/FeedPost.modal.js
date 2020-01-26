@@ -131,6 +131,7 @@ export default function PostModal(props) {
 							onChange={msgChange}
 							autoFocus={true}
 							fullWidth={true}
+							dir="auto"
 						/>
 						<img
 							src={photo}
