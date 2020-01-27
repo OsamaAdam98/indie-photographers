@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
-import FAB from "../FAB";
+import {FAB} from "../index";
 import EditIcon from "@material-ui/icons/Edit";
 import useWindowDimensions from "../utilities/WindowDimensions";
 import {
@@ -131,6 +131,7 @@ export default function PostModal(props) {
 							onChange={msgChange}
 							autoFocus={true}
 							fullWidth={true}
+							dir="auto"
 						/>
 						<img
 							src={photo}

@@ -76,6 +76,10 @@ export default function Login(props) {
 						setUser(user);
 					}
 					handleClose();
+
+					setTimeout(() => {
+						window.location.reload();
+					}, 1000);
 				})
 				.catch((err) => {
 					console.log(err);

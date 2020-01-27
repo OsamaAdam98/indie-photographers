@@ -28,24 +28,17 @@ export default function GoogleBtn(props) {
 				if (token) {
 					localStorage.setItem("token", token);
 					setIsLogged(true);
-					handleClose();
 				}
 				if (user) {
 					setUser(user);
 				}
+				handleClose();
+
+				setTimeout(() => {
+					window.location.reload();
+				}, 1000);
 			})
-			.catch((err) => {
-				console.log(err);
-				if (res.picture) {
-					setUser({
-						username: res.name,
-						email: res.email,
-						profilePicture: res.picture.data.url,
-						admin: false
-					});
-					handleClose();
-				}
-			});
+			.catch((err) => console.log(err));
 	};
 
 	return (

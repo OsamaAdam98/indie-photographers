@@ -57,23 +57,16 @@ export default function FBButton(props) {
 					localStorage.setItem("token", token);
 					setIsLogged(true);
 					handleClose();
+
+					setTimeout(() => {
+						window.location.reload();
+					}, 1000);
 				}
 				if (user) {
 					setUser(user);
 				}
 			})
-			.catch((err) => {
-				console.log(err);
-				if (res.picture) {
-					setUser({
-						username: res.name,
-						email: res.email,
-						profilePicture: res.picture.data.url,
-						admin: false
-					});
-					handleClose();
-				}
-			});
+			.catch((err) => console.log(err));
 	};
 
 	return (

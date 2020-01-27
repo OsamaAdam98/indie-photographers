@@ -230,7 +230,7 @@ export default function PostMedia(props) {
 					}
 				/>
 				<CardContent>
-					<Typography variant="body2" component="p">
+					<Typography variant="body2" component="p" dir="auto">
 						{feedPost.msg}
 					</Typography>
 				</CardContent>

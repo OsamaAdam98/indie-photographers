@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
-import FAB from "../FAB";
+import {FAB} from "../index";
 import AddIcon from "@material-ui/icons/Add";
 
 export default function MPPost(props) {

@@ -57,6 +57,7 @@ export default function ProfileAvatar(props) {
 					onClick={() => {
 						handleClose();
 						setIsLogged(false);
+						window.location.reload();
 					}}
 				>
 					Logout

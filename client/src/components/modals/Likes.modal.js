@@ -92,6 +92,34 @@ export default function Likes(props) {
 			);
 		}
 	});
+	let i = 0;
+
+	const AvatarArray = () => (
+		<>
+			{liked && (
+				<Avatar
+					className={classes.avatar}
+					alt={currentUser.username}
+					src={currentUser.profilePicture}
+				/>
+			)}
+			{users.map((user) => {
+				if (user._id !== currentUser._id && (liked ? i < 2 : i < 3)) {
+					// this shouldn't work but it does
+					i++;
+					return (
+						<Avatar
+							key={user._id}
+							className={classes.avatar}
+							alt={user.username}
+							src={user.profilePicture}
+						/>
+					);
+				}
+				return null;
+			})}
+		</>
+	);
 
 	const likeGroup = users && (
 		<Badge
@@ -106,36 +134,7 @@ export default function Likes(props) {
 			className={classes.badge}
 		>
 			<AvatarGroup className={classes.avGrp} onClick={handleShow}>
-				{liked && (
-					<Avatar
-						className={classes.avatar}
-						alt={currentUser.username}
-						src={currentUser.profilePicture}
-					/>
-				)}
-				{users[0] && users[0]._id !== currentUser._id && (
-					<Avatar
-						className={classes.avatar}
-						alt={users[0].username}
-						src={users[0].profilePicture}
-					/>
-				)}
-				{users[1] && users[1]._id !== currentUser._id && (
-					<Avatar
-						className={classes.avatar}
-						alt={users[1].username}
-						src={users[1].profilePicture}
-					/>
-				)}
-				{users[2] &&
-					users[2]._id !== currentUser._id &&
-					users.length + (liked ? 1 : 0) < 4 && (
-						<Avatar
-							className={classes.avatar}
-							alt={users[2].username}
-							src={users[2].profilePicture}
-						/>
-					)}
+				<AvatarArray />
 			</AvatarGroup>
 		</Badge>
 	);
@@ -155,7 +154,9 @@ export default function Likes(props) {
 			>
 				<DialogTitle
 					id="form-dialog-title"
-					style={{height: width > 500 ? "1rem" : "3.5rem"}}
+					style={{
+						height: width > 500 ? "1rem" : "3.5rem"
+					}}
 				>
 					<IconButton
 						style={{

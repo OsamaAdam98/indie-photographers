@@ -10,17 +10,18 @@ import PostModal from "./modals/FeedPost.modal";
 import PostMedia from "./PostMedia";
 import PostSkeleton from "./PostSkeleton";
 import LikesSkeleton from "./LikesSkeleton";
-import FBButton from "./FBButton";
+import FBButton from "./buttons/FBButton";
 import ProfileAvatar from "./ProfileAvatar";
 import LeftDrawer from "./LeftDrawer";
 import Login from "./modals/Login.modal";
 import PhotoPreview from "./modals/PhotoPreview.modal";
 import ProfileSkeleton from "./ProfileSkeleton";
-import GoogleBtn from "./GoogleBtn";
+import GoogleBtn from "./buttons/GoogleBtn";
 import Settings from "../routes/Settings";
 import Likes from "./modals/Likes.modal";
-import LightSwitch from "./LightSwitch";
+import LightSwitch from "./buttons/LightSwitch";
 import ProfileCard from "./ProfileCard";
+import FAB from "./buttons/FAB";
 
 export {
 	Home,
@@ -45,5 +46,6 @@ export {
 	Settings,
 	Likes,
 	LightSwitch,
-	ProfileCard
+	ProfileCard,
+	FAB
 };
