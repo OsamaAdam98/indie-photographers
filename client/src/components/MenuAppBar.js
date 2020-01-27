@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {withRouter, Link} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { withRouter, Link } from "react-router-dom";
 import {
 	makeStyles,
 	AppBar,
@@ -9,12 +9,12 @@ import {
 	useScrollTrigger,
 	Slide
 } from "@material-ui/core";
-import logo from "../logo.png";
-import {useWindowDimensions, LeftDrawer, Login, LightSwitch} from ".";
+import logo from "../assets/logo.png";
+import { useWindowDimensions, LeftDrawer, Login, LightSwitch } from ".";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		flexGrow: 1
+		flexGrow: 1,
 	},
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function HideOnScroll(props) {
-	const {children} = props;
+	const { children } = props;
 	const trigger = useScrollTrigger();
 
 	return (
@@ -53,7 +53,7 @@ function MenuAppBar(props) {
 		isLight,
 		setIsLight
 	} = props;
-	const {width} = useWindowDimensions();
+	const { width } = useWindowDimensions();
 
 	const [show, setShow] = useState(false);
 
