@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import "./css/style.css";
 import {MuiThemeProvider, createMuiTheme} from "@material-ui/core";
 import {yellow} from "@material-ui/core/colors";
@@ -13,7 +13,8 @@ import {
 	SnackAlert,
 	BottomBar,
 	useWindowDimensions,
-	Settings
+	Settings,
+	NotFound
 } from "./components";
 
 function App() {
@@ -147,29 +148,38 @@ function App() {
 						isLight={isLight}
 						setIsLight={setIsLight}
 					/>
-					<Route
-						exact
-						path="/"
-						render={(props) => (
-							<Home {...props} showBtn={showBtn} handleClick={handleClick} />
-						)}
-					/>
-					<Route
-						path="/profile/:id"
-						render={(props) => <Profile {...props} user={user} />}
-					/>
-					<Route
-						path="/feed"
-						render={(props) => (
-							<Feed {...props} isLogged={isLogged} user={user} />
-						)}
-					/>
-					<Route
-						path="/settings"
-						render={(props) => (
-							<Settings {...props} isLight={isLight} setIsLight={setIsLight} />
-						)}
-					/>
+					<Switch>
+						<Route
+							exact
+							path="/"
+							render={(props) => (
+								<Home {...props} showBtn={showBtn} handleClick={handleClick} />
+							)}
+						/>
+						<Route
+							path="/profile/:id"
+							render={(props) => <Profile {...props} user={user} />}
+						/>
+						<Route
+							exact
+							path="/feed"
+							render={(props) => (
+								<Feed {...props} isLogged={isLogged} user={user} />
+							)}
+						/>
+						<Route
+							exact
+							path="/settings"
+							render={(props) => (
+								<Settings
+									{...props}
+									isLight={isLight}
+									setIsLight={setIsLight}
+								/>
+							)}
+						/>
+						<Route component={NotFound} />
+					</Switch>
 					<SnackAlert
 						severity={severity}
 						errorMsg={errorMsg}

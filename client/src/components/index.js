@@ -22,6 +22,7 @@ import Likes from "./modals/Likes.modal";
 import LightSwitch from "./buttons/LightSwitch";
 import ProfileCard from "./ProfileCard";
 import FAB from "./buttons/FAB";
+import NotFound from "../routes/NotFound";
 
 export {
 	Home,
@@ -47,5 +48,6 @@ export {
 	Likes,
 	LightSwitch,
 	ProfileCard,
-	FAB
+	FAB,
+	NotFound
 };
