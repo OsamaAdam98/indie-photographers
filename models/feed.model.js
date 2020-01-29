@@ -8,7 +8,7 @@ const feedSchema = mongoose.Schema({
 	},
 	msg: {
 		type: String,
-		required: true
+		required: false
 	},
 	photo: {
 		type: String,

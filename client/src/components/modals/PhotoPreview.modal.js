@@ -1,7 +1,15 @@
 import React, {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
-import {Dialog} from "@material-ui/core";
+import {Dialog, makeStyles} from "@material-ui/core";
 import {useWindowDimensions} from "..";
+
+const useStyles = makeStyles({
+	preview: {
+		"&:hover": {
+			cursor: "pointer"
+		}
+	}
+});
 
 export default function PhotoPreview(props) {
 	const {photo, username, show, setShow, maxHeight} = props;
@@ -10,6 +18,7 @@ export default function PhotoPreview(props) {
 	const [selfShow, setSelfShow] = useState(false);
 
 	const history = useHistory();
+	const classes = useStyles();
 
 	useEffect(() => {
 		if (props.location.hash === "") handleClose();
@@ -29,6 +38,7 @@ export default function PhotoPreview(props) {
 
 	const imagePreview = (
 		<img
+			className={classes.preview}
 			src={photo}
 			alt={`by, ${username}`}
 			onClick={handleShow}
@@ -61,7 +71,6 @@ export default function PhotoPreview(props) {
 				open={show && selfShow}
 				onClose={handleClose}
 				fullWidth={true}
-				maxWidth="xl"
 				style={{
 					display: "flex",
 					justifyContent: "center"

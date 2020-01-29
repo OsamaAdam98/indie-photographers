@@ -64,32 +64,36 @@ export default function PostModal(props) {
 	const handleSubmit = (event) => {
 		const username = user.username;
 		const email = user.email;
-		const subData = {
-			username,
-			email,
-			msg,
-			photo
-		};
-		const token = localStorage.getItem("token");
+		if (!msg && !photo) {
+			setErrorMsg("Surely you'd like to write something!");
+		} else {
+			const subData = {
+				username,
+				email,
+				msg,
+				photo
+			};
+			const token = localStorage.getItem("token");
 
-		axios
-			.post("/api/feed/add", subData, {
-				headers: {
-					"x-auth-token": `${token}`
-				}
-			})
-			.then((res) => {
-				setNewPost([res.data]);
-				localStorage.setItem(
-					`feedPage1`,
-					JSON.stringify([
-						res.data,
-						...JSON.parse(localStorage.getItem(`feedPage1`))
-					])
-				);
-				handleClose();
-			})
-			.catch((err) => console.log(err));
+			axios
+				.post("/api/feed/add", subData, {
+					headers: {
+						"x-auth-token": `${token}`
+					}
+				})
+				.then((res) => {
+					setNewPost([res.data]);
+					localStorage.setItem(
+						`feedPage1`,
+						JSON.stringify([
+							res.data,
+							...JSON.parse(localStorage.getItem(`feedPage1`))
+						])
+					);
+					handleClose();
+				})
+				.catch((err) => console.log(err));
+		}
 
 		event.preventDefault();
 	};
@@ -103,11 +107,6 @@ export default function PostModal(props) {
 		/>
 	) : null;
 
-	const subError = errorMsg ? (
-		<div className="alert alert-danger" role="alert">
-			{errorMsg}
-		</div>
-	) : null;
 	return (
 		<>
 			{subButton}
@@ -132,6 +131,8 @@ export default function PostModal(props) {
 							autoFocus={true}
 							fullWidth={true}
 							dir="auto"
+							error={errorMsg ? true : false}
+							helperText={errorMsg}
 						/>
 						<img
 							src={photo}
@@ -146,7 +147,6 @@ export default function PostModal(props) {
 								maxHeight: `${height / 2}px`
 							}}
 						/>
-						{subError}
 					</DialogContent>
 					<DialogActions>
 						<div

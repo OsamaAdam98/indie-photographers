@@ -34,18 +34,16 @@ export default function ProfileCard(props) {
 		<Grid container direction="column" alignItems="center" justify="center">
 			<Box minWidth={`${width < 345 ? `100%` : ``}`}>
 				<Card className={classes.card}>
-					<CardActionArea>
-						<CardMedia className={classes.cardMedia}>
-							<PhotoPreview
-								photo={pic}
-								username={username}
-								maxHeight={345}
-								show={show}
-								setShow={setShow}
-								{...props}
-							/>
-						</CardMedia>
-					</CardActionArea>
+					<CardMedia className={classes.cardMedia}>
+						<PhotoPreview
+							photo={pic}
+							username={username}
+							maxHeight={345}
+							show={show}
+							setShow={setShow}
+							{...props}
+						/>
+					</CardMedia>
 					<CardActionArea>
 						<CardContent>
 							<Typography gutterBottom variant="h5" component="h2">

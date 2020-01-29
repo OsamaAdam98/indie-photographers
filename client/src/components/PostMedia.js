@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import {
 	CardActions,
-	CardActionArea,
 	Menu,
 	MenuItem,
 	makeStyles,
@@ -235,18 +234,16 @@ export default function PostMedia(props) {
 					</Typography>
 				</CardContent>
 				{feedPost.photo ? (
-					<CardActionArea>
-						<CardMedia className={classes.media}>
-							<PhotoPreview
-								show={showPrev}
-								setShow={setShowPrev}
-								photo={feedPost.photo}
-								username={feedPost.user.username}
-								maxHeight={250}
-								{...props}
-							/>
-						</CardMedia>
-					</CardActionArea>
+					<CardMedia className={classes.media}>
+						<PhotoPreview
+							show={showPrev}
+							setShow={setShowPrev}
+							photo={feedPost.photo}
+							username={feedPost.user.username}
+							maxHeight={250}
+							{...props}
+						/>
+					</CardMedia>
 				) : (
 					""
 				)}

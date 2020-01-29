@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { withRouter, Link } from "react-router-dom";
+import React, {useState} from "react";
+import {withRouter, Link} from "react-router-dom";
 import {
 	makeStyles,
 	AppBar,
@@ -10,12 +10,9 @@ import {
 	Slide
 } from "@material-ui/core";
 import logo from "../assets/logo.png";
-import { useWindowDimensions, LeftDrawer, Login, LightSwitch } from ".";
+import {useWindowDimensions, LeftDrawer, Login, LightSwitch} from ".";
 
 const useStyles = makeStyles((theme) => ({
-	root: {
-		flexGrow: 1,
-	},
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1
 	},
@@ -25,14 +22,11 @@ const useStyles = makeStyles((theme) => ({
 	title: {
 		flexGrow: 1
 	},
-	barMargin: {
-		marginBottom: "4rem"
-	},
 	toolbar: theme.mixins.toolbar
 }));
 
 function HideOnScroll(props) {
-	const { children } = props;
+	const {children} = props;
 	const trigger = useScrollTrigger();
 
 	return (
@@ -53,21 +47,17 @@ function MenuAppBar(props) {
 		isLight,
 		setIsLight
 	} = props;
-	const { width } = useWindowDimensions();
+	const {width} = useWindowDimensions();
 
 	const [show, setShow] = useState(false);
 
 	const classes = useStyles();
 
-	useEffect(() => {
-		if (props.location.hash === "") setShow(false);
-	}, [props.location.hash]);
-
 	return (
-		<div className={(classes.root, classes.barMargin)}>
+		<>
 			<HideOnScroll {...props}>
-				<AppBar position="fixed" className={classes.appBar} color="inherit">
-					<Toolbar>
+				<AppBar position="sticky" className={classes.appBar} color="inherit">
+					<Toolbar className={classes.toolbar}>
 						{width > 500 && (
 							<LeftDrawer
 								user={user}
@@ -102,7 +92,7 @@ function MenuAppBar(props) {
 					</Toolbar>
 				</AppBar>
 			</HideOnScroll>
-		</div>
+		</>
 	);
 }
 

@@ -83,7 +83,7 @@ function BottomBar(props) {
 				variant="fullWidth"
 				indicatorColor="primary"
 				textColor="primary"
-				aria-label="icon tabs example"
+				aria-label="Bottom navigation"
 				className={classes.tabs}
 			>
 				<Tab icon={<HomeIcon />} aria-label="Home" />
@@ -100,7 +100,7 @@ function BottomBar(props) {
 							}}
 						/>
 					}
-					aria-label="person"
+					aria-label="Profile"
 					style={{
 						display: user.username ? "" : "none"
 					}}
