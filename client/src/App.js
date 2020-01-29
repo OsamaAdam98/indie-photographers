@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, lazy, Suspense} from "react";
 import axios from "axios";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import "./css/style.css";
@@ -7,15 +7,18 @@ import {yellow} from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
 	Home,
-	Profile,
-	Feed,
 	MenuAppBar,
 	SnackAlert,
 	BottomBar,
 	useWindowDimensions,
 	Settings,
-	NotFound
+	NotFound,
+	PostSkeleton,
+	ProfileSkeleton
 } from "./components";
+
+const Feed = lazy(() => import("./routes/Feed"));
+const Profile = lazy(() => import("./routes/Profile"));
 
 function App() {
 	const [isLogged, setIsLogged] = useState(
@@ -158,13 +161,19 @@ function App() {
 						/>
 						<Route
 							path="/profile/:id"
-							render={(props) => <Profile {...props} user={user} />}
+							render={(props) => (
+								<Suspense fallback={<ProfileSkeleton />}>
+									<Profile {...props} user={user} />
+								</Suspense>
+							)}
 						/>
 						<Route
 							exact
 							path="/feed"
 							render={(props) => (
-								<Feed {...props} isLogged={isLogged} user={user} />
+								<Suspense fallback={<PostSkeleton />}>
+									<Feed {...props} isLogged={isLogged} user={user} />
+								</Suspense>
 							)}
 						/>
 						<Route
