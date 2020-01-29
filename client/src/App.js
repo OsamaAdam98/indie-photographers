@@ -152,13 +152,7 @@ function App() {
 						setIsLight={setIsLight}
 					/>
 					<Switch>
-						<Route
-							exact
-							path="/"
-							render={(props) => (
-								<Home {...props} showBtn={showBtn} handleClick={handleClick} />
-							)}
-						/>
+						<Route exact path="/" render={(props) => <Home {...props} />} />
 						<Route
 							path="/profile/:id"
 							render={(props) => (
