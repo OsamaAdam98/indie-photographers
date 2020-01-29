@@ -45,7 +45,7 @@ router.post("/add", auth, (req, res) => {
 			Feed.findById(newPost._id)
 				.populate("user comments likes", "-password -registerDate -__v -posts")
 				.exec()
-				.then((result) => res.status(200).json(result))
+				.then((result) => res.status(201).json(result))
 				.catch((err) => res.status(404).json(err));
 		})
 		.catch((err) => res.status(400).json(err));
