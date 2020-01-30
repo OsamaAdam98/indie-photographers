@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
 import {FAB} from "../index";
@@ -39,22 +39,15 @@ export default function PostModal(props) {
 
 	const [errorMsg, setErrorMsg] = useState("");
 	const [msg, setMsg] = useState("");
-	const [selfShow, setSelfShow] = useState(false);
-
-	useEffect(() => {
-		if (props.location.hash === "") setSelfShow(false);
-	}, [props.location.hash]);
 
 	const msgChange = (event) => setMsg(event.target.value);
 
 	const handleClose = () => {
-		setSelfShow(false);
 		setErrorMsg("");
 		if (props.location.hash === "#feed-post") history.goBack();
 	};
 
 	const handleShow = () => {
-		setSelfShow(true);
 		setShow(true);
 		setErrorMsg("");
 		window.location.hash = "feed-post";
@@ -110,7 +103,7 @@ export default function PostModal(props) {
 		<>
 			{subButton}
 			<Dialog
-				open={show && selfShow}
+				open={show}
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
 				fullWidth={true}

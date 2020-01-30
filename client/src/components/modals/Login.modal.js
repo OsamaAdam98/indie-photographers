@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
 import {
@@ -30,14 +30,9 @@ export default function Login(props) {
 	const classes = useStyles();
 	const history = useHistory();
 
-	const [selfShow, setSelfShow] = useState(false);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
-
-	useEffect(() => {
-		if (props.location.hash === "") setSelfShow(false);
-	}, [props.location.hash]);
 
 	const handleClose = () => {
 		setShow(false);
@@ -103,7 +98,7 @@ export default function Login(props) {
 		<>
 			{loginButton}
 			<Dialog
-				open={show && selfShow}
+				open={show}
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
 			>

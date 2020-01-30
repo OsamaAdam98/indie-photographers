@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {withRouter, Link} from "react-router-dom";
 import {
 	makeStyles,
@@ -69,10 +69,13 @@ function MenuAppBar(props) {
 		setIsLight
 	} = props;
 	const {width} = useWindowDimensions();
+	const classes = useStyles();
 
 	const [show, setShow] = useState(false);
 
-	const classes = useStyles();
+	useEffect(() => {
+		if (props.location.hash === "") setShow(false);
+	}, [props.location.hash]);
 
 	return (
 		<>
