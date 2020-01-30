@@ -6,9 +6,9 @@ export default function Home() {
 	return (
 		<div className="container">
 			<img className="main-img" alt="Home cover" src={homeCover} />
-			<h1 className="main-line">
+			<h2 className="main-line">
 				<span className="highlight">In development</span>
-			</h1>
+			</h2>
 		</div>
 	);
 }

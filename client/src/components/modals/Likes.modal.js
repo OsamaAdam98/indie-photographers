@@ -47,8 +47,7 @@ export default function Likes(props) {
 	const classes = useStyles();
 
 	useEffect(() => {
-		if (props.location.hash === "") handleClose();
-		// eslint-disable-next-line
+		if (props.location.hash === "") setSelfShow(false);
 	}, [props.location.hash]);
 
 	const entering = () => {

@@ -30,13 +30,13 @@ export default function Login(props) {
 	const classes = useStyles();
 	const history = useHistory();
 
+	const [selfShow, setSelfShow] = useState(false);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
 
 	useEffect(() => {
-		if (props.location.hash === "") handleClose();
-		// eslint-disable-next-line
+		if (props.location.hash === "") setSelfShow(false);
 	}, [props.location.hash]);
 
 	const handleClose = () => {
@@ -103,7 +103,7 @@ export default function Login(props) {
 		<>
 			{loginButton}
 			<Dialog
-				open={show}
+				open={show && selfShow}
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
 			>

@@ -1,19 +1,28 @@
 import React, {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
 import {Dialog, makeStyles} from "@material-ui/core";
-import {useWindowDimensions} from "..";
 
 const useStyles = makeStyles({
 	preview: {
 		"&:hover": {
 			cursor: "pointer"
 		}
+	},
+	fullPrev: {
+		objectFit: "contain",
+		objectPosition: "50% 50%",
+		maxWidth: `100vw`,
+		maxHeight: `100vh`,
+		overflow: "hidden"
+	},
+	dialog: {
+		display: "flex",
+		justifyContent: "center"
 	}
 });
 
 export default function PhotoPreview(props) {
 	const {photo, username, show, setShow, maxHeight} = props;
-	const {height, width} = useWindowDimensions();
 
 	const [selfShow, setSelfShow] = useState(false);
 
@@ -21,8 +30,7 @@ export default function PhotoPreview(props) {
 	const classes = useStyles();
 
 	useEffect(() => {
-		if (props.location.hash === "") handleClose();
-		// eslint-disable-next-line
+		if (props.location.hash === "") setSelfShow(false);
 	}, [props.location.hash]);
 
 	const handleShow = () => {
@@ -33,10 +41,10 @@ export default function PhotoPreview(props) {
 
 	const handleClose = () => {
 		setSelfShow(false);
-		if (props.location.hash === "#photo-preview") history.goBack();
+		if (window.location.hash === "#photo-preview") history.goBack();
 	};
 
-	const imagePreview = (
+	const ImagePreview = () => (
 		<img
 			className={classes.preview}
 			src={photo}
@@ -51,32 +59,25 @@ export default function PhotoPreview(props) {
 		/>
 	);
 
-	const fullImage = (
+	const FullImage = () => (
 		<img
 			src={photo}
 			alt={`max width and height`}
-			style={{
-				objectFit: "contain",
-				objectPosition: "50% 50%",
-				maxWidth: `${width}px`,
-				maxHeight: `${0.9 * height}px`
-			}}
+			className={classes.fullPrev}
 		/>
 	);
 
 	return (
 		<>
-			{imagePreview}
+			<ImagePreview />
 			<Dialog
 				open={show && selfShow}
 				onClose={handleClose}
 				fullWidth={true}
-				style={{
-					display: "flex",
-					justifyContent: "center"
-				}}
+				className={classes.dialog}
+				onKeyUp={handleClose}
 			>
-				{fullImage}
+				<FullImage />
 			</Dialog>
 		</>
 	);

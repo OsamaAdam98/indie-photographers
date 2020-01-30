@@ -42,8 +42,7 @@ export default function PostModal(props) {
 	const [selfShow, setSelfShow] = useState(false);
 
 	useEffect(() => {
-		if (props.location.hash === "") handleClose();
-		// eslint-disable-next-line
+		if (props.location.hash === "") setSelfShow(false);
 	}, [props.location.hash]);
 
 	const msgChange = (event) => setMsg(event.target.value);
