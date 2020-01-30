@@ -10,11 +10,13 @@ import {
 	Slide
 } from "@material-ui/core";
 import logo from "../assets/logo.png";
-import {useWindowDimensions, LeftDrawer, Login, LightSwitch} from ".";
+import {useWindowDimensions, Login, LightSwitch, BottomBar} from ".";
 
 const useStyles = makeStyles((theme) => ({
 	appBar: {
-		zIndex: theme.zIndex.drawer + 1
+		zIndex: theme.zIndex.drawer + 1,
+		position: "relative",
+		boxShadow: "0px 0px 0px 0px"
 	},
 	menuButton: {
 		marginRight: theme.spacing(2)
@@ -22,7 +24,26 @@ const useStyles = makeStyles((theme) => ({
 	title: {
 		flexGrow: 1
 	},
-	toolbar: theme.mixins.toolbar
+	toolbar: theme.mixins.toolbar,
+	bottomBar: {
+		position: "sticky",
+		top: 0,
+		zIndex: theme.zIndex.appBar
+	},
+	"@media (max-width: 500px)": {
+		bottomBar: {
+			position: "fixed",
+			top: "auto",
+			bottom: 0,
+			zIndex: theme.zIndex.appBar,
+			width: "100vw"
+		},
+		appBar: {
+			zIndex: theme.zIndex.drawer + 1,
+			position: "sticky",
+			boxShadow: "0px 1px 5px 1px rgba(0, 0, 0, .3)"
+		}
+	}
 }));
 
 function HideOnScroll(props) {
@@ -56,15 +77,8 @@ function MenuAppBar(props) {
 	return (
 		<>
 			<HideOnScroll {...props}>
-				<AppBar position="sticky" className={classes.appBar} color="inherit">
+				<AppBar className={classes.appBar} color="inherit">
 					<Toolbar className={classes.toolbar}>
-						{width > 500 && (
-							<LeftDrawer
-								user={user}
-								showBtn={showBtn}
-								handleClick={handleClick}
-							/>
-						)}
 						<Link to="/">
 							<Avatar
 								alt="indie photographers"
@@ -92,6 +106,9 @@ function MenuAppBar(props) {
 					</Toolbar>
 				</AppBar>
 			</HideOnScroll>
+			<div className={classes.bottomBar}>
+				<BottomBar user={user} showBtn={showBtn} handleClick={handleClick} />
+			</div>
 		</>
 	);
 }

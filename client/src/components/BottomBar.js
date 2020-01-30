@@ -9,11 +9,8 @@ import SettingsIcon from "@material-ui/icons/Settings";
 const useStyles = makeStyles((theme) => ({
 	tabs: {
 		backgroundColor: theme.palette.background.paper,
-		position: "fixed",
-		bottom: 0,
 		width: "100%",
-		boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)",
-		zIndex: theme.zIndex.appBar
+		boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)"
 	}
 }));
 

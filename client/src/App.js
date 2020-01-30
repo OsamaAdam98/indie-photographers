@@ -9,7 +9,6 @@ import {
 	Home,
 	MenuAppBar,
 	SnackAlert,
-	BottomBar,
 	useWindowDimensions,
 	Settings,
 	NotFound,
@@ -189,13 +188,6 @@ function App() {
 						setOpenError={setOpenError}
 						openError={openError}
 					/>
-					{width < 500 && (
-						<BottomBar
-							user={user}
-							showBtn={showBtn}
-							handleClick={handleClick}
-						/>
-					)}
 					<div
 						style={{
 							height: 48,
