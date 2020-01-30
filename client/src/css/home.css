@@ -13,7 +13,7 @@
 	overflow-x: hidden;
 	background-color: transparent;
 	display: grid;
-	grid-template-columns: 1fr 10fr 1fr;
+	grid-template-columns: 1fr minmax(min-content, max-content) 1fr;
 	grid-template-rows: 56px auto 48px;
 }
 
