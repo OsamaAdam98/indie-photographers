@@ -1,52 +1,45 @@
 import React, {useState, useEffect} from "react";
-import {useHistory} from "react-router-dom";
 import axios from "axios";
-
-import {useWindowDimensions, ProfileCard} from "../components";
+import {Paper, Typography} from "@material-ui/core";
+import "../css/profile.css";
+import {PostMedia} from "../components/index";
 
 export default function Profile(props) {
-	const [username, setUsername] = useState("");
-	const [pic, setPic] = useState("");
-	const [show, setShow] = useState(false);
-
-	const history = useHistory();
+	const [user, setUser] = useState("");
 
 	useEffect(() => {
-		if (props.location.hash === "") setShow(false);
-	}, [props.location.hash]);
-
-	const {width} = useWindowDimensions();
-
-	useEffect(() => {
-		let cachedProfile = localStorage.getItem(`${props.match.params.id}`);
-		if (cachedProfile) {
-			const {username, profilePicture} = JSON.parse(cachedProfile);
-			setUsername(username);
-			setPic(profilePicture);
-		}
 		axios
-			.get(`/api/users/profile/${props.match.params.id}`)
+			.get(`/api/users/${props.match.params.id}`)
 			.then((res) => {
 				const {data} = res;
-				if (!cachedProfile) {
-					setUsername(data.username);
-					setPic(data.profilePicture);
-				}
-				localStorage.setItem(`${props.match.params.id}`, JSON.stringify(data));
+				console.log(data);
+				setUser(data);
 			})
-			.catch((err) => {
-				if (err) history.push("/not-found");
-			});
-	}, [props.match.params.id, history]);
+			.catch((err) => console.log(err));
+	}, [props.match.params.id]);
 
 	return (
-		<ProfileCard
-			width={width}
-			pic={pic}
-			username={username}
-			show={show}
-			setShow={setShow}
-			{...props}
-		/>
+		<div className="container">
+			<Paper className="main-block">
+				<div className="cover-photo" />
+				<img className="profile-photo" src={user.profilePicture} />
+				<div className="tagline">
+					<Typography variant="h5">{user.username}</Typography>
+					<Typography style={{fontStyle: "italic"}}>
+						<span className="highlight">title</span>
+					</Typography>
+				</div>
+				<div className="main-info">
+					<Typography>
+						Irure culpa sint tempor Lorem Lorem eu eu consequat in elit. Laborum
+						id magna mollit pariatur. Incididunt velit mollit sit aliqua duis
+						esse nisi velit esse ad occaecat voluptate aliqua esse. Adipisicing
+						pariatur sint consequat ea et pariatur sint nisi anim.
+					</Typography>
+				</div>
+			</Paper>
+			<Paper className="details-block"></Paper>
+			<div className="post-block" />
+		</div>
 	);
 }
