@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		width: "100%",
 		maxWidth: 360,
-		backgroundColor: theme.palette.background.paper
+		padding: theme.spacing(2)
 	}
 }));
 
@@ -213,7 +213,7 @@ export default function Profile(props) {
 					</Typography>
 				</div>
 			</Paper>
-			<Paper className="details-block">
+			<Paper className="details-block" round>
 				<List className={classes.root}>
 					<ListItem>
 						<ListItemAvatar>
