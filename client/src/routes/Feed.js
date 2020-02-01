@@ -168,23 +168,23 @@ export default function Feed(props) {
 				setIsLoading(false);
 			})
 			.catch((err) => {
-				if (err) {
-					const {status} = err.response;
-					if (status === 500) {
-						setErrorMsg("Can't connect to the internet!");
-						setSeverity("warning");
-						setOffline(true);
-						setOpenError(true);
-						if (cachedData) {
-							setHasMore(cachedData.length > 0);
-						} else {
-							setHasMore(false);
-						}
+				const {status} = err.response;
+				if (status === 500) {
+					setErrorMsg("Can't connect to the internet!");
+					setSeverity("warning");
+					setOffline(true);
+					setOpenError(true);
+					if (cachedData) {
+						setHasMore(cachedData.length > 0);
+					} else {
+						setHasMore(false);
 					}
-					setIsLoading(false);
 				}
+				setIsLoading(false);
 			});
-		return () => cancel();
+		return () => {
+			if (page === 1) cancel();
+		};
 	}, [page]);
 
 	const observer = useRef();

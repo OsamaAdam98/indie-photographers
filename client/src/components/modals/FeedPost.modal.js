@@ -87,7 +87,9 @@ export default function PostModal(props) {
 					);
 					handleClose();
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => {
+					setErrorMsg(err.response.data);
+				});
 		}
 
 		event.preventDefault();

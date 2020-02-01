@@ -19,6 +19,7 @@ import {
 import ShareIcon from "@material-ui/icons/Share";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import {Likes, PhotoPreview} from "./index";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -117,34 +118,11 @@ export default function PostMedia(props) {
 		setAnchorEl(null);
 	};
 
-	const today = new Date();
 	let date = new Date(feedPost.date);
-	let yearOffset = today.getFullYear() - date.getFullYear();
-	let monthsOffset = today.getMonth() - date.getMonth();
-	let hoursOffset = today.getHours() - date.getHours();
-	let daysOffset = today.getDate() - date.getDate();
-	let minutesOffset = today.getMinutes() - date.getMinutes();
-
-	const daysInAMonth = (month, year) => {
-		return new Date(year, month, 0).getDate();
-	};
-
-	if (yearOffset) {
-		monthsOffset =
-			12 - date.getMonth() + today.getMonth() + 12 * (yearOffset - 1);
-	}
-	if (monthsOffset === 1 && daysOffset < 31) {
-		daysOffset =
-			daysInAMonth(date.getMonth(), date.getFullYear()) -
-			date.getDate() +
-			today.getDate();
-	}
-	if (hoursOffset === 1) {
-		minutesOffset = 60 - date.getMinutes() + today.getMinutes();
-	} else if (hoursOffset) {
-		minutesOffset =
-			60 - date.getMinutes() + today.getMinutes() + hoursOffset * 60;
-	}
+	let monthsOffset = moment().diff(date, "months");
+	let hoursOffset = moment().diff(date, "hours");
+	let daysOffset = moment().diff(date, "days");
+	let minutesOffset = moment().diff(date, "minutes");
 
 	if (user) {
 		return (
@@ -215,8 +193,10 @@ export default function PostMedia(props) {
 							? `Posted ${minutesOffset} minutes ago`
 							: hoursOffset
 							? `Posted ${hoursOffset} hours ago`
-							: minutesOffset
+							: minutesOffset > 1
 							? `Posted ${minutesOffset} minutes ago`
+							: minutesOffset
+							? `Posted a minute ago`
 							: `Posted just now`
 					}
 				/>

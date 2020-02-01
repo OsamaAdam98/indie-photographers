@@ -1,9 +1,12 @@
 const router = require("express").Router();
+const moment = require("moment");
 let Feed = require("../models/feed.model");
 let Comment = require("../models/comments.model");
 let Likes = require("../models/likes.model");
 
 const auth = require("../middleware/auth.middleware");
+
+const admins = ["5de3b79f3c679b2a10601f60"];
 
 router.get("/", (req, res) => {
 	const {page} = req.query;
@@ -39,16 +42,36 @@ router.post("/add", auth, (req, res) => {
 		user
 	});
 
-	newPost
-		.save()
-		.then(() => {
-			Feed.findById(newPost._id)
-				.populate("user comments likes", "-password -registerDate -__v -posts")
-				.exec()
-				.then((result) => res.status(201).json(result))
-				.catch((err) => res.status(404).json(err));
+	Feed.findOne({user})
+		.sort({date: "desc"})
+		.skip(1)
+		.exec()
+		.then((result) => {
+			const date = new Date(result.date);
+			if (
+				moment().diff(date, "minutes") > 15 ||
+				admins.filter((admin) => admin === user).length
+			) {
+				newPost
+					.save()
+					.then(() => {
+						Feed.findById(newPost._id)
+							.populate(
+								"user comments likes",
+								"-password -registerDate -__v -posts"
+							)
+							.exec()
+							.then((result) => res.status(201).json(result))
+							.catch((err) => res.status(404).json(err));
+					})
+					.catch((err) => res.status(400).json(err));
+			} else {
+				res
+					.status(403)
+					.json("Can't post more than 2 posts in a 15 minutes span!");
+			}
 		})
-		.catch((err) => res.status(400).json(err));
+		.catch((err) => console.log(err));
 });
 
 router.post("/comment/:id", auth, (req, res) => {
