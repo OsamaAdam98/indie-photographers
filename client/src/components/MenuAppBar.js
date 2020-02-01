@@ -28,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
 	bottomBar: {
 		position: "sticky",
 		top: 0,
-		zIndex: theme.zIndex.appBar
+		zIndex: theme.zIndex.appBar,
+		marginBottom: theme.spacing(2)
 	},
 	"@media (max-width: 500px)": {
 		bottomBar: {
@@ -36,12 +37,14 @@ const useStyles = makeStyles((theme) => ({
 			top: "auto",
 			bottom: 0,
 			zIndex: theme.zIndex.appBar,
-			width: "100vw"
+			width: "100vw",
+			marginBottom: 0
 		},
 		appBar: {
 			zIndex: theme.zIndex.drawer + 1,
 			position: "sticky",
-			boxShadow: "0px 1px 5px 1px rgba(0, 0, 0, .3)"
+			boxShadow: "0px 1px 5px 1px rgba(0, 0, 0, .3)",
+			marginBottom: theme.spacing(2)
 		}
 	}
 }));

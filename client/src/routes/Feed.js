@@ -8,13 +8,9 @@ import React, {
 } from "react";
 import axios from "axios";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
-import {LinearProgress, Grid, Box, makeStyles} from "@material-ui/core";
-import {
-	PostModal,
-	PostSkeleton,
-	SnackAlert,
-	useWindowDimensions
-} from "../components";
+import {LinearProgress, makeStyles} from "@material-ui/core";
+import {PostModal, PostSkeleton, SnackAlert} from "../components";
+import "../css/feed.css";
 
 const PostMedia = lazy(() => import("../components/PostMedia"));
 
@@ -37,7 +33,6 @@ const useStyles = makeStyles({
 
 export default function Feed(props) {
 	const {isLogged, user} = props;
-	const {width} = useWindowDimensions();
 	const classes = useStyles();
 
 	const [posts, setPosts] = useState([]);
@@ -278,8 +273,8 @@ export default function Feed(props) {
 		: null;
 
 	return (
-		<Grid container direction="column" alignItems="center" justify="center">
-			<Box maxWidth="500px" width={`${width > 500 ? `500px` : `100%`}`}>
+		<div className="feed-container">
+			<div className="feed-post-block">
 				<Suspense fallback={<PostSkeleton />}>
 					{newPost && newPosts}
 					{postMedia}
@@ -312,7 +307,7 @@ export default function Feed(props) {
 					offline={offline}
 					{...props}
 				/>
-			</Box>
+			</div>
 			{isUploading && (
 				<LinearProgress
 					variant="determinate"
@@ -321,6 +316,6 @@ export default function Feed(props) {
 					className={classes.progress}
 				/>
 			)}
-		</Grid>
+		</div>
 	);
 }

@@ -174,4 +174,27 @@ router.post("/update/:id", auth, (req, res) => {
 		.catch((err) => res.status(400).json(err));
 });
 
+router.get("/user/:id/", (req, res) => {
+	const {page} = req.query;
+
+	Feed.find({user: req.params.id})
+		.sort({date: "desc"})
+		.limit(10)
+		.skip(page >= 1 ? 10 * (page - 1) : 0)
+		.populate(
+			"user comments likes",
+			"-password -registerDate -__v -posts -email"
+		)
+		.populate({
+			path: "likes",
+			populate: {
+				path: "user",
+				model: "users"
+			}
+		})
+		.exec()
+		.then((result) => res.status(200).json(result))
+		.catch((err) => res.status(404).json(err));
+});
+
 module.exports = router;

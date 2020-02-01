@@ -23,7 +23,7 @@ import {Likes, PhotoPreview} from "./index";
 const useStyles = makeStyles((theme) => ({
 	card: {
 		maxWidth: 500,
-		margin: theme.spacing(2)
+		marginBottom: theme.spacing(2)
 	},
 	media: {
 		maxHeight: 250

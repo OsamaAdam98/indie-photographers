@@ -156,7 +156,7 @@ function App() {
 							path="/profile/:id"
 							render={(props) => (
 								<Suspense fallback={<ProfileSkeleton />}>
-									<Profile {...props} user={user} />
+									<Profile {...props} currentUser={user} />
 								</Suspense>
 							)}
 						/>

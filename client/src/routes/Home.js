@@ -4,7 +4,7 @@ import homeCover from "../assets/home-cover.jpg";
 
 export default function Home() {
 	return (
-		<div className="container">
+		<div className="home-container">
 			<img className="main-img" alt="Home cover" src={homeCover} />
 			<h2 className="main-line">
 				<span className="highlight">In development</span>

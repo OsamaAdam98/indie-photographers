@@ -4,7 +4,7 @@
 	padding: 0;
 }
 
-.container {
+.home-container {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -56,7 +56,7 @@
 }
 
 @media (min-width: 500px) {
-	.container {
+	.home-container {
 		grid-template-rows: 102px auto;
 	}
 

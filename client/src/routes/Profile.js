@@ -1,31 +1,206 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef, useCallback} from "react";
 import axios from "axios";
-import {Paper, Typography} from "@material-ui/core";
+import {
+	Paper,
+	Typography,
+	List,
+	ListItem,
+	ListItemAvatar,
+	ListItemText,
+	Avatar,
+	makeStyles
+} from "@material-ui/core";
 import "../css/profile.css";
-import {PostMedia} from "../components/index";
+import {PostMedia, PostSkeleton, SnackAlert} from "../components/index";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
+import ImageIcon from "@material-ui/icons/Image";
+import WorkIcon from "@material-ui/icons/Work";
+import BeachAccessIcon from "@material-ui/icons/BeachAccess";
+
+const useStyles = makeStyles((theme) => ({
+	root: {
+		width: "100%",
+		maxWidth: 360,
+		backgroundColor: theme.palette.background.paper
+	}
+}));
 
 export default function Profile(props) {
+	const {currentUser} = props;
 	const [user, setUser] = useState("");
+	const [posts, setPosts] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [page, setPage] = useState(1);
+	const [hasMore, setHasMore] = useState(false);
+	const [errorMsg, setErrorMsg] = useState("");
+	const [openError, setOpenError] = useState(false);
+	const [severity, setSeverity] = useState("");
+	const [showPrev, setShowPrev] = useState(false);
+	const [showLikes, setShowLikes] = useState(false);
+
+	const classes = useStyles();
+
+	const handleDelete = (id) => {
+		const token = localStorage.getItem("token");
+
+		axios
+			.delete(`/api/feed/delete/${id}`, {
+				headers: {
+					"x-auth-token": `${token}`
+				}
+			})
+			.then((res) => {
+				setErrorMsg(res.data);
+				setSeverity("success");
+				setOpenError(true);
+			})
+			.catch((err) => console.log(err));
+	};
 
 	useEffect(() => {
+		let cachedData = JSON.parse(
+			localStorage.getItem(`${user._id}/page${page}`)
+		);
+		if (cachedData) {
+			setPosts((prevPosts) =>
+				[...prevPosts, ...cachedData].filter(
+					(post) => post.user._id === user._id
+				)
+			);
+			setIsLoading(false);
+			setHasMore(cachedData.length > 0);
+		}
+
+		if (user) {
+			axios
+				.get(`/api/feed/user/${user._id}/?page=${page}`)
+				.then((res) => {
+					const {data} = res;
+
+					if (!cachedData) {
+						setPosts((prevPosts) => [...prevPosts, ...data]);
+					}
+
+					setHasMore(data.length > 0);
+					localStorage.setItem(
+						`${user._id}/page${page}`,
+						JSON.stringify(data.filter((post) => post.user._id === user._id))
+					);
+					setErrorMsg("");
+					setOpenError(false);
+					setIsLoading(false);
+				})
+				.catch((err) => {
+					if (err) {
+						setErrorMsg("Can't connect to the internet!");
+						setSeverity("warning");
+						setOpenError(true);
+						console.log(err);
+						if (cachedData) {
+							setHasMore(cachedData.length > 0);
+						} else {
+							setHasMore(false);
+						}
+						setIsLoading(false);
+					}
+				});
+		}
+	}, [page, user]);
+
+	useEffect(() => {
+		setPosts([]);
+		setPage(1);
+
+		let cachedData = JSON.parse(
+			localStorage.getItem(`${props.match.params.id}`)
+		);
+
+		if (cachedData) {
+			setUser(cachedData);
+		}
+
 		axios
 			.get(`/api/users/${props.match.params.id}`)
 			.then((res) => {
 				const {data} = res;
-				console.log(data);
-				setUser(data);
+				if (!cachedData) setUser(data);
+				localStorage.setItem(`${props.match.params.id}`, JSON.stringify(data));
 			})
 			.catch((err) => console.log(err));
 	}, [props.match.params.id]);
+
+	const observer = useRef();
+
+	const lastElementRef = useCallback(
+		(node) => {
+			if (isLoading) return;
+			if (observer.current) observer.current.disconnect();
+
+			observer.current = new IntersectionObserver((entries) => {
+				if (entries[0].isIntersecting && hasMore) {
+					setPage((prevPage) => prevPage + 1);
+				}
+			});
+			if (node) observer.current.observe(node);
+		},
+		[isLoading, hasMore]
+	);
+
+	const postMedia = posts
+		? posts.map((feedPost, i) => {
+				if (posts.length === i + 1) {
+					return (
+						<div ref={lastElementRef} key={feedPost._id}>
+							<PostMedia
+								{...props}
+								showLikes={showLikes}
+								setShowLikes={setShowLikes}
+								showPrev={showPrev}
+								setShowPrev={setShowPrev}
+								feedPost={feedPost}
+								isLoading={isLoading}
+								currentUser={currentUser}
+								handleDelete={handleDelete}
+							/>
+							{hasMore ? <PostSkeleton /> : null}
+						</div>
+					);
+				} else {
+					return (
+						<div key={feedPost._id}>
+							<PostMedia
+								{...props}
+								showLikes={showLikes}
+								setShowLikes={setShowLikes}
+								showPrev={showPrev}
+								setShowPrev={setShowPrev}
+								feedPost={feedPost}
+								isLoading={isLoading}
+								currentUser={currentUser}
+								handleDelete={handleDelete}
+							/>
+						</div>
+					);
+				}
+		  })
+		: null;
 
 	return (
 		<div className="container">
 			<Paper className="main-block">
 				<div className="cover-photo" />
-				<img className="profile-photo" src={user.profilePicture} />
+				<img
+					className="profile-photo"
+					src={user.profilePicture}
+					alt={user.username}
+				/>
 				<div className="tagline">
 					<Typography variant="h5">{user.username}</Typography>
-					<Typography style={{fontStyle: "italic"}}>
+					<Typography
+						style={{
+							fontStyle: "italic"
+						}}
+					>
 						<span className="highlight">title</span>
 					</Typography>
 				</div>
@@ -38,8 +213,52 @@ export default function Profile(props) {
 					</Typography>
 				</div>
 			</Paper>
-			<Paper className="details-block"></Paper>
-			<div className="post-block" />
+			<Paper className="details-block">
+				<List className={classes.root}>
+					<ListItem>
+						<ListItemAvatar>
+							<Avatar>
+								<ImageIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText primary="Placeholder" secondary="Placeholder" />
+					</ListItem>
+					<ListItem>
+						<ListItemAvatar>
+							<Avatar>
+								<WorkIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText primary="Placeholder" secondary="Placeholder" />
+					</ListItem>
+					<ListItem>
+						<ListItemAvatar>
+							<Avatar>
+								<BeachAccessIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText primary="Placeholder" secondary="Placeholder" />
+					</ListItem>
+				</List>
+			</Paper>
+			<div className="post-block">
+				{postMedia}
+				{!hasMore && !isLoading ? (
+					<DoneAllIcon
+						style={{
+							position: "relative",
+							width: "100%",
+							textAlign: "center"
+						}}
+					/>
+				) : null}
+			</div>
+			<SnackAlert
+				severity={severity}
+				openError={openError}
+				setOpenError={setOpenError}
+				errorMsg={errorMsg}
+			/>
 		</div>
 	);
 }
