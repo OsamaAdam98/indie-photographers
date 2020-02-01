@@ -51,16 +51,6 @@ export default function Feed(props) {
 	const [showPost, setShowPost] = useState(false);
 	const [offline, setOffline] = useState(false);
 
-	const hideAll = () => {
-		setShowPrev(false);
-		setShowPost(false);
-		setShowLikes(false);
-	};
-
-	useEffect(() => {
-		if (props.location.hash === "") hideAll();
-	}, [props.location.hash]);
-
 	const config = {
 		onUploadProgress: (progressEvent) => {
 			setIsUploading(true);

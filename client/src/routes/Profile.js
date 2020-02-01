@@ -213,7 +213,7 @@ export default function Profile(props) {
 					</Typography>
 				</div>
 			</Paper>
-			<Paper className="details-block" round>
+			<Paper className="details-block">
 				<List className={classes.root}>
 					<ListItem>
 						<ListItemAvatar>

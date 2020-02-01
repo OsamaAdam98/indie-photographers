@@ -72,10 +72,9 @@ export default function PhotoPreview(props) {
 			<ImagePreview />
 			<Dialog
 				open={show && selfShow}
-				onClose={handleClose}
 				fullWidth={true}
 				className={classes.dialog}
-				onKeyUp={handleClose}
+				onClick={handleClose}
 			>
 				<FullImage />
 			</Dialog>

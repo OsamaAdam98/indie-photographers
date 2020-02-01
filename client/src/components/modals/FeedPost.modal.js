@@ -44,6 +44,7 @@ export default function PostModal(props) {
 
 	const handleClose = () => {
 		setErrorMsg("");
+		setShow(false);
 		if (props.location.hash === "#feed-post") history.goBack();
 	};
 
