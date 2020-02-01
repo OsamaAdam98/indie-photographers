@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useCallback} from "react";
-import axios from "axios";
+import axios, {CancelToken} from "axios";
 import {
 	Paper,
 	Typography,
@@ -35,8 +35,6 @@ export default function Profile(props) {
 	const [errorMsg, setErrorMsg] = useState("");
 	const [openError, setOpenError] = useState(false);
 	const [severity, setSeverity] = useState("");
-	const [showPrev, setShowPrev] = useState(false);
-	const [showLikes, setShowLikes] = useState(false);
 
 	const classes = useStyles();
 
@@ -92,14 +90,20 @@ export default function Profile(props) {
 				})
 				.catch((err) => {
 					if (err) {
-						setErrorMsg("Can't connect to the internet!");
-						setSeverity("warning");
-						setOpenError(true);
-						console.log(err);
+						const {status} = err.response;
 						if (cachedData) {
 							setHasMore(cachedData.length > 0);
 						} else {
 							setHasMore(false);
+						}
+						if (status === 404) {
+							setErrorMsg("User not found");
+							setSeverity("error");
+							setOpenError(true);
+						} else {
+							setErrorMsg("Can't connect to the internet!");
+							setSeverity("warning");
+							setOpenError(true);
 						}
 						setIsLoading(false);
 					}
@@ -110,23 +114,36 @@ export default function Profile(props) {
 	useEffect(() => {
 		setPosts([]);
 		setPage(1);
+		let cancel;
 
 		let cachedData = JSON.parse(
 			localStorage.getItem(`${props.match.params.id}`)
 		);
-
 		if (cachedData) {
 			setUser(cachedData);
 		}
 
 		axios
-			.get(`/api/users/${props.match.params.id}`)
+			.get(`/api/users/${props.match.params.id}`, {
+				cancelToken: new CancelToken(function executor(c) {
+					cancel = c;
+				})
+			})
 			.then((res) => {
 				const {data} = res;
 				if (!cachedData) setUser(data);
 				localStorage.setItem(`${props.match.params.id}`, JSON.stringify(data));
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				const {status} = err.response;
+				if (status === 404) {
+					setErrorMsg("Can't find user");
+					setSeverity("error");
+					setOpenError(true);
+				}
+			});
+
+		return () => cancel();
 	}, [props.match.params.id]);
 
 	const observer = useRef();
@@ -153,10 +170,6 @@ export default function Profile(props) {
 						<div ref={lastElementRef} key={feedPost._id}>
 							<PostMedia
 								{...props}
-								showLikes={showLikes}
-								setShowLikes={setShowLikes}
-								showPrev={showPrev}
-								setShowPrev={setShowPrev}
 								feedPost={feedPost}
 								isLoading={isLoading}
 								currentUser={currentUser}
@@ -170,10 +183,6 @@ export default function Profile(props) {
 						<div key={feedPost._id}>
 							<PostMedia
 								{...props}
-								showLikes={showLikes}
-								setShowLikes={setShowLikes}
-								showPrev={showPrev}
-								setShowPrev={setShowPrev}
 								feedPost={feedPost}
 								isLoading={isLoading}
 								currentUser={currentUser}

@@ -4,8 +4,8 @@ import {makeStyles, Card, CardContent, CardHeader} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
 	card: {
-		maxWidth: 500,
-		margin: theme.spacing(2)
+		margin: theme.spacing(2),
+		width: "100%"
 	},
 	media: {
 		height: 345

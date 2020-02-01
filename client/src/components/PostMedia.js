@@ -31,15 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PostMedia(props) {
-	const {
-		currentUser,
-		handleDelete,
-		feedPost,
-		showLikes,
-		setShowLikes,
-		showPrev,
-		setShowPrev
-	} = props;
+	const {currentUser, handleDelete, feedPost} = props;
 	const {user} = feedPost;
 	const classes = useStyles();
 
@@ -236,8 +228,6 @@ export default function PostMedia(props) {
 				{feedPost.photo ? (
 					<CardMedia className={classes.media}>
 						<PhotoPreview
-							show={showPrev}
-							setShow={setShowPrev}
 							photo={feedPost.photo}
 							username={feedPost.user.username}
 							maxHeight={250}
@@ -250,8 +240,6 @@ export default function PostMedia(props) {
 				<Likes
 					liked={liked}
 					users={post && post.likes.map((like) => like.user)}
-					show={showLikes}
-					setShow={setShowLikes}
 					currentUser={currentUser}
 					{...props}
 				/>

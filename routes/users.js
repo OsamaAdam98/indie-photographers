@@ -72,10 +72,9 @@ router.get("/:id", (req, res) => {
 	const id = req.params.id;
 	Users.findById(id)
 		.select("-password -registerDate -__v")
-		.populate("posts")
 		.exec()
 		.then((data) => res.status(200).json(data))
-		.catch((err) => res.status(500).json(err));
+		.catch((err) => res.status(404).json(err));
 });
 
 module.exports = router;

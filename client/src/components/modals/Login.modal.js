@@ -25,11 +25,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login(props) {
-	const {isLogged, setIsLogged, setUser, user, show, setShow} = props;
+	const {isLogged, setIsLogged, setUser, user} = props;
 
 	const classes = useStyles();
 	const history = useHistory();
 
+	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");

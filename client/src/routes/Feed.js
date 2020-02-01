@@ -1,18 +1,9 @@
-import React, {
-	useState,
-	useEffect,
-	useRef,
-	useCallback,
-	lazy,
-	Suspense
-} from "react";
-import axios from "axios";
+import React, {useState, useEffect, useRef, useCallback} from "react";
+import axios, {CancelToken} from "axios";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import {LinearProgress, makeStyles} from "@material-ui/core";
-import {PostModal, PostSkeleton, SnackAlert} from "../components";
+import {PostModal, PostSkeleton, SnackAlert, PostMedia} from "../components";
 import "../css/feed.css";
-
-const PostMedia = lazy(() => import("../components/PostMedia"));
 
 const useStyles = makeStyles({
 	progress: {
@@ -46,9 +37,6 @@ export default function Feed(props) {
 	const [photo, setPhoto] = useState("");
 	const [uploadProgress, setUploadProgress] = useState(0);
 	const [isUploading, setIsUploading] = useState(false);
-	const [showLikes, setShowLikes] = useState(false);
-	const [showPrev, setShowPrev] = useState(false);
-	const [showPost, setShowPost] = useState(false);
 	const [offline, setOffline] = useState(false);
 
 	const config = {
@@ -85,8 +73,8 @@ export default function Feed(props) {
 				setOpenError(true);
 			})
 			.catch((err) => {
-				setErrorMsg("Upload failed!");
-				console.log(err);
+				const {status} = err.response;
+				if (status === 500) setErrorMsg("Upload failed!");
 			});
 	};
 
@@ -145,6 +133,8 @@ export default function Feed(props) {
 
 	useEffect(() => {
 		setIsLoading(true);
+		let cancel;
+
 		let cachedData = JSON.parse(localStorage.getItem(`feedPage${page}`));
 		if (cachedData) {
 			setPosts((prevPosts) => [...prevPosts, ...cachedData]);
@@ -153,14 +143,17 @@ export default function Feed(props) {
 		}
 
 		axios
-			.get(`/api/feed/?page=${page}`)
+			.get(`/api/feed/?page=${page}`, {
+				cancelToken: new CancelToken(function executor(c) {
+					cancel = c;
+				})
+			})
 			.then((res) => {
 				const {data} = res;
-				if (getNewPosts(data, cachedData)) {
-					setNewPost((prevPosts) => [
-						...prevPosts,
-						...getNewPosts(data, cachedData)
-					]);
+				let newData = getNewPosts(data, cachedData);
+
+				if (newData) {
+					setNewPost((prevPosts) => [...prevPosts, ...newData]);
 				}
 
 				if (!cachedData) {
@@ -176,19 +169,22 @@ export default function Feed(props) {
 			})
 			.catch((err) => {
 				if (err) {
-					setErrorMsg("Can't connect to the internet!");
-					setSeverity("warning");
-					setOffline(true);
-					setOpenError(true);
-					console.log(err);
-					if (cachedData) {
-						setHasMore(cachedData.length > 0);
-					} else {
-						setHasMore(false);
+					const {status} = err.response;
+					if (status === 500) {
+						setErrorMsg("Can't connect to the internet!");
+						setSeverity("warning");
+						setOffline(true);
+						setOpenError(true);
+						if (cachedData) {
+							setHasMore(cachedData.length > 0);
+						} else {
+							setHasMore(false);
+						}
 					}
 					setIsLoading(false);
 				}
 			});
+		return () => cancel();
 	}, [page]);
 
 	const observer = useRef();
@@ -214,16 +210,12 @@ export default function Feed(props) {
 				<div ref={lastElementRef} key={feedPost._id}>
 					<PostMedia
 						{...props}
-						showLikes={showLikes}
-						setShowLikes={setShowLikes}
-						showPrev={showPrev}
-						setShowPrev={setShowPrev}
 						feedPost={feedPost}
 						isLoading={isLoading}
 						currentUser={user}
 						handleDelete={handleDelete}
 					/>
-					{hasMore ? <PostSkeleton /> : null}
+					{hasMore && <PostSkeleton />}
 				</div>
 			);
 		} else {
@@ -231,10 +223,6 @@ export default function Feed(props) {
 				<div key={feedPost._id}>
 					<PostMedia
 						{...props}
-						showLikes={showLikes}
-						setShowLikes={setShowLikes}
-						showPrev={showPrev}
-						setShowPrev={setShowPrev}
 						feedPost={feedPost}
 						isLoading={isLoading}
 						currentUser={user}
@@ -248,16 +236,12 @@ export default function Feed(props) {
 	const newPosts = newPost
 		? newPost.map((incoming) => (
 				<PostMedia
-					showLikes={showLikes}
-					setShowLikes={setShowLikes}
-					showPrev={showPrev}
-					setShowPrev={setShowPrev}
+					{...props}
 					feedPost={incoming}
 					isLoading={isLoading}
 					currentUser={user}
 					handleDelete={handleDelete}
 					key={incoming._id}
-					{...props}
 				/>
 		  ))
 		: null;
@@ -265,10 +249,8 @@ export default function Feed(props) {
 	return (
 		<div className="feed-container">
 			<div className="feed-post-block">
-				<Suspense fallback={<PostSkeleton />}>
-					{newPost && newPosts}
-					{postMedia}
-				</Suspense>
+				{newPost && newPosts}
+				{postMedia}
 				{!hasMore && !isLoading ? (
 					<DoneAllIcon
 						style={{
@@ -285,6 +267,7 @@ export default function Feed(props) {
 					errorMsg={errorMsg}
 				/>
 				<PostModal
+					{...props}
 					isLogged={isLogged}
 					user={user}
 					setNewPost={setNewPost}
@@ -292,10 +275,7 @@ export default function Feed(props) {
 					setPhoto={setPhoto}
 					isUploading={isUploading}
 					onUpload={onUpload}
-					show={showPost}
-					setShow={setShowPost}
 					offline={offline}
-					{...props}
 				/>
 			</div>
 			{isUploading && (

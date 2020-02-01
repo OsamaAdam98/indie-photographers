@@ -47,7 +47,10 @@ function App() {
 		},
 		lightTheme: {
 			palette: {
-				type: "light"
+				type: "light",
+				primary: {
+					main: yellow[700]
+				}
 			}
 		}
 	};
@@ -155,7 +158,15 @@ function App() {
 						<Route
 							path="/profile/:id"
 							render={(props) => (
-								<Suspense fallback={<ProfileSkeleton />}>
+								<Suspense
+									fallback={
+										<div className="container">
+											<div className="main-block">
+												<ProfileSkeleton />
+											</div>
+										</div>
+									}
+								>
 									<Profile {...props} currentUser={user} />
 								</Suspense>
 							)}
@@ -164,7 +175,15 @@ function App() {
 							exact
 							path="/feed"
 							render={(props) => (
-								<Suspense fallback={<PostSkeleton />}>
+								<Suspense
+									fallback={
+										<div className="feed-container">
+											<div className="feed-post-block">
+												<PostSkeleton />
+											</div>
+										</div>
+									}
+								>
 									<Feed {...props} isLogged={isLogged} user={user} />
 								</Suspense>
 							)}

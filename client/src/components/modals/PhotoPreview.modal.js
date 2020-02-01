@@ -22,25 +22,24 @@ const useStyles = makeStyles({
 });
 
 export default function PhotoPreview(props) {
-	const {photo, username, show, setShow, maxHeight} = props;
+	const {photo, username, maxHeight} = props;
 
-	const [selfShow, setSelfShow] = useState(false);
+	const [show, setShow] = useState(false);
 
 	const history = useHistory();
 	const classes = useStyles();
 
 	useEffect(() => {
-		if (props.location.hash === "") setSelfShow(false);
+		if (props.location.hash === "") setShow(false);
 	}, [props.location.hash]);
 
 	const handleShow = () => {
-		setSelfShow(true);
 		setShow(true);
 		window.location.hash = "photo-preview";
 	};
 
 	const handleClose = () => {
-		setSelfShow(false);
+		setShow(false);
 		if (window.location.hash === "#photo-preview") history.goBack();
 	};
 
@@ -71,7 +70,7 @@ export default function PhotoPreview(props) {
 		<>
 			<ImagePreview />
 			<Dialog
-				open={show && selfShow}
+				open={show}
 				fullWidth={true}
 				className={classes.dialog}
 				onClick={handleClose}

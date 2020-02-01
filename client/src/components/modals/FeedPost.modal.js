@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
 import {FAB} from "../index";
@@ -28,17 +28,19 @@ export default function PostModal(props) {
 		photo,
 		isUploading,
 		onUpload,
-		show,
-		setShow,
 		offline
 	} = props;
 
 	const classes = useStyles();
 	const history = useHistory();
 	const {height} = useWindowDimensions();
-
+	const [show, setShow] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 	const [msg, setMsg] = useState("");
+
+	useEffect(() => {
+		if (props.location.hash === "") setShow(false);
+	}, [props.location.hash]);
 
 	const msgChange = (event) => setMsg(event.target.value);
 

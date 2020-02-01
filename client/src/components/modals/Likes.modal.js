@@ -39,15 +39,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Likes(props) {
-	const {users, show, setShow, liked, currentUser} = props;
-	const [selfShow, setSelfShow] = useState(false);
+	const {users, liked, currentUser} = props;
+	const [show, setShow] = useState(false);
 	const {width} = useWindowDimensions();
 
 	const history = useHistory();
 	const classes = useStyles();
 
 	useEffect(() => {
-		if (props.location.hash === "") setSelfShow(false);
+		if (props.location.hash === "") setShow(false);
 	}, [props.location.hash]);
 
 	const entering = () => {
@@ -55,12 +55,12 @@ export default function Likes(props) {
 	};
 
 	const handleClose = () => {
-		setSelfShow(false);
+		setShow(false);
 		if (props.location.hash === "#likes") history.goBack();
 	};
 
 	const handleShow = () => {
-		setSelfShow(true);
+		setShow(true);
 		setShow(true);
 		window.location.hash = "likes";
 	};
@@ -142,7 +142,7 @@ export default function Likes(props) {
 		<>
 			{likeGroup}
 			<Dialog
-				open={show && selfShow}
+				open={show}
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
 				maxWidth="xs"
