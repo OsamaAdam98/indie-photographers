@@ -14,6 +14,7 @@ const feedSchema = mongoose.Schema({
 		type: String,
 		required: false
 	},
+	photoId: String,
 	likes: [
 		{
 			type: mongoose.Types.ObjectId,

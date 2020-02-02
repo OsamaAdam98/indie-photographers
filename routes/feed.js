@@ -25,6 +25,7 @@ router.get("/", (req, res) => {
 		.sort({date: "desc"})
 		.limit(10)
 		.skip(page >= 1 ? 10 * (page - 1) : 0)
+		.select("-photoId")
 		.populate(
 			"user comments likes",
 			"-password -registerDate -__v -posts -email"
@@ -44,11 +45,13 @@ router.get("/", (req, res) => {
 router.post("/add", auth, (req, res) => {
 	const msg = req.body.msg;
 	const photo = req.body.photo;
+	const photoId = req.body.photoId;
 	const user = req.user.id;
 
 	const newPost = new Feed({
 		msg,
 		photo,
+		photoId,
 		user
 	});
 
@@ -203,9 +206,27 @@ router.get("/likes/:postID", (req, res) => {
 });
 
 router.delete("/delete/:id", auth, (req, res) => {
-	Feed.findByIdAndDelete(req.params.id)
-		.then(() => res.json(`Post deleted!`))
-		.catch((err) => res.status(400).json(err));
+	Feed.findById(req.params.id)
+		.exec()
+		.then((post) => {
+			if (post.photoId) {
+				cloudinary.api.delete_resources(
+					[`${post.photoId}`],
+					{
+						cloud_name: process.env.CLOUD_NAME,
+						api_key: process.env.CLOUDINAY_API_KEY,
+						api_secret: process.env.CLOUDINARY_API_SECRET
+					},
+					(err, result) => {
+						if (err) console.log(err);
+					}
+				);
+			}
+			Feed.findByIdAndDelete(req.params.id)
+				.then(() => res.json(`Post deleted!`))
+				.catch((err) => res.status(400).json(err));
+		})
+		.catch((err) => res.status(404).json("Post not found"));
 });
 
 router.post("/update/:id", auth, (req, res) => {

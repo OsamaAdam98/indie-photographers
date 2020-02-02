@@ -66,7 +66,8 @@ export default function PostModal(props) {
 				username,
 				email,
 				msg,
-				photo
+				photo: photo.eager[0].secure_url,
+				photoId: photo.public_id
 			};
 			const token = localStorage.getItem("token");
 

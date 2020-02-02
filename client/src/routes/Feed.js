@@ -34,8 +34,8 @@ export default function Feed(props) {
 			.post("/api/feed/upload", formData)
 			.then((res) => {
 				setIsUploading(false);
-				const {secure_url} = res.data.eager[0];
-				setPhoto(secure_url);
+				const {data} = res;
+				setPhoto(data);
 				setErrorMsg("Upload complete!");
 				setSeverity("success");
 				setOpenError(true);
@@ -140,8 +140,7 @@ export default function Feed(props) {
 				setIsLoading(false);
 			})
 			.catch((err) => {
-				const {status} = err.response;
-				if (status === 500) {
+				if (err) {
 					setErrorMsg("Can't connect to the internet!");
 					setSeverity("warning");
 					setOffline(true);
