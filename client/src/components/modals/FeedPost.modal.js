@@ -77,7 +77,7 @@ export default function PostModal(props) {
 					}
 				})
 				.then((res) => {
-					setNewPost([res.data]);
+					setNewPost((prevPost) => [res.data, ...prevPost]);
 					localStorage.setItem(
 						`feedPage1`,
 						JSON.stringify([
@@ -132,7 +132,7 @@ export default function PostModal(props) {
 							helperText={errorMsg}
 						/>
 						<img
-							src={photo}
+							src={photo && photo.eager[0].secure_url}
 							alt="uploaded"
 							style={{
 								objectFit: "scale-down",

@@ -1,5 +1,9 @@
 const router = require("express").Router();
 const moment = require("moment");
+const upload = require("../middleware/upload.middleware");
+const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
+
 let Feed = require("../models/feed.model");
 let Comment = require("../models/comments.model");
 let Likes = require("../models/likes.model");
@@ -7,6 +11,12 @@ let Likes = require("../models/likes.model");
 const auth = require("../middleware/auth.middleware");
 
 const admins = ["5de3b79f3c679b2a10601f60"];
+
+cloudinary.config({
+	cloud_name: process.env.CLOUD_NAME,
+	api_key: process.env.CLOUDINAY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 router.get("/", (req, res) => {
 	const {page} = req.query;
@@ -72,6 +82,22 @@ router.post("/add", auth, (req, res) => {
 			}
 		})
 		.catch((err) => console.log(err));
+});
+
+router.post("/upload", upload.single("image"), (req, res) => {
+	cloudinary.uploader.unsigned_upload(
+		req.file.path,
+		"hahlpxqe",
+		{cloud_name: process.env.CLOUD_NAME},
+		(err, result) => {
+			if (err) {
+				res.status(500).json("upload failed!");
+			} else {
+				res.status(200).json(result);
+				fs.unlinkSync(req.file.path);
+			}
+		}
+	);
 });
 
 router.post("/comment/:id", auth, (req, res) => {

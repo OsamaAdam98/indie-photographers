@@ -1,30 +1,11 @@
 import React, {useState, useEffect, useRef, useCallback} from "react";
 import axios, {CancelToken} from "axios";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
-import {LinearProgress, makeStyles} from "@material-ui/core";
 import {PostModal, PostSkeleton, SnackAlert, PostMedia} from "../components";
 import "../css/feed.css";
 
-const useStyles = makeStyles({
-	progress: {
-		position: "fixed",
-		bottom: 0,
-		width: "100%",
-		height: 4
-	},
-	"@media (max-width: 500px)": {
-		progress: {
-			position: "fixed",
-			bottom: 48,
-			width: "100%",
-			height: 4
-		}
-	}
-});
-
 export default function Feed(props) {
 	const {isLogged, user} = props;
-	const classes = useStyles();
 
 	const [posts, setPosts] = useState([]);
 	const [newPost, setNewPost] = useState([]);
@@ -35,26 +16,13 @@ export default function Feed(props) {
 	const [openError, setOpenError] = useState(false);
 	const [severity, setSeverity] = useState("");
 	const [photo, setPhoto] = useState("");
-	const [uploadProgress, setUploadProgress] = useState(0);
 	const [isUploading, setIsUploading] = useState(false);
 	const [offline, setOffline] = useState(false);
 
-	const config = {
-		onUploadProgress: (progressEvent) => {
-			setIsUploading(true);
-			let percentCompleted = Math.round(
-				(progressEvent.loaded * 100) / progressEvent.total
-			);
-			setUploadProgress(percentCompleted);
-		}
-	};
-
 	const onUpload = (e) => {
 		const files = e.target.files;
-		console.log("Clicked");
 		const formData = new FormData();
-		formData.append("file", files[0]);
-		formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET);
+		formData.append("image", files[0]);
 
 		setErrorMsg(
 			"Uploading photo, we'll notify you when the upload is complete."
@@ -63,10 +31,10 @@ export default function Feed(props) {
 		setOpenError(true);
 
 		axios
-			.post(process.env.REACT_APP_CLOUDINARY_URL, formData, config)
+			.post("/api/feed/upload", formData)
 			.then((res) => {
 				setIsUploading(false);
-				const {secure_url} = res.data;
+				const {secure_url} = res.data.eager[0];
 				setPhoto(secure_url);
 				setErrorMsg("Upload complete!");
 				setSeverity("success");
@@ -74,7 +42,11 @@ export default function Feed(props) {
 			})
 			.catch((err) => {
 				const {status} = err.response;
-				if (status === 500) setErrorMsg("Upload failed!");
+				if (status === 500) {
+					setErrorMsg("Upload failed!");
+					setSeverity("error");
+					setOpenError(true);
+				}
 			});
 	};
 
@@ -278,14 +250,6 @@ export default function Feed(props) {
 					offline={offline}
 				/>
 			</div>
-			{isUploading && (
-				<LinearProgress
-					variant="determinate"
-					value={uploadProgress}
-					color="primary"
-					className={classes.progress}
-				/>
-			)}
 		</div>
 	);
 }
