@@ -41,8 +41,7 @@ export default function Feed(props) {
 				setOpenError(true);
 			})
 			.catch((err) => {
-				const {status} = err.response;
-				if (status === 500) {
+				if (err) {
 					setErrorMsg("Upload failed!");
 					setSeverity("error");
 					setOpenError(true);

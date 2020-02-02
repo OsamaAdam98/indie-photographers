@@ -229,6 +229,21 @@ router.delete("/delete/:id", auth, (req, res) => {
 		.catch((err) => res.status(404).json("Post not found"));
 });
 
+router.delete("/delete-photo/:photoId", (req, res) => {
+	cloudinary.api.delete_resources(
+		[`${req.params.photoId}`],
+		{
+			cloud_name: process.env.CLOUD_NAME,
+			api_key: process.env.CLOUDINAY_API_KEY,
+			api_secret: process.env.CLOUDINARY_API_SECRET
+		},
+		(err, result) => {
+			if (err) console.log(err);
+			res.status(200).json("Photo deleted");
+		}
+	);
+});
+
 router.post("/update/:id", auth, (req, res) => {
 	Feed.findById(req.params.id)
 		.then((item) => {
