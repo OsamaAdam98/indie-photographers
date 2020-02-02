@@ -9,7 +9,7 @@
 	position: relative;
 	width: 100vw;
 	height: auto;
-	grid-template-columns: 1fr 500px minmax(min-content, 1fr);
+	grid-template-columns: 1fr minmax(min-content, 500px) minmax(min-content, 1fr);
 	grid-template-rows: minmax(auto, 500px) 1fr;
 	grid-gap: 16px;
 	padding: 16px;

@@ -150,6 +150,7 @@ export default function Likes(props) {
 				fullScreen={width < 500}
 				onEntering={entering}
 				scroll="paper"
+				transitionDuration={0}
 			>
 				<DialogTitle
 					id="form-dialog-title"

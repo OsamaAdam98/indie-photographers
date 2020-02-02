@@ -101,6 +101,7 @@ export default function Login(props) {
 			<Dialog
 				open={show}
 				onClose={handleClose}
+				transitionDuration={0}
 				aria-labelledby="form-dialog-title"
 			>
 				<form onSubmit={handleSubmit} className={classes.root}>

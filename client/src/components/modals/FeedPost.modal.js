@@ -113,6 +113,7 @@ export default function PostModal(props) {
 				aria-labelledby="form-dialog-title"
 				fullWidth={true}
 				maxWidth="xs"
+				transitionDuration={0}
 			>
 				<form onSubmit={handleSubmit}>
 					<DialogTitle id="form-dialog-title">Post</DialogTitle>
@@ -125,7 +126,6 @@ export default function PostModal(props) {
 							variant="outlined"
 							value={msg}
 							onChange={msgChange}
-							autoFocus={true}
 							fullWidth={true}
 							dir="auto"
 							error={errorMsg ? true : false}
