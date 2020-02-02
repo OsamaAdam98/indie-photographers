@@ -2,10 +2,29 @@ import React, {useState, useEffect, useRef, useCallback} from "react";
 import axios, {CancelToken} from "axios";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import {PostModal, PostSkeleton, SnackAlert, PostMedia} from "../components";
+import {LinearProgress, makeStyles} from "@material-ui/core";
 import "../css/feed.css";
+
+const useStyles = makeStyles({
+	progress: {
+		position: "fixed",
+		bottom: 0,
+		width: "100%",
+		height: 4
+	},
+	"@media (max-width: 500px)": {
+		progress: {
+			position: "fixed",
+			bottom: 48,
+			width: "100%",
+			height: 4
+		}
+	}
+});
 
 export default function Feed(props) {
 	const {isLogged, user} = props;
+	const classes = useStyles();
 
 	const [posts, setPosts] = useState([]);
 	const [newPost, setNewPost] = useState([]);
@@ -29,6 +48,7 @@ export default function Feed(props) {
 		);
 		setSeverity("info");
 		setOpenError(true);
+		setIsUploading(true);
 
 		axios
 			.post("/api/feed/upload", formData)
@@ -45,6 +65,7 @@ export default function Feed(props) {
 					setErrorMsg("Upload failed!");
 					setSeverity("error");
 					setOpenError(true);
+					setIsUploading(false);
 				}
 			});
 	};
@@ -248,6 +269,10 @@ export default function Feed(props) {
 					offline={offline}
 				/>
 			</div>
+
+			{isUploading && (
+				<LinearProgress color="primary" className={classes.progress} />
+			)}
 		</div>
 	);
 }
