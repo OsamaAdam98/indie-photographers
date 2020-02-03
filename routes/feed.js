@@ -11,8 +11,6 @@ let Users = require("../models/users.model");
 
 const auth = require("../middleware/auth.middleware");
 
-const admins = ["5de3b79f3c679b2a10601f60"];
-
 cloudinary.config({
 	cloud_name: process.env.CLOUD_NAME,
 	api_key: process.env.CLOUDINAY_API_KEY,
