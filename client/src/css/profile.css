@@ -10,7 +10,7 @@
 	width: 100vw;
 	height: auto;
 	grid-template-columns: 1fr minmax(min-content, 500px) minmax(min-content, 1fr);
-	grid-template-rows: minmax(auto, 500px) 1fr;
+	grid-template-rows: min-content 1fr;
 	grid-gap: 16px;
 	padding: 16px;
 	padding-top: 0px;
@@ -63,7 +63,7 @@
 .cover-photo {
 	grid-area: 1 / 1 / 3 / -1;
 	background-color: brown;
-	min-height: 20vh;
+	height: min-content;
 }
 
 .profile-photo {

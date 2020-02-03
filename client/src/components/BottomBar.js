@@ -61,6 +61,12 @@ function BottomBar(props) {
 				history.push("/feed/");
 				break;
 			case 2:
+				if (props.location.pathname === `/profile/${user._id}`)
+					window.scroll({
+						top: 0,
+						left: 0,
+						behavior: "auto"
+					});
 				history.push(`/profile/${user._id}`);
 				break;
 			case 3:
