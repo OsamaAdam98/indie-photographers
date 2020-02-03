@@ -57,16 +57,25 @@ export default function PostModal(props) {
 	const handleSubmit = (event) => {
 		const username = user.username;
 		const email = user.email;
+		let subData;
 		if (!msg && !photo) {
 			setErrorMsg("Surely you'd like to write something!");
 		} else {
-			const subData = {
-				username,
-				email,
-				msg,
-				photo: photo.eager[0].secure_url,
-				photoId: photo.public_id
-			};
+			if (photo) {
+				subData = {
+					username,
+					email,
+					msg,
+					photo: photo.eager[0].secure_url,
+					photoId: photo.public_id
+				};
+			} else {
+				subData = {
+					username,
+					email,
+					msg
+				};
+			}
 			const token = localStorage.getItem("token");
 
 			axios

@@ -7,6 +7,7 @@ const cloudinary = require("cloudinary").v2;
 let Feed = require("../models/feed.model");
 let Comment = require("../models/comments.model");
 let Likes = require("../models/likes.model");
+let Users = require("../models/users.model");
 
 const auth = require("../middleware/auth.middleware");
 
@@ -44,9 +45,16 @@ router.get("/", (req, res) => {
 
 router.post("/add", auth, (req, res) => {
 	const msg = req.body.msg;
-	const photo = req.body.photo;
-	const photoId = req.body.photoId;
 	const user = req.user.id;
+	let photo, photoId;
+
+	if (photo) {
+		photo = req.body.photo;
+		photoId = req.body.photoId;
+	} else {
+		photo = null;
+		photoId = null;
+	}
 
 	const newPost = new Feed({
 		msg,
@@ -55,34 +63,38 @@ router.post("/add", auth, (req, res) => {
 		user
 	});
 
-	Feed.findOne({user})
-		.sort({date: "desc"})
-		.skip(1)
+	Users.findById(user)
 		.exec()
-		.then((result) => {
-			const date = new Date(result.date);
-			if (
-				moment().diff(date, "minutes") > 15 ||
-				admins.filter((admin) => admin === user).length
-			) {
-				newPost
-					.save()
-					.then(() => {
-						Feed.findById(newPost._id)
-							.populate(
-								"user comments likes",
-								"-password -registerDate -__v -posts"
-							)
-							.exec()
-							.then((result) => res.status(201).json(result))
-							.catch((err) => res.status(404).json(err));
-					})
-					.catch((err) => res.status(400).json(err));
-			} else {
-				res
-					.status(403)
-					.json("Can't post more than 2 posts in a 15 minutes span!");
-			}
+		.then((user) => {
+			Feed.findOne({user})
+				.sort({date: "desc"})
+				.skip(1)
+				.exec()
+				.then((result) => {
+					let date;
+					if (result) date = new Date(result.date);
+
+					if (date ? moment().diff(date, "minutes") > 15 : true || user.admin) {
+						newPost
+							.save()
+							.then(() => {
+								Feed.findById(newPost._id)
+									.populate(
+										"user comments likes",
+										"-password -registerDate -__v -posts"
+									)
+									.exec()
+									.then((result) => res.status(201).json(result))
+									.catch((err) => res.status(404).json(err));
+							})
+							.catch((err) => res.status(400).json(err));
+					} else {
+						res
+							.status(403)
+							.json("Can't post more than 2 posts in a 15 minutes span!");
+					}
+				})
+				.catch((err) => console.log(err));
 		})
 		.catch((err) => console.log(err));
 });

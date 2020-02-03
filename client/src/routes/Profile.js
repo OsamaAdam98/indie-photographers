@@ -119,9 +119,7 @@ export default function Profile(props) {
 		let cachedData = JSON.parse(
 			localStorage.getItem(`${props.match.params.id}`)
 		);
-		if (cachedData) {
-			setUser(cachedData);
-		}
+		if (cachedData) setUser(cachedData);
 
 		axios
 			.get(`/api/users/${props.match.params.id}`, {
