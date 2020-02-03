@@ -158,15 +158,7 @@ function App() {
 						<Route
 							path="/profile/:id"
 							render={(props) => (
-								<Suspense
-									fallback={
-										<div className="container">
-											<div className="main-block">
-												<ProfileSkeleton />
-											</div>
-										</div>
-									}
-								>
+								<Suspense fallback={<ProfileSkeleton />}>
 									<Profile {...props} currentUser={user} />
 								</Suspense>
 							)}
@@ -175,15 +167,7 @@ function App() {
 							exact
 							path="/feed"
 							render={(props) => (
-								<Suspense
-									fallback={
-										<div className="feed-container">
-											<div className="feed-post-block">
-												<PostSkeleton />
-											</div>
-										</div>
-									}
-								>
+								<Suspense fallback={<PostSkeleton />}>
 									<Feed {...props} isLogged={isLogged} user={user} />
 								</Suspense>
 							)}

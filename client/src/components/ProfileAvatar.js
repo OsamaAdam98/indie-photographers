@@ -38,6 +38,7 @@ export default function ProfileAvatar(props) {
 					horizontal: "right"
 				}}
 				keepMounted
+				transitionDuration={0}
 				transformOrigin={{
 					vertical: "top",
 					horizontal: "right"
