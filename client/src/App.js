@@ -2,6 +2,7 @@ import React, {useState, useEffect, lazy, Suspense} from "react";
 import axios from "axios";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import "./css/style.css";
+import "./css/feed.css";
 import {MuiThemeProvider, createMuiTheme} from "@material-ui/core";
 import {yellow} from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -167,7 +168,15 @@ function App() {
 							exact
 							path="/feed"
 							render={(props) => (
-								<Suspense fallback={<PostSkeleton />}>
+								<Suspense
+									fallback={
+										<div className="feed-container">
+											<div className="feed-post-block">
+												<PostSkeleton />
+											</div>
+										</div>
+									}
+								>
 									<Feed {...props} isLogged={isLogged} user={user} />
 								</Suspense>
 							)}
