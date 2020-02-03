@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef, useCallback} from "react";
+import {useHistory} from "react-router-dom";
 import axios, {CancelToken} from "axios";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import {PostModal, PostSkeleton, SnackAlert, PostMedia} from "../components";
@@ -9,14 +10,13 @@ const useStyles = makeStyles({
 	progress: {
 		position: "fixed",
 		bottom: 0,
-		width: "100%",
+		width: "100vw",
 		height: 4
 	},
 	"@media (max-width: 500px)": {
 		progress: {
 			position: "fixed",
 			bottom: 48,
-			width: "100%",
 			height: 4
 		}
 	}
@@ -25,6 +25,7 @@ const useStyles = makeStyles({
 export default function Feed(props) {
 	const {isLogged, user} = props;
 	const classes = useStyles();
+	const history = useHistory();
 
 	const [posts, setPosts] = useState([]);
 	const [newPost, setNewPost] = useState([]);
@@ -37,6 +38,7 @@ export default function Feed(props) {
 	const [photo, setPhoto] = useState("");
 	const [isUploading, setIsUploading] = useState(false);
 	const [offline, setOffline] = useState(false);
+	const [show, setShow] = useState(false);
 
 	const onUpload = (e) => {
 		const files = e.target.files;
@@ -59,6 +61,7 @@ export default function Feed(props) {
 				setErrorMsg("Upload complete!");
 				setSeverity("success");
 				setOpenError(true);
+				setShow(true);
 			})
 			.catch((err) => {
 				if (err) {
@@ -69,6 +72,24 @@ export default function Feed(props) {
 				}
 			});
 	};
+
+	const handleCancel = () => {
+		if (photo) {
+			axios
+				.delete(`/api/feed/delete-photo/${photo.public_id}`)
+				.then((res) => {
+					console.log(res.data);
+				})
+				.catch((err) => console.log(err));
+		}
+		setPhoto("");
+		setShow(false);
+		if (props.location.hash === "#feed-post") history.goBack();
+	};
+
+	useEffect(() => {
+		if (props.location.hash === "") setShow(false);
+	}, [props.location.hash]);
 
 	const cleanupDelete = (id) => {
 		let index = 1;
@@ -160,16 +181,12 @@ export default function Feed(props) {
 				setIsLoading(false);
 			})
 			.catch((err) => {
-				if (err) {
+				if (err && page !== 1) {
 					setErrorMsg("Can't connect to the internet!");
 					setSeverity("warning");
 					setOffline(true);
 					setOpenError(true);
-					if (cachedData) {
-						setHasMore(cachedData.length > 0);
-					} else {
-						setHasMore(false);
-					}
+					if (cachedData) setHasMore(cachedData.length > 0);
 				}
 				setIsLoading(false);
 			});
@@ -267,6 +284,9 @@ export default function Feed(props) {
 					isUploading={isUploading}
 					onUpload={onUpload}
 					offline={offline}
+					show={show}
+					setShow={setShow}
+					handleCancel={handleCancel}
 				/>
 			</div>
 

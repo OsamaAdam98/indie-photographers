@@ -23,6 +23,7 @@ export default function SnackAlert(props) {
 				open={openError}
 				autoHideDuration={6000}
 				onClose={handleClose}
+				onClick={handleClose}
 				style={{
 					position: "fixed",
 					bottom: "70px"
