@@ -5,6 +5,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import ViewDayIcon from "@material-ui/icons/ViewDay";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import SettingsIcon from "@material-ui/icons/Settings";
+import {useWindowDimensions} from "./index";
 
 const useStyles = makeStyles((theme) => ({
 	tabs: {
@@ -19,6 +20,7 @@ function BottomBar(props) {
 	const [value, setValue] = useState(false);
 
 	const classes = useStyles();
+	const {width} = useWindowDimensions();
 
 	useEffect(() => {
 		switch (props.location.pathname) {
@@ -77,11 +79,12 @@ function BottomBar(props) {
 			<Tabs
 				value={value}
 				onChange={handleChange}
-				variant="fullWidth"
+				variant={width < 500 ? "fullWidth" : "standard"}
 				indicatorColor="primary"
 				textColor="primary"
 				aria-label="Bottom navigation"
 				className={classes.tabs}
+				centered
 			>
 				<Tab icon={<HomeIcon />} aria-label="Home" />
 
