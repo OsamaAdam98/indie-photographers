@@ -28,12 +28,7 @@ const userSchema = mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
-	posts: [
-		{
-			type: mongoose.Types.ObjectId,
-			ref: "feed"
-		}
-	]
+	details: mongoose.Schema.Types.Mixed
 });
 
 const User = mongoose.model("users", userSchema);

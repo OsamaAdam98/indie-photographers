@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const moment = require("moment");
-const upload = require("../middleware/upload.middleware");
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 
@@ -10,6 +9,7 @@ let Likes = require("../models/likes.model");
 let Users = require("../models/users.model");
 
 const auth = require("../middleware/auth.middleware");
+const upload = require("../middleware/upload.middleware");
 
 cloudinary.config({
 	cloud_name: process.env.CLOUD_NAME,
@@ -155,7 +155,6 @@ router.post("/like/:id", auth, (req, res) => {
 	like
 		.save()
 		.then(() => {
-			// Todo: make the like change state when called
 			Feed.findById(id)
 				.exec()
 				.then((post) => {

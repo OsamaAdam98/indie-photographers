@@ -58,7 +58,7 @@ export default function PostModal(props) {
 		const username = user.username;
 		const email = user.email;
 		let subData;
-		if (!msg && !photo) {
+		if (!msg.trim() && !photo) {
 			setErrorMsg("Surely you'd like to write something!");
 		} else {
 			if (photo) {
@@ -121,7 +121,10 @@ export default function PostModal(props) {
 				aria-labelledby="form-dialog-title"
 				fullWidth={true}
 				maxWidth="xs"
-				transitionDuration={0}
+				transitionDuration={{
+					enter: 0,
+					exit: 0
+				}}
 			>
 				<form onSubmit={handleSubmit}>
 					<DialogTitle id="form-dialog-title">Post</DialogTitle>

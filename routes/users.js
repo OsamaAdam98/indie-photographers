@@ -1,7 +1,10 @@
 const bcrypt = require("bcryptjs");
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
+
 let Users = require("../models/users.model");
+
+const auth = require("../middleware/auth.middleware");
 
 // User registeration
 
@@ -75,6 +78,11 @@ router.get("/:id", (req, res) => {
 		.exec()
 		.then((data) => res.status(200).json(data))
 		.catch((err) => res.status(404).json(err));
+});
+
+router.put("/update", auth, (req, res) => {
+	//TODO: finish this one
+	Users.findByIdAndUpdate(req.user);
 });
 
 module.exports = router;

@@ -162,6 +162,10 @@ export default function PostMedia(props) {
 									}}
 									open={open}
 									onClose={handleClose}
+									transitionDuration={{
+										enter: 0,
+										exit: 0
+									}}
 								>
 									<MenuItem>Edit</MenuItem>
 									<MenuItem onClick={() => handleDelete(feedPost._id)}>
