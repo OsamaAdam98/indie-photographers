@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, memo} from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function PostMedia(props) {
+function PostMedia(props) {
 	const {currentUser, handleDelete, feedPost} = props;
 	const {user} = feedPost;
 	const classes = useStyles();
@@ -248,3 +248,5 @@ export default function PostMedia(props) {
 PostMedia.propTypes = {
 	isLoading: PropTypes.bool
 };
+
+export default memo(PostMedia);

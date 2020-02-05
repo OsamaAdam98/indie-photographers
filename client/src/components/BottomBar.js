@@ -88,7 +88,7 @@ function BottomBar(props) {
 				variant={width < 500 ? "fullWidth" : "standard"}
 				indicatorColor="primary"
 				textColor="primary"
-				aria-label="Bottom navigation"
+				aria-label="Site navigation"
 				className={classes.tabs}
 				centered
 			>

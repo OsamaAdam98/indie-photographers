@@ -118,7 +118,7 @@ export default function Feed(props) {
 		} while (true);
 	};
 
-	const handleDelete = (id) => {
+	const handleDelete = useCallback((id) => {
 		const token = localStorage.getItem("token");
 
 		axios
@@ -134,7 +134,7 @@ export default function Feed(props) {
 				setOpenError(true);
 			})
 			.catch((err) => console.log(err));
-	};
+	}, []);
 
 	const getNewPosts = (newPosts, cachedData) => {
 		if (newPosts && cachedData) {
