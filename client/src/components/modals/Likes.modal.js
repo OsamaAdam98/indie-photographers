@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Link, useHistory} from "react-router-dom";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import {
@@ -46,10 +46,6 @@ export default function Likes(props) {
 	const history = useHistory();
 	const classes = useStyles();
 
-	const exiting = () => {
-		if (props.location.hash === "") setShow(false);
-	};
-
 	const entering = () => {
 		handleShow();
 	};
@@ -58,6 +54,10 @@ export default function Likes(props) {
 		setShow(false);
 		if (props.location.hash === "#likes") history.goBack();
 	};
+
+	useEffect(() => {
+		if (props.location.hash !== "#likes") setShow(false);
+	}, [props.location.hash]);
 
 	const handleShow = () => {
 		setShow(true);
@@ -148,7 +148,6 @@ export default function Likes(props) {
 				fullWidth={true}
 				fullScreen={width < 500}
 				onEntering={entering}
-				onExiting={exiting}
 				scroll="paper"
 				transitionDuration={{
 					enter: 0,

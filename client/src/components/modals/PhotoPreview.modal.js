@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
 import {Dialog, makeStyles} from "@material-ui/core";
 
@@ -29,9 +29,9 @@ export default function PhotoPreview(props) {
 	const history = useHistory();
 	const classes = useStyles();
 
-	const exiting = () => {
-		if (props.location.hash === "") setShow(false);
-	};
+	useEffect(() => {
+		if (props.location.hash !== "#photo-preview") setShow(false);
+	}, [props.location.hash]);
 
 	const handleShow = () => {
 		setShow(true);
@@ -74,7 +74,6 @@ export default function PhotoPreview(props) {
 				fullWidth={true}
 				className={classes.dialog}
 				onClick={handleClose}
-				onExiting={exiting}
 				transitionDuration={{
 					enter: 0,
 					exit: 0

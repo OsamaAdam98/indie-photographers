@@ -73,36 +73,36 @@ function MenuAppBar(props) {
 
 	return (
 		<>
-			{/* <HideOnScroll {...props}> */}
-			<AppBar className={classes.appBar} color="inherit">
-				<Toolbar className={classes.toolbar}>
-					<Link to="/">
-						<Avatar
-							alt="indie photographers"
-							src={logo}
-							style={{
-								marginRight: "1rem"
-							}}
+			<HideOnScroll {...props}>
+				<AppBar className={classes.appBar} color="inherit">
+					<Toolbar className={classes.toolbar}>
+						<Link to="/">
+							<Avatar
+								alt="indie photographers"
+								src={logo}
+								style={{
+									marginRight: "1rem"
+								}}
+							/>
+						</Link>
+						<Typography variant="h5" className={classes.title}>
+							Indie
+						</Typography>
+						{width > 500 && (
+							<LightSwitch isLight={isLight} setIsLight={setIsLight} />
+						)}
+						<Login
+							user={user}
+							isLogged={isLogged}
+							setIsLogged={setIsLogged}
+							setUser={setUser}
+							show={show}
+							setShow={setShow}
+							{...props}
 						/>
-					</Link>
-					<Typography variant="h5" className={classes.title}>
-						Indie
-					</Typography>
-					{width > 500 && (
-						<LightSwitch isLight={isLight} setIsLight={setIsLight} />
-					)}
-					<Login
-						user={user}
-						isLogged={isLogged}
-						setIsLogged={setIsLogged}
-						setUser={setUser}
-						show={show}
-						setShow={setShow}
-						{...props}
-					/>
-				</Toolbar>
-			</AppBar>
-			{/* </HideOnScroll> */}
+					</Toolbar>
+				</AppBar>
+			</HideOnScroll>
 			<div className={classes.bottomBar}>
 				<BottomBar user={user} />
 			</div>

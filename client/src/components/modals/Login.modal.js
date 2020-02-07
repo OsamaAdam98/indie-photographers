@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
 import {
@@ -35,9 +35,9 @@ export default function Login(props) {
 	const [password, setPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
 
-	const exiting = () => {
-		if (props.location.hash === "") setShow(false);
-	};
+	useEffect(() => {
+		if (props.location.hash !== "#login-window") setShow(false);
+	}, [props.location.hash]);
 
 	const handleClose = () => {
 		setShow(false);
@@ -105,7 +105,6 @@ export default function Login(props) {
 			<Dialog
 				open={show}
 				onClose={handleClose}
-				onExiting={exiting}
 				transitionDuration={{
 					enter: 0,
 					exit: 0

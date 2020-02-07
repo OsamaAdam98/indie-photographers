@@ -38,7 +38,6 @@ export default function Feed(props) {
 	const [photo, setPhoto] = useState("");
 	const [isUploading, setIsUploading] = useState(false);
 	const [offline, setOffline] = useState(false);
-	const [show, setShow] = useState(false);
 
 	const onUpload = (e) => {
 		const files = e.target.files;
@@ -61,7 +60,6 @@ export default function Feed(props) {
 				setErrorMsg("Upload complete!");
 				setSeverity("success");
 				setOpenError(true);
-				setShow(true);
 			})
 			.catch((err) => {
 				if (err) {
@@ -83,7 +81,6 @@ export default function Feed(props) {
 				.catch((err) => console.log(err));
 		}
 		setPhoto("");
-		setShow(false);
 		if (props.location.hash === "#feed-post") history.goBack();
 	};
 
@@ -272,8 +269,6 @@ export default function Feed(props) {
 					isUploading={isUploading}
 					onUpload={onUpload}
 					offline={offline}
-					show={show}
-					setShow={setShow}
 					handleCancel={handleCancel}
 				/>
 			</div>

@@ -2,7 +2,7 @@ import React from "react";
 import {Container, Typography, Button} from "@material-ui/core";
 import {LightSwitch} from "../components";
 
-export default function Settings({isLight, setIsLight, handleClick}) {
+export default function Settings({isLight, setIsLight, handleClick, showBtn}) {
 	return (
 		<Container maxWidth="lg">
 			<Typography>Light mode</Typography>
@@ -12,6 +12,7 @@ export default function Settings({isLight, setIsLight, handleClick}) {
 				color="primary"
 				variant="contained"
 				onClick={handleClick}
+				disabled={!showBtn}
 			>
 				Install
 			</Button>
