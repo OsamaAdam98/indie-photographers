@@ -61,16 +61,7 @@ function HideOnScroll(props) {
 }
 
 function MenuAppBar(props) {
-	const {
-		isLogged,
-		setIsLogged,
-		user,
-		setUser,
-		showBtn,
-		handleClick,
-		isLight,
-		setIsLight
-	} = props;
+	const {isLogged, setIsLogged, user, setUser, isLight, setIsLight} = props;
 	const {width} = useWindowDimensions();
 	const classes = useStyles();
 
@@ -113,7 +104,7 @@ function MenuAppBar(props) {
 				</AppBar>
 			</HideOnScroll>
 			<div className={classes.bottomBar}>
-				<BottomBar user={user} showBtn={showBtn} handleClick={handleClick} />
+				<BottomBar user={user} />
 			</div>
 		</>
 	);

@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, useCallback} from "react";
 import {useHistory} from "react-router-dom";
-import axios, {CancelToken} from "axios";
+import axios from "axios";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import {PostModal, PostSkeleton, SnackAlert, PostMedia} from "../components";
 import {LinearProgress, makeStyles} from "@material-ui/core";
@@ -87,10 +87,6 @@ export default function Feed(props) {
 		if (props.location.hash === "#feed-post") history.goBack();
 	};
 
-	useEffect(() => {
-		if (props.location.hash === "") setShow(false);
-	}, [props.location.hash]);
-
 	const cleanupDelete = (id) => {
 		let index = 1;
 		let targetHit;
@@ -146,7 +142,6 @@ export default function Feed(props) {
 
 	useEffect(() => {
 		setIsLoading(true);
-		let cancel;
 
 		let cachedData = JSON.parse(localStorage.getItem(`feedPage${page}`));
 		if (cachedData) {
@@ -156,11 +151,7 @@ export default function Feed(props) {
 		}
 
 		axios
-			.get(`/api/feed/?page=${page}`, {
-				cancelToken: new CancelToken(function executor(c) {
-					cancel = c;
-				})
-			})
+			.get(`/api/feed/?page=${page}`)
 			.then((res) => {
 				const {data} = res;
 				let newData = getNewPosts(data, cachedData);
@@ -190,9 +181,6 @@ export default function Feed(props) {
 				}
 				setIsLoading(false);
 			});
-		return () => {
-			if (page === 1) cancel();
-		};
 	}, [page]);
 
 	const observer = useRef();

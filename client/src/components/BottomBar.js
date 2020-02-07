@@ -3,7 +3,6 @@ import {useHistory, withRouter} from "react-router-dom";
 import {Avatar, Tab, Tabs, Paper, makeStyles} from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import ViewDayIcon from "@material-ui/icons/ViewDay";
-import GetAppIcon from "@material-ui/icons/GetApp";
 import SettingsIcon from "@material-ui/icons/Settings";
 import {useWindowDimensions} from "./index";
 
@@ -16,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function BottomBar(props) {
-	const {user, showBtn, handleClick} = props;
+	const {user} = props;
 	const [value, setValue] = useState(false);
 
 	const classes = useStyles();
@@ -72,9 +71,6 @@ function BottomBar(props) {
 			case 3:
 				history.push("/settings");
 				break;
-			case 4:
-				handleClick();
-				break;
 			default:
 				break;
 		}
@@ -117,14 +113,6 @@ function BottomBar(props) {
 					aria-label="Settings"
 					style={{
 						display: user.username ? "none" : ""
-					}}
-				/>
-
-				<Tab
-					icon={<GetAppIcon />}
-					aria-label="Install app"
-					style={{
-						display: showBtn ? "" : "none"
 					}}
 				/>
 			</Tabs>

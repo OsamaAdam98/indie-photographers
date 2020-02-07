@@ -57,7 +57,6 @@ function App() {
 	};
 
 	window.addEventListener("beforeinstallprompt", (event) => {
-		event.preventDefault();
 		setPwa(event);
 		if (
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -148,8 +147,6 @@ function App() {
 					setIsLogged={setIsLogged}
 					user={user}
 					setUser={setUser}
-					showBtn={showBtn}
-					handleClick={handleClick}
 					isLight={isLight}
 					setIsLight={setIsLight}
 				/>
@@ -184,7 +181,12 @@ function App() {
 						exact
 						path="/settings"
 						render={(props) => (
-							<Settings {...props} isLight={isLight} setIsLight={setIsLight} />
+							<Settings
+								{...props}
+								isLight={isLight}
+								setIsLight={setIsLight}
+								handleClick={handleClick}
+							/>
 						)}
 					/>
 					<Route component={NotFound} />
