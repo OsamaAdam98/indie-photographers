@@ -143,71 +143,65 @@ function App() {
 		>
 			<CssBaseline />
 			<Router>
-				<>
-					<MenuAppBar
-						isLogged={isLogged}
-						setIsLogged={setIsLogged}
-						user={user}
-						setUser={setUser}
-						showBtn={showBtn}
-						handleClick={handleClick}
-						isLight={isLight}
-						setIsLight={setIsLight}
+				<MenuAppBar
+					isLogged={isLogged}
+					setIsLogged={setIsLogged}
+					user={user}
+					setUser={setUser}
+					showBtn={showBtn}
+					handleClick={handleClick}
+					isLight={isLight}
+					setIsLight={setIsLight}
+				/>
+				<Switch>
+					<Route exact path="/" render={(props) => <Home {...props} />} />
+					<Route
+						path="/profile/:id"
+						render={(props) => (
+							<Suspense fallback={<ProfileSkeleton />}>
+								<Profile {...props} currentUser={user} />
+							</Suspense>
+						)}
 					/>
-					<Switch>
-						<Route exact path="/" render={(props) => <Home {...props} />} />
-						<Route
-							path="/profile/:id"
-							render={(props) => (
-								<Suspense fallback={<ProfileSkeleton />}>
-									<Profile {...props} currentUser={user} />
-								</Suspense>
-							)}
-						/>
-						<Route
-							exact
-							path="/feed"
-							render={(props) => (
-								<Suspense
-									fallback={
-										<div className="feed-container">
-											<div className="feed-post-block">
-												<PostSkeleton />
-											</div>
+					<Route
+						exact
+						path="/feed"
+						render={(props) => (
+							<Suspense
+								fallback={
+									<div className="feed-container">
+										<div className="feed-post-block">
+											<PostSkeleton />
 										</div>
-									}
-								>
-									<Feed {...props} isLogged={isLogged} user={user} />
-								</Suspense>
-							)}
-						/>
-						<Route
-							exact
-							path="/settings"
-							render={(props) => (
-								<Settings
-									{...props}
-									isLight={isLight}
-									setIsLight={setIsLight}
-								/>
-							)}
-						/>
-						<Route component={NotFound} />
-					</Switch>
-					<SnackAlert
-						severity={severity}
-						errorMsg={errorMsg}
-						setOpenError={setOpenError}
-						openError={openError}
+									</div>
+								}
+							>
+								<Feed {...props} isLogged={isLogged} user={user} />
+							</Suspense>
+						)}
 					/>
-					<div
-						style={{
-							height: 48,
-							display: width < 500 ? "" : "none"
-						}}
+					<Route
+						exact
+						path="/settings"
+						render={(props) => (
+							<Settings {...props} isLight={isLight} setIsLight={setIsLight} />
+						)}
 					/>
-				</>
+					<Route component={NotFound} />
+				</Switch>
 			</Router>
+			<SnackAlert
+				severity={severity}
+				errorMsg={errorMsg}
+				setOpenError={setOpenError}
+				openError={openError}
+			/>
+			<div
+				style={{
+					height: 48,
+					display: width < 500 ? "" : "none"
+				}}
+			/>
 		</MuiThemeProvider>
 	);
 }

@@ -35,6 +35,10 @@ export default function Login(props) {
 	const [password, setPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
 
+	const exiting = () => {
+		if (props.location.hash === "") setShow(false);
+	};
+
 	const handleClose = () => {
 		setShow(false);
 		setErrorMsg("");
@@ -101,6 +105,7 @@ export default function Login(props) {
 			<Dialog
 				open={show}
 				onClose={handleClose}
+				onExiting={exiting}
 				transitionDuration={{
 					enter: 0,
 					exit: 0
