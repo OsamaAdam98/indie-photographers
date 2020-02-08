@@ -69,8 +69,6 @@ function App() {
 			)
 		) {
 			setShowBtn(true);
-		} else {
-			setShowBtn(false);
 		}
 	});
 
