@@ -23,11 +23,11 @@ import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
 	card: {
-		maxWidth: 500,
+		maxWidth: "31.25rem",
 		marginBottom: theme.spacing(2)
 	},
 	media: {
-		maxHeight: 250
+		maxHeight: "15.625rem"
 	}
 }));
 

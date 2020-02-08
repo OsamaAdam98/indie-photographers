@@ -3,11 +3,6 @@ import {useHistory} from "react-router-dom";
 import {Dialog, makeStyles} from "@material-ui/core";
 
 const useStyles = makeStyles({
-	preview: {
-		"&:hover": {
-			cursor: "pointer"
-		}
-	},
 	fullPrev: {
 		objectFit: "contain",
 		objectPosition: "50% 50%",
@@ -17,12 +12,13 @@ const useStyles = makeStyles({
 	},
 	dialog: {
 		display: "flex",
-		justifyContent: "center"
+		justifyContent: "center",
+		alignContent: "center"
 	}
 });
 
 export default function PhotoPreview(props) {
-	const {photo, username, maxHeight} = props;
+	const {photo, username, maxHeight, round} = props;
 
 	const [show, setShow] = useState(false);
 
@@ -45,7 +41,6 @@ export default function PhotoPreview(props) {
 
 	const ImagePreview = () => (
 		<img
-			className={classes.preview}
 			src={photo}
 			alt={`by, ${username}`}
 			onClick={handleShow}
@@ -53,8 +48,11 @@ export default function PhotoPreview(props) {
 				objectFit: "cover",
 				objectPosition: "50% 50%",
 				width: "100%",
-				maxHeight: maxHeight
+				height: "auto",
+				maxHeight: maxHeight,
+				borderRadius: round ? "50%" : ""
 			}}
+			className={`hover-img ${round ? "profile-photo" : ""}`}
 		/>
 	);
 

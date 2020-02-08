@@ -13,7 +13,7 @@ const useStyles = makeStyles({
 		width: "100vw",
 		height: 4
 	},
-	"@media (max-width: 500px)": {
+	"@media (max-width: 31.25rem)": {
 		progress: {
 			position: "fixed",
 			bottom: 48,

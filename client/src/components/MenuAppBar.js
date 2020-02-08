@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 		boxShadow: "0px 0px 0px 0px"
 	},
 	menuButton: {
-		marginRight: theme.spacing(2)
+		marginRight: "1rem"
 	},
 	title: {
 		flexGrow: 1
@@ -29,9 +29,9 @@ const useStyles = makeStyles((theme) => ({
 		position: "sticky",
 		top: 0,
 		zIndex: theme.zIndex.appBar,
-		marginBottom: theme.spacing(2)
+		marginBottom: "1rem"
 	},
-	"@media (max-width: 500px)": {
+	"@media (max-width: 31.25rem)": {
 		bottomBar: {
 			position: "fixed",
 			top: "auto",

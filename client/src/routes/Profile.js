@@ -11,7 +11,12 @@ import {
 	makeStyles
 } from "@material-ui/core";
 import "../css/profile.css";
-import {PostMedia, PostSkeleton, SnackAlert} from "../components/index";
+import {
+	PostMedia,
+	PostSkeleton,
+	SnackAlert,
+	PhotoPreview
+} from "../components/index";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import ImageIcon from "@material-ui/icons/Image";
 import WorkIcon from "@material-ui/icons/Work";
@@ -196,10 +201,11 @@ export default function Profile(props) {
 		<div className="container">
 			<Paper className="main-block">
 				<div className="cover-photo" />
-				<img
-					className="profile-photo"
-					src={user.profilePicture}
-					alt={user.username}
+				<PhotoPreview
+					{...props}
+					photo={user.profilePicture}
+					username={user.username}
+					round={true}
 				/>
 				<div className="tagline">
 					<Typography variant="h5">{user.username}</Typography>

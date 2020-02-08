@@ -9,10 +9,10 @@
 	position: relative;
 	width: 100vw;
 	height: auto;
-	grid-template-columns: 1fr minmax(min-content, 500px) 1fr;
+	grid-template-columns: 1fr minmax(min-content, 31.25rem) 1fr;
 	grid-template-rows: auto;
 	grid-gap: 0;
-	padding: 16px;
+	padding: 1rem;
 	padding-top: 0px;
 	justify-items: center;
 	align-items: flex-start;

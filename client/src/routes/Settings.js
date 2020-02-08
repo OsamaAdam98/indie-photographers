@@ -12,6 +12,9 @@ export default function Settings({isLight, setIsLight, handleClick, showBtn}) {
 				color="primary"
 				variant="contained"
 				onClick={handleClick}
+				style={{
+					display: showBtn ? "" : "none"
+				}}
 			>
 				Install
 			</Button>

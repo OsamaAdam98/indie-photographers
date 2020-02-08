@@ -55,7 +55,7 @@
 	filter: blur(5px);
 }
 
-@media (min-width: 500px) {
+@media (min-width: 31.25rem) {
 	.home-container {
 		grid-template-rows: 102px auto;
 	}

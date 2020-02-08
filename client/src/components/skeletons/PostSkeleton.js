@@ -13,12 +13,12 @@ import {
 
 const useStyles = makeStyles((theme) => ({
 	card: {
-		maxWidth: 500,
+		maxWidth: "31.25rem",
 		marginBottom: theme.spacing(2),
 		width: "100%"
 	},
 	media: {
-		height: 250
+		height: "15.625rem"
 	}
 }));
 export default function PostSkeleton() {

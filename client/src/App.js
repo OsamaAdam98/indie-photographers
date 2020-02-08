@@ -57,7 +57,6 @@ function App() {
 	};
 
 	window.addEventListener("beforeinstallprompt", (event) => {
-		event.preventDefault();
 		setPwa(event);
 		if (
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
