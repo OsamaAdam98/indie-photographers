@@ -7,7 +7,7 @@ export default function Home() {
 		<div className="home-container">
 			<img className="main-img" alt="Home cover" src={homeCover} />
 			<h2 className="main-line">
-				<span className="highlight">In development V0.1.4a</span>
+				<span className="highlight">In development V0.1.5</span>
 			</h2>
 		</div>
 	);

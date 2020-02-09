@@ -101,7 +101,7 @@ function App() {
 	useEffect(() => {
 		const token = localStorage.getItem("token");
 		const userInfo = localStorage.getItem("userInfo");
-		if (userInfo && token) {
+		if (userInfo && token && !userInfo.admin) {
 			setUser(JSON.parse(userInfo));
 			setIsLogged(true);
 		}

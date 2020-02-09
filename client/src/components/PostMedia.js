@@ -213,7 +213,7 @@ function PostMedia(props) {
 					<CardMedia className={classes.media}>
 						<PhotoPreview
 							photo={feedPost.photo}
-							username={feedPost.user.username}
+							alt={feedPost.user.username}
 							maxHeight={250}
 							{...props}
 						/>

@@ -204,7 +204,7 @@ export default function Profile(props) {
 				<PhotoPreview
 					{...props}
 					photo={user.profilePicture}
-					username={user.username}
+					alt={user.username}
 					round={true}
 				/>
 				<div className="tagline">

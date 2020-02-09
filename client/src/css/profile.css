@@ -27,12 +27,15 @@
 	height: 100%;
 	display: grid;
 	grid-template-columns: repeat(6, 1fr);
-	grid-template-rows: repeat(4, min-content) 1fr 1fr;
+	grid-template-rows: repeat(4, minmax(1rem, max-content)) 1fr 1fr;
 	grid-gap: 1rem;
 	padding-bottom: 1rem;
 }
 
 .details-block {
+	position: sticky;
+	top: 4rem;
+	bottom: auto;
 	grid-area: 1 / 3 / -1 / 4;
 	width: min-content;
 	height: auto;
@@ -55,6 +58,8 @@
 		grid-area: 1 / 2 / 2 / 3;
 	}
 	.details-block {
+		position: relative;
+		top: 0;
 		grid-area: 2 / 2 / 3 / 3;
 		width: 100%;
 	}
@@ -65,8 +70,9 @@
 
 .cover-photo {
 	grid-area: 1 / 1 / 3 / -1;
-	background-color: brown;
-	min-height: 100%;
+	background-color: black;
+	width: 100%;
+	height: 100%;
 }
 
 .profile-photo {
@@ -75,8 +81,10 @@
 	object-position: 50% 50%;
 	height: auto;
 	width: 100%;
-	border-radius: 100%;
+	border-radius: 50%;
 	align-self: center;
+	justify-content: center;
+	border: 0.2rem solid #ffc107;
 }
 
 .tagline {
@@ -90,7 +98,7 @@
 
 .main-info {
 	grid-area: 5 / 2 / 7 / 6;
-	text-align: flex-start;
+	text-align: center;
 	align-self: center;
 }
 

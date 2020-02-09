@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 });
 
 export default function PhotoPreview(props) {
-	const {photo, username, maxHeight, round} = props;
+	const {photo, maxHeight, round, alt} = props;
 
 	const [show, setShow] = useState(false);
 
@@ -42,7 +42,7 @@ export default function PhotoPreview(props) {
 	const ImagePreview = () => (
 		<img
 			src={photo}
-			alt={`by, ${username}`}
+			alt={alt}
 			onClick={handleShow}
 			style={{
 				objectFit: "cover",
