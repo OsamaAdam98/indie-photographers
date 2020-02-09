@@ -83,7 +83,7 @@ const Profile: React.FC<Props> = (props) => {
 					)
 				);
 				setIsLoading(false);
-				setHasMore(cachedData.length > 0);
+				setHasMore(cachedData.length === 10);
 			} else {
 				axios
 					.get(`/api/feed/user/${match.params.id}/?page=${page}`)
@@ -92,7 +92,7 @@ const Profile: React.FC<Props> = (props) => {
 
 						setPosts((prevPosts) => [...prevPosts, ...data]);
 
-						setHasMore(data.length > 0);
+						setHasMore(data.length === 10);
 						localStorage.setItem(
 							`${match.params.id}/page${page}`,
 							JSON.stringify(
@@ -106,7 +106,7 @@ const Profile: React.FC<Props> = (props) => {
 					.catch((err) => {
 						if (err) {
 							if (cachedData) {
-								setHasMore(cachedData.length > 0);
+								setHasMore(cachedData.length === 0);
 							} else {
 								setHasMore(false);
 							}

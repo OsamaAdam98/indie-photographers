@@ -155,7 +155,7 @@ const Feed: React.FC<Props> = (props) => {
 		if (cachedData) {
 			setPosts((prevPosts) => [...prevPosts, ...cachedData]);
 			setIsLoading(false);
-			setHasMore(cachedData.length > 0);
+			setHasMore(cachedData.length === 10);
 		}
 
 		axios
@@ -172,7 +172,7 @@ const Feed: React.FC<Props> = (props) => {
 					setPosts((prevPosts) => [...prevPosts, ...data]);
 				}
 
-				setHasMore(data.length > 0);
+				setHasMore(data.length === 10);
 				localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
 				setErrorMsg("");
 				setOpenError(false);
@@ -185,7 +185,7 @@ const Feed: React.FC<Props> = (props) => {
 					setSeverity("warning");
 					setOffline(true);
 					setOpenError(true);
-					if (cachedData) setHasMore(cachedData.length > 0);
+					if (cachedData) setHasMore(cachedData.length === 10);
 				}
 				setIsLoading(false);
 			});
