@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef, useCallback} from "react";
-import axios, {CancelToken} from "axios";
+import {useRouteMatch} from "react-router-dom";
+import axios from "axios";
 import {
 	Paper,
 	Typography,
@@ -31,21 +32,27 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function Profile(props) {
-	const {currentUser} = props;
-	const [user, setUser] = useState("");
-	const [posts, setPosts] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [page, setPage] = useState(1);
-	const [hasMore, setHasMore] = useState(false);
-	const [errorMsg, setErrorMsg] = useState("");
-	const [openError, setOpenError] = useState(false);
-	const [severity, setSeverity] = useState("");
+interface Props {
+	currentUser: User;
+}
+
+const Profile: React.FC<Props> = ({currentUser}) => {
+	const [user, setUser] = useState<User>({admin: false});
+	const [posts, setPosts] = useState<Post[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [page, setPage] = useState<number>(1);
+	const [hasMore, setHasMore] = useState<boolean>(false);
+	const [errorMsg, setErrorMsg] = useState<string>("");
+	const [openError, setOpenError] = useState<boolean>(false);
+	const [severity, setSeverity] = useState<string>("");
 
 	const classes = useStyles();
+	const match = useRouteMatch();
 
-	const handleDelete = (id) => {
-		const token = localStorage.getItem("token");
+	const handleDelete = (id: string) => {
+		const token: string | null = JSON.parse(
+			localStorage.getItem("token") as string
+		);
 
 		axios
 			.delete(`/api/feed/delete/${id}`, {
@@ -54,7 +61,7 @@ export default function Profile(props) {
 				}
 			})
 			.then((res) => {
-				setErrorMsg(res.data);
+				setErrorMsg(res.data as string);
 				setSeverity("success");
 				setOpenError(true);
 			})
@@ -63,8 +70,8 @@ export default function Profile(props) {
 
 	useEffect(() => {
 		setIsLoading(true);
-		let cachedData = JSON.parse(
-			localStorage.getItem(`${user._id}/page${page}`)
+		let cachedData: Post[] = JSON.parse(
+			localStorage.getItem(`${user._id}/page${page}`) as string
 		);
 		if (cachedData) {
 			setPosts((prevPosts) =>
@@ -80,7 +87,7 @@ export default function Profile(props) {
 			axios
 				.get(`/api/feed/user/${user._id}/?page=${page}`)
 				.then((res) => {
-					const {data} = res;
+					const data: Post[] = res.data;
 
 					if (!cachedData) {
 						setPosts((prevPosts) => [...prevPosts, ...data]);
@@ -97,13 +104,12 @@ export default function Profile(props) {
 				})
 				.catch((err) => {
 					if (err) {
-						const {status} = err.response;
 						if (cachedData) {
 							setHasMore(cachedData.length > 0);
 						} else {
 							setHasMore(false);
 						}
-						if (status === 404) {
+						if (err) {
 							setErrorMsg("User not found");
 							setSeverity("error");
 							setOpenError(true);
@@ -121,19 +127,14 @@ export default function Profile(props) {
 	useEffect(() => {
 		setPosts([]);
 		setPage(1);
-		let cancel;
 
-		let cachedData = JSON.parse(
-			localStorage.getItem(`${props.match.params.id}`)
+		let cachedData: User = JSON.parse(
+			localStorage.getItem(`${match.params.id}`) as string
 		);
 		if (cachedData) setUser(cachedData);
 
 		axios
-			.get(`/api/users/${props.match.params.id}`, {
-				cancelToken: new CancelToken(function executor(c) {
-					cancel = c;
-				})
-			})
+			.get(`/api/users/${match.params.id}`)
 			.then((res) => {
 				const {data} = res;
 				if (!cachedData) setUser(data);
@@ -285,4 +286,6 @@ export default function Profile(props) {
 			/>
 		</div>
 	);
-}
+};
+
+export default Profile;

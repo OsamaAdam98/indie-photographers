@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useCallback} from "react";
-import {useHistory} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 import axios from "axios";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import {PostModal, PostSkeleton, SnackAlert, PostMedia} from "../components";
@@ -22,25 +22,31 @@ const useStyles = makeStyles({
 	}
 });
 
-export default function Feed(props) {
+interface Props {
+	isLogged: boolean;
+	user: User;
+}
+
+const Feed: React.FC<Props> = (props) => {
 	const {isLogged, user} = props;
 	const classes = useStyles();
 	const history = useHistory();
+	const location = useLocation();
 
-	const [posts, setPosts] = useState([]);
-	const [newPost, setNewPost] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [page, setPage] = useState(1);
-	const [hasMore, setHasMore] = useState(false);
-	const [errorMsg, setErrorMsg] = useState("");
-	const [openError, setOpenError] = useState(false);
-	const [severity, setSeverity] = useState("");
-	const [photo, setPhoto] = useState("");
-	const [isUploading, setIsUploading] = useState(false);
-	const [offline, setOffline] = useState(false);
+	const [posts, setPosts] = useState<Post[]>([]);
+	const [newPost, setNewPost] = useState<Post[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [page, setPage] = useState<number>(1);
+	const [hasMore, setHasMore] = useState<boolean>(false);
+	const [errorMsg, setErrorMsg] = useState<string>("");
+	const [openError, setOpenError] = useState<boolean>(false);
+	const [severity, setSeverity] = useState<string>("");
+	const [photo, setPhoto] = useState<Photo>({secure_url: ""});
+	const [isUploading, setIsUploading] = useState<boolean>(false);
+	const [offline, setOffline] = useState<boolean>(false);
 
-	const onUpload = (e) => {
-		const files = e.target.files;
+	const onUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = e.target.files as FileList;
 		const formData = new FormData();
 		formData.append("image", files[0]);
 
@@ -80,16 +86,18 @@ export default function Feed(props) {
 				})
 				.catch((err) => console.log(err));
 		}
-		setPhoto("");
-		if (props.location.hash === "#feed-post") history.goBack();
+		setPhoto({secure_url: ""});
+		if (location.hash === "#feed-post") history.goBack();
 	};
 
-	const cleanupDelete = (id) => {
-		let index = 1;
-		let targetHit;
-		let cachedData;
+	const cleanupDelete = (id: string) => {
+		let index: number = 1;
+		let targetHit: boolean;
+		let cachedData: Post[];
 		do {
-			cachedData = JSON.parse(localStorage.getItem(`feedPage${index}`));
+			cachedData = JSON.parse(
+				localStorage.getItem(`feedPage${index}`) as string
+			);
 			if (cachedData) {
 				targetHit = cachedData.filter((data) => data._id === id).length
 					? true
@@ -111,8 +119,8 @@ export default function Feed(props) {
 		} while (true);
 	};
 
-	const handleDelete = useCallback((id) => {
-		const token = localStorage.getItem("token");
+	const handleDelete = useCallback((id: string) => {
+		const token: string = localStorage.getItem("token") as string;
 
 		axios
 			.delete(`/api/feed/delete/${id}`, {
@@ -122,25 +130,27 @@ export default function Feed(props) {
 			})
 			.then((res) => {
 				cleanupDelete(id);
-				setErrorMsg(res.data);
+				setErrorMsg(res.data as string);
 				setSeverity("success");
 				setOpenError(true);
 			})
 			.catch((err) => console.log(err));
 	}, []);
 
-	const getNewPosts = (newPosts, cachedData) => {
+	const getNewPosts = (newPosts: Post[], cachedData: Post[]) => {
 		if (newPosts && cachedData) {
 			return newPosts.filter((newPost) => newPost.date > cachedData[0].date);
 		} else {
-			return null;
+			return [];
 		}
 	};
 
 	useEffect(() => {
 		setIsLoading(true);
 
-		let cachedData = JSON.parse(localStorage.getItem(`feedPage${page}`));
+		let cachedData: Post[] = JSON.parse(
+			localStorage.getItem(`feedPage${page}`) as string
+		);
 		if (cachedData) {
 			setPosts((prevPosts) => [...prevPosts, ...cachedData]);
 			setIsLoading(false);
@@ -151,7 +161,7 @@ export default function Feed(props) {
 			.get(`/api/feed/?page=${page}`)
 			.then((res) => {
 				const {data} = res;
-				let newData = getNewPosts(data, cachedData);
+				let newData: Post[] = getNewPosts(data, cachedData);
 
 				if (newData) {
 					setNewPost((prevPosts) => [...prevPosts, ...newData]);
@@ -180,7 +190,7 @@ export default function Feed(props) {
 			});
 	}, [page]);
 
-	const observer = useRef();
+	const observer = useRef<HTMLDivElement>();
 
 	const lastElementRef = useCallback(
 		(node) => {
@@ -278,4 +288,6 @@ export default function Feed(props) {
 			)}
 		</div>
 	);
-}
+};
+
+export default Feed;

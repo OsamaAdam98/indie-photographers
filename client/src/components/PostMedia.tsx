@@ -31,14 +31,20 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function PostMedia(props) {
+interface Props {
+	currentUser: User;
+	feedPost: Post;
+	handleDelete: (id: string) => void;
+}
+
+const PostMedia: React.FC<Props> = (props) => {
 	const {currentUser, handleDelete, feedPost} = props;
 	const {user} = feedPost;
 	const classes = useStyles();
 
-	const [anchorEl, setAnchorEl] = useState(null);
-	const [post, setPost] = useState(feedPost);
-	const [liked, setLiked] = useState(
+	const [anchorEl, setAnchorEl] = useState<any>(null);
+	const [post, setPost] = useState<Post>(feedPost);
+	const [liked, setLiked] = useState<boolean>(
 		feedPost.likes.filter((like) => like.user._id === currentUser._id).length
 			? true
 			: false
@@ -46,13 +52,15 @@ function PostMedia(props) {
 
 	const open = Boolean(anchorEl);
 
-	const likeCleanup = (id, like) => {
-		let index = 1;
-		let targetHit = false;
-		let cachedData;
+	const likeCleanup = (id: string, like: Likes) => {
+		let index: number = 1;
+		let targetHit: boolean = false;
+		let cachedData: Post[];
 
 		do {
-			cachedData = JSON.parse(localStorage.getItem(`feedPage${index}`));
+			cachedData = JSON.parse(
+				localStorage.getItem(`feedPage${index}`) as string
+			);
 			if (cachedData !== null) {
 				targetHit = cachedData.filter((post) => post._id === id).length
 					? true
@@ -94,8 +102,10 @@ function PostMedia(props) {
 		} while (true);
 	};
 
-	const handleLike = (id) => {
-		const token = localStorage.getItem("token");
+	const handleLike = (id: string) => {
+		const token: string | null = JSON.parse(
+			localStorage.getItem("token") as string
+		);
 		axios
 			.post(`/api/feed/like/${id}`, null, {
 				headers: {
@@ -110,7 +120,9 @@ function PostMedia(props) {
 			.catch((err) => console.log(err));
 	};
 
-	const handleMenu = (event) => {
+	const handleMenu = (
+		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) => {
 		setAnchorEl(event.currentTarget);
 	};
 
@@ -243,10 +255,6 @@ function PostMedia(props) {
 	} else {
 		return null;
 	}
-}
-
-PostMedia.propTypes = {
-	isLoading: PropTypes.bool
 };
 
 export default memo(PostMedia);

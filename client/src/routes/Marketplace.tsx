@@ -4,11 +4,16 @@ import ItemCard from "../components/ItemCard";
 import Loadingpage from "../components/Loadingpage";
 import MPPost from "../components/modals/MPPost.modal";
 
-export default function Marketplace(props) {
+interface Props {
+	isLogged: boolean;
+	user: User;
+}
+
+const Marketplace: React.FC<Props> = (props) => {
 	const {isLogged, user} = props;
 
-	const [items, setItems] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
+	const [items, setItems] = useState<[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -31,4 +36,6 @@ export default function Marketplace(props) {
 			</div>
 		</div>
 	);
-}
+};
+
+export default Marketplace;

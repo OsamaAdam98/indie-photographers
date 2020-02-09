@@ -1,6 +1,6 @@
 import React from "react";
 import "../css/home.css";
-import homeCover from "../assets/home-cover.jpg";
+import * as homeCover from "../assets/home-cover.jpg";
 
 export default function Home() {
 	return (

@@ -1,13 +1,13 @@
-import Home from "../routes/Home";
-import Marketplace from "../routes/Marketplace";
-import Profile from "../routes/Profile";
-import Feed from "../routes/Feed";
+import Home from "../routes/Home.tsx";
+import Marketplace from "../routes/Marketplace.tsx";
+import Profile from "../routes/Profile.tsx";
+import Feed from "../routes/Feed.tsx";
 import MenuAppBar from "./MenuAppBar";
 import SnackAlert from "./SnackAlert";
 import BottomBar from "./BottomBar";
 import useWindowDimensions from "./utilities/WindowDimensions";
 import PostModal from "./modals/FeedPost.modal";
-import PostMedia from "./PostMedia";
+import PostMedia from "./PostMedia.tsx";
 import PostSkeleton from "./skeletons/PostSkeleton";
 import LikesSkeleton from "./skeletons/LikesSkeleton";
 import FBButton from "./buttons/FBButton";
@@ -17,12 +17,12 @@ import Login from "./modals/Login.modal";
 import PhotoPreview from "./modals/PhotoPreview.modal";
 import ProfileSkeleton from "./skeletons/ProfileSkeleton";
 import GoogleBtn from "./buttons/GoogleBtn";
-import Settings from "../routes/Settings";
+import Settings from "../routes/Settings.tsx";
 import Likes from "./modals/Likes.modal";
 import LightSwitch from "./buttons/LightSwitch";
 import ProfileCard from "./ProfileCard";
 import FAB from "./buttons/FAB";
-import NotFound from "../routes/NotFound";
+import NotFound from "../routes/NotFound.tsx";
 
 export {
 	Home,

@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import "../css/four-o-four.css";
 
-export default function NotFound() {
+const NotFound: React.FC = () => {
 	return (
 		<div id="notfound">
 			<div className="notfound">
@@ -14,4 +14,6 @@ export default function NotFound() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default NotFound;

@@ -2,7 +2,19 @@ import React from "react";
 import {Container, Typography, Button} from "@material-ui/core";
 import {LightSwitch} from "../components";
 
-export default function Settings({isLight, setIsLight, handleClick, showBtn}) {
+interface Props {
+	isLight: boolean;
+	showBtn: boolean;
+	setIsLight: (event: React.Dispatch<React.SetStateAction<boolean>>) => void;
+	handleClick: () => void;
+}
+
+const Settings: React.FC<Props> = ({
+	isLight,
+	showBtn,
+	setIsLight,
+	handleClick
+}) => {
 	return (
 		<Container maxWidth="lg">
 			<Typography>Light mode</Typography>
@@ -20,4 +32,6 @@ export default function Settings({isLight, setIsLight, handleClick, showBtn}) {
 			</Button>
 		</Container>
 	);
-}
+};
+
+export default Settings;

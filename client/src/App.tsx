@@ -20,24 +20,26 @@ import {
 const Feed = lazy(() => import("./routes/Feed"));
 const Profile = lazy(() => import("./routes/Profile"));
 
-function App() {
+const App: React.FC = () => {
 	const [isLogged, setIsLogged] = useState(
-		localStorage.getItem("token") ? true : false
+		JSON.parse(localStorage.getItem("token") as string) ? true : false
 	);
 
 	const {width} = useWindowDimensions();
 
-	const [user, setUser] = useState({admin: false});
-	const [openError, setOpenError] = useState(false);
-	const [errorMsg, setErrorMsg] = useState("");
-	const [severity, setSeverity] = useState("");
-	const [pwa, setPwa] = useState();
-	const [showBtn, setShowBtn] = useState(false);
-	const [isLight, setIsLight] = useState(
-		JSON.parse(localStorage.getItem("theme")) ? true : false
+	const [user, setUser] = useState<User>({admin: false});
+	const [openError, setOpenError] = useState<boolean>(false);
+	const [errorMsg, setErrorMsg] = useState<string>("");
+	const [severity, setSeverity] = useState<string>("");
+	const [pwa, setPwa] = useState<any>();
+	const [showBtn, setShowBtn] = useState<boolean>(false);
+	const [isLight, setIsLight] = useState<boolean>(
+		(JSON.parse(localStorage.getItem("theme") as string) as boolean)
+			? true
+			: false
 	);
 
-	const theme = {
+	const theme: Theme = {
 		darkTheme: {
 			palette: {
 				type: "dark",
@@ -62,10 +64,7 @@ function App() {
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 				navigator.userAgent
 			) &&
-			!(
-				window.matchMedia("(display-mode: standalone)").matches ||
-				window.navigator.standalone === true
-			)
+			!window.matchMedia("(display-mode: standalone)").matches
 		) {
 			setShowBtn(true);
 		}
@@ -87,7 +86,7 @@ function App() {
 			setOpenError(true);
 		} else {
 			pwa.prompt();
-			pwa.userChoice.then((choiceResult) => {
+			pwa.userChoice.then((choiceResult: {outcome: string}) => {
 				if (choiceResult.outcome === "accepted") {
 					setErrorMsg("App downloading in the background..");
 					setSeverity("info");
@@ -99,10 +98,12 @@ function App() {
 	};
 
 	useEffect(() => {
-		const token = localStorage.getItem("token");
-		const userInfo = localStorage.getItem("userInfo");
+		const token: string | null = JSON.parse(
+			localStorage.getItem("token") as string
+		);
+		let userInfo: User = JSON.parse(localStorage.getItem("userInfo") as string);
 		if (userInfo && token && !userInfo.admin) {
-			setUser(JSON.parse(userInfo));
+			setUser(userInfo);
 			setIsLogged(true);
 		}
 		if (isLogged) {
@@ -114,9 +115,9 @@ function App() {
 				})
 				.then((res) => {
 					if (!userInfo || !token) {
-						setUser(res.data);
+						setUser(res.data as User);
 					}
-					localStorage.setItem(`userInfo`, JSON.stringify(res.data));
+					localStorage.setItem(`userInfo`, JSON.stringify(res.data as User));
 					setIsLogged(true);
 				})
 				.catch((err) => {
@@ -161,7 +162,7 @@ function App() {
 					<Route
 						exact
 						path="/feed"
-						render={(props) => (
+						render={() => (
 							<Suspense
 								fallback={
 									<div className="feed-container">
@@ -171,7 +172,7 @@ function App() {
 									</div>
 								}
 							>
-								<Feed {...props} isLogged={isLogged} user={user} />
+								<Feed isLogged={isLogged} user={user} />
 							</Suspense>
 						)}
 					/>
@@ -205,6 +206,6 @@ function App() {
 			/>
 		</MuiThemeProvider>
 	);
-}
+};
 
 export default App;

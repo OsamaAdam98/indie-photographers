@@ -67,7 +67,7 @@ export default function Login(props) {
 				.then((res) => {
 					const {token, user} = res.data;
 					if (token) {
-						localStorage.setItem("token", token);
+						localStorage.setItem("token", JSON.stringify(token));
 						setEmail("");
 						setPassword("");
 						setIsLogged(true);
