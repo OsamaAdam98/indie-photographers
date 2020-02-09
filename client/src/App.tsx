@@ -27,7 +27,11 @@ const App: React.FC = () => {
 
 	const {width} = useWindowDimensions();
 
-	const [user, setUser] = useState<User>({admin: false});
+	const [user, setUser] = useState<User>(
+		isLogged
+			? JSON.parse(localStorage.getItem("userInfo") as string)
+			: {admin: false}
+	);
 	const [openError, setOpenError] = useState<boolean>(false);
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [severity, setSeverity] = useState<string>("");

@@ -92,7 +92,6 @@ function MenuAppBar(props) {
 							<LightSwitch isLight={isLight} setIsLight={setIsLight} />
 						)}
 						<Login
-							user={user}
 							isLogged={isLogged}
 							setIsLogged={setIsLogged}
 							setUser={setUser}

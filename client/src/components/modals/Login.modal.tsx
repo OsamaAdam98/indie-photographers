@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {useHistory} from "react-router-dom";
+import {useHistory, RouteComponentProps} from "react-router-dom";
 import axios from "axios";
 import {
 	Dialog,
@@ -24,8 +24,14 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function Login(props) {
-	const {isLogged, setIsLogged, setUser, user} = props;
+interface Props extends RouteComponentProps {
+	isLogged: boolean;
+	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
+	setUser: React.Dispatch<React.SetStateAction<User>>;
+}
+
+const Login: React.FC<Props> = (props) => {
+	const {isLogged, setIsLogged, setUser} = props;
 
 	const classes = useStyles();
 	const history = useHistory();
@@ -51,21 +57,28 @@ export default function Login(props) {
 		setErrorMsg("");
 	};
 
-	const emailChange = (event) => setEmail(event.target.value);
-	const passwordChange = (event) => setPassword(event.target.value);
-	const handleSubmit = (event) => {
-		if (!email || !password) {
+	const emailChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+		setEmail(event.target.value);
+	const passwordChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+		setPassword(event.target.value);
+	const handleSubmit = (
+		event:
+			| React.MouseEvent<HTMLButtonElement, MouseEvent>
+			| React.FormEvent<HTMLFormElement>
+	) => {
+		if (!email.trim() || !password.trim()) {
 			setErrorMsg("Please enter all fields");
 			event.preventDefault();
 		} else {
-			const user = {
+			const user: SubUser = {
 				email,
 				password
 			};
 			axios
 				.post("/api/auth/", user)
 				.then((res) => {
-					const {token, user} = res.data;
+					const token: string = res.data.token;
+					const user: User = res.data.user;
 					if (token) {
 						localStorage.setItem("token", JSON.stringify(token));
 						setEmail("");
@@ -96,7 +109,7 @@ export default function Login(props) {
 			Login
 		</Button>
 	) : (
-		<ProfileAvatar user={user} setIsLogged={setIsLogged} />
+		<ProfileAvatar setIsLogged={setIsLogged} />
 	);
 
 	return (
@@ -164,4 +177,6 @@ export default function Login(props) {
 			</Dialog>
 		</>
 	);
-}
+};
+
+export default Login;

@@ -3,15 +3,19 @@ import {useHistory} from "react-router-dom";
 import {Menu, MenuItem, IconButton} from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
 
-export default function ProfileAvatar(props) {
-	const {setIsLogged} = props;
+interface Props {
+	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
+const ProfileAvatar: React.FC<Props> = ({setIsLogged}) => {
 	const history = useHistory();
 
-	const [anchorEl, setAnchorEl] = useState(null);
+	const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 	const open = Boolean(anchorEl);
 
-	const handleMenu = (event) => {
+	const handleMenu = (
+		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) => {
 		setAnchorEl(event.currentTarget);
 	};
 
@@ -69,4 +73,6 @@ export default function ProfileAvatar(props) {
 			</Menu>
 		</>
 	);
-}
+};
+
+export default ProfileAvatar;

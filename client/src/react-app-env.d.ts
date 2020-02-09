@@ -14,6 +14,11 @@ interface User {
 	_id?: string;
 }
 
+interface SubUser {
+	email: string;
+	password: string;
+}
+
 interface Theme {
 	darkTheme?: object;
 	lightTheme?: object;
