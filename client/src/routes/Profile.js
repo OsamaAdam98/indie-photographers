@@ -21,6 +21,7 @@ import DoneAllIcon from "@material-ui/icons/DoneAll";
 import ImageIcon from "@material-ui/icons/Image";
 import WorkIcon from "@material-ui/icons/Work";
 import BeachAccessIcon from "@material-ui/icons/BeachAccess";
+import {Skeleton} from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -61,6 +62,7 @@ export default function Profile(props) {
 	};
 
 	useEffect(() => {
+		setIsLoading(true);
 		let cachedData = JSON.parse(
 			localStorage.getItem(`${user._id}/page${page}`)
 		);
@@ -201,12 +203,21 @@ export default function Profile(props) {
 		<div className="container">
 			<Paper className="main-block">
 				<div className="cover-photo" />
-				<PhotoPreview
-					{...props}
-					photo={user.profilePicture}
-					alt={user.username}
-					round={true}
-				/>
+				{isLoading ? (
+					<Skeleton
+						height="100%"
+						width="auto"
+						variant="circle"
+						className="profile-photo"
+					/>
+				) : (
+					<PhotoPreview
+						{...props}
+						photo={user.profilePicture}
+						alt={user.username}
+						round={true}
+					/>
+				)}
 				<div className="tagline">
 					<Typography variant="h5">{user.username}</Typography>
 					<Typography

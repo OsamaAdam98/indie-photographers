@@ -7,7 +7,6 @@ export default function ProfileSkeleton() {
 		<div className="container">
 			<Paper className="main-block">
 				<div className="cover-photo" />
-				<div className="profile-photo" />
 				<div className="tagline">
 					<Typography
 						style={{

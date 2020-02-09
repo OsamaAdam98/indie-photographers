@@ -24,10 +24,10 @@
 .main-block {
 	grid-area: 1 / 2 / 2 / 3;
 	width: 100%;
-	height: 100%;
+	min-height: 26.25rem;
 	display: grid;
 	grid-template-columns: repeat(6, 1fr);
-	grid-template-rows: repeat(4, minmax(1rem, max-content)) 1fr 1fr;
+	grid-template-rows: repeat(4, minmax(1fr, max-content)) 1fr 1fr;
 	grid-gap: 1rem;
 	padding-bottom: 1rem;
 }
@@ -79,8 +79,6 @@
 	grid-area: 2 / 3 / 4 / 5;
 	object-fit: cover;
 	object-position: 50% 50%;
-	height: auto;
-	width: 100%;
 	border-radius: 50%;
 	align-self: center;
 	justify-content: center;

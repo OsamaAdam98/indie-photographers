@@ -48,9 +48,7 @@ export default function PhotoPreview(props) {
 				objectFit: "cover",
 				objectPosition: "50% 50%",
 				width: "100%",
-				height: "auto",
-				maxHeight: maxHeight,
-				borderRadius: round ? "50%" : ""
+				maxHeight: maxHeight
 			}}
 			className={`hover-img ${round ? "profile-photo" : ""}`}
 		/>
