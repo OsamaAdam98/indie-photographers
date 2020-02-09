@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useCallback} from "react";
-import {useHistory, useLocation} from "react-router-dom";
+import {useHistory, useLocation, RouteComponentProps} from "react-router-dom";
 import axios from "axios";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import {PostModal, PostSkeleton, SnackAlert, PostMedia} from "../components";
@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 	}
 });
 
-interface Props {
+interface Props extends RouteComponentProps<MatchParams> {
 	isLogged: boolean;
 	user: User;
 }
@@ -41,9 +41,10 @@ const Feed: React.FC<Props> = (props) => {
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [openError, setOpenError] = useState<boolean>(false);
 	const [severity, setSeverity] = useState<string>("");
-	const [photo, setPhoto] = useState<Photo>({secure_url: ""});
+	const [photo, setPhoto] = useState<Photo>({eager: [{secure_url: ""}]});
 	const [isUploading, setIsUploading] = useState<boolean>(false);
 	const [offline, setOffline] = useState<boolean>(false);
+	const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
 
 	const onUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const files = e.target.files as FileList;
@@ -86,7 +87,7 @@ const Feed: React.FC<Props> = (props) => {
 				})
 				.catch((err) => console.log(err));
 		}
-		setPhoto({secure_url: ""});
+		setPhoto({eager: [{secure_url: ""}]});
 		if (location.hash === "#feed-post") history.goBack();
 	};
 
@@ -190,27 +191,29 @@ const Feed: React.FC<Props> = (props) => {
 			});
 	}, [page]);
 
-	const observer = useRef<HTMLDivElement>();
-
-	const lastElementRef = useCallback(
-		(node) => {
-			if (isLoading) return;
-			if (observer.current) observer.current.disconnect();
-
-			observer.current = new IntersectionObserver((entries) => {
-				if (entries[0].isIntersecting && hasMore) {
-					setPage((prevPage) => prevPage + 1);
-				}
-			});
-			if (node) observer.current.observe(node);
-		},
-		[isLoading, hasMore]
+	const observer = useRef(
+		new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+			if (entries[0].isIntersecting) {
+				setPage((page) => page + 1);
+			}
+		})
 	);
+
+	useEffect(() => {
+		const currentElement = lastElement;
+		const currentObserver = observer.current;
+
+		if (currentElement) currentObserver.observe(currentElement);
+
+		return () => {
+			if (currentElement) currentObserver.unobserve(currentElement);
+		};
+	}, [lastElement]);
 
 	const postMedia = posts.map((feedPost, i) => {
 		if (posts.length === i + 1) {
 			return (
-				<div ref={lastElementRef} key={feedPost._id}>
+				<div ref={setLastElement} key={feedPost._id}>
 					<PostMedia
 						{...props}
 						feedPost={feedPost}

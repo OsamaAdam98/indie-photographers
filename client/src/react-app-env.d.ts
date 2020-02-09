@@ -30,6 +30,14 @@ interface Post {
 	_id: string;
 }
 
+interface SubPost {
+	username?: string;
+	email?: string;
+	msg?: string;
+	photo?: string;
+	photoId?: string;
+}
+
 interface Likes {
 	_id?: string;
 	__v?: number;
@@ -52,7 +60,21 @@ interface Photo {
 	type?: string;
 	etag?: string;
 	url?: string;
-	secure_url: string;
+	eager: [
+		{
+			transformation?: string;
+			width?: number;
+			height?: number;
+			bytes?: number;
+			url?: string;
+			secure_url: string;
+		}
+	];
+	secure_url?: string;
 	signature?: string;
 	original_filename?: string;
+}
+
+interface MatchParams {
+	id: string;
 }

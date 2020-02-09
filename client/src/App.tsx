@@ -162,7 +162,7 @@ const App: React.FC = () => {
 					<Route
 						exact
 						path="/feed"
-						render={() => (
+						render={(props) => (
 							<Suspense
 								fallback={
 									<div className="feed-container">
@@ -172,7 +172,7 @@ const App: React.FC = () => {
 									</div>
 								}
 							>
-								<Feed isLogged={isLogged} user={user} />
+								<Feed {...props} isLogged={isLogged} user={user} />
 							</Suspense>
 						)}
 					/>

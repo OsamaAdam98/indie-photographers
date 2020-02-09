@@ -6,7 +6,7 @@ import MenuAppBar from "./MenuAppBar";
 import SnackAlert from "./SnackAlert";
 import BottomBar from "./BottomBar";
 import useWindowDimensions from "./utilities/WindowDimensions";
-import PostModal from "./modals/FeedPost.modal";
+import PostModal from "./modals/FeedPost.modal.tsx";
 import PostMedia from "./PostMedia.tsx";
 import PostSkeleton from "./skeletons/PostSkeleton";
 import LikesSkeleton from "./skeletons/LikesSkeleton";

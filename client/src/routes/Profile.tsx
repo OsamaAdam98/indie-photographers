@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useRef, useCallback} from "react";
-import {useRouteMatch} from "react-router-dom";
+import React, {useState, useEffect, useRef} from "react";
+import {RouteComponentProps} from "react-router-dom";
 import axios from "axios";
 import {
 	Paper,
@@ -32,12 +32,12 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-interface Props {
+interface Props extends RouteComponentProps<MatchParams> {
 	currentUser: User;
 }
 
-const Profile: React.FC<Props> = ({currentUser}) => {
-	const [user, setUser] = useState<User>({admin: false});
+const Profile: React.FC<Props> = (props) => {
+	const [user, setUser] = useState<User | null>(null);
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
@@ -45,9 +45,11 @@ const Profile: React.FC<Props> = ({currentUser}) => {
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [openError, setOpenError] = useState<boolean>(false);
 	const [severity, setSeverity] = useState<string>("");
+	const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
+
+	const {currentUser, match} = props;
 
 	const classes = useStyles();
-	const match = useRouteMatch();
 
 	const handleDelete = (id: string) => {
 		const token: string | null = JSON.parse(
@@ -70,110 +72,108 @@ const Profile: React.FC<Props> = ({currentUser}) => {
 
 	useEffect(() => {
 		setIsLoading(true);
-		let cachedData: Post[] = JSON.parse(
-			localStorage.getItem(`${user._id}/page${page}`) as string
-		);
-		if (cachedData) {
-			setPosts((prevPosts) =>
-				[...prevPosts, ...cachedData].filter(
-					(post) => post.user._id === user._id
-				)
+		if (match.params.id) {
+			let cachedData: Post[] = JSON.parse(
+				localStorage.getItem(`${match.params.id}/page${page}`) as string
 			);
-			setIsLoading(false);
-			setHasMore(cachedData.length > 0);
-		}
+			if (cachedData) {
+				setPosts((prevPosts) =>
+					[...prevPosts, ...cachedData].filter(
+						(post) => post.user._id === match.params.id
+					)
+				);
+				setIsLoading(false);
+				setHasMore(cachedData.length > 0);
+			} else {
+				axios
+					.get(`/api/feed/user/${match.params.id}/?page=${page}`)
+					.then((res) => {
+						const data: Post[] = res.data;
 
-		if (user) {
-			axios
-				.get(`/api/feed/user/${user._id}/?page=${page}`)
-				.then((res) => {
-					const data: Post[] = res.data;
-
-					if (!cachedData) {
 						setPosts((prevPosts) => [...prevPosts, ...data]);
-					}
 
-					setHasMore(data.length > 0);
-					localStorage.setItem(
-						`${user._id}/page${page}`,
-						JSON.stringify(data.filter((post) => post.user._id === user._id))
-					);
-					setErrorMsg("");
-					setOpenError(false);
-					setIsLoading(false);
+						setHasMore(data.length > 0);
+						localStorage.setItem(
+							`${match.params.id}/page${page}`,
+							JSON.stringify(
+								data.filter((post) => post.user._id === match.params.id)
+							)
+						);
+						setErrorMsg("");
+						setOpenError(false);
+						setIsLoading(false);
+					})
+					.catch((err) => {
+						if (err) {
+							if (cachedData) {
+								setHasMore(cachedData.length > 0);
+							} else {
+								setHasMore(false);
+							}
+							if (err) {
+								setErrorMsg("User not found");
+								setSeverity("error");
+								setOpenError(true);
+							} else {
+								setErrorMsg("Can't connect to the internet!");
+								setSeverity("warning");
+								setOpenError(true);
+							}
+							setIsLoading(false);
+						}
+					});
+			}
+		}
+	}, [page, match.params.id]);
+
+	useEffect(() => {
+		if (match.params.id) {
+			let cachedData: User = JSON.parse(
+				localStorage.getItem(`${match.params.id}`) as string
+			);
+			if (cachedData) setUser(cachedData);
+
+			axios
+				.get(`/api/users/${match.params.id}`)
+				.then((res) => {
+					const data: User = res.data;
+					setUser(data);
+					localStorage.setItem(`${match.params.id}`, JSON.stringify(data));
 				})
 				.catch((err) => {
 					if (err) {
-						if (cachedData) {
-							setHasMore(cachedData.length > 0);
-						} else {
-							setHasMore(false);
-						}
-						if (err) {
-							setErrorMsg("User not found");
-							setSeverity("error");
-							setOpenError(true);
-						} else {
-							setErrorMsg("Can't connect to the internet!");
-							setSeverity("warning");
-							setOpenError(true);
-						}
-						setIsLoading(false);
+						setErrorMsg("Can't find user");
+						setSeverity("error");
+						setOpenError(true);
 					}
 				});
 		}
-	}, [page, user]);
+	}, [match.params.id]);
+
+	const observer = useRef(
+		new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+			if (entries[0].isIntersecting) {
+				setPage((page) => page + 1);
+			}
+		})
+	);
 
 	useEffect(() => {
-		setPosts([]);
-		setPage(1);
+		const currentElement = lastElement;
+		const currentObserver = observer.current;
 
-		let cachedData: User = JSON.parse(
-			localStorage.getItem(`${match.params.id}`) as string
-		);
-		if (cachedData) setUser(cachedData);
+		if (currentElement) currentObserver.observe(currentElement);
 
-		axios
-			.get(`/api/users/${match.params.id}`)
-			.then((res) => {
-				const {data} = res;
-				if (!cachedData) setUser(data);
-				localStorage.setItem(`${props.match.params.id}`, JSON.stringify(data));
-			})
-			.catch((err) => {
-				const {status} = err.response;
-				if (status === 404) {
-					setErrorMsg("Can't find user");
-					setSeverity("error");
-					setOpenError(true);
-				}
-			});
-
-		return () => cancel();
-	}, [props.match.params.id]);
-
-	const observer = useRef();
-
-	const lastElementRef = useCallback(
-		(node) => {
-			if (isLoading) return;
-			if (observer.current) observer.current.disconnect();
-
-			observer.current = new IntersectionObserver((entries) => {
-				if (entries[0].isIntersecting && hasMore) {
-					setPage((prevPage) => prevPage + 1);
-				}
-			});
-			if (node) observer.current.observe(node);
-		},
-		[isLoading, hasMore]
-	);
+		return () => {
+			if (currentElement) currentObserver.unobserve(currentElement);
+		};
+	}, [lastElement]);
 
 	const postMedia = posts
 		? posts.map((feedPost, i) => {
 				if (posts.length === i + 1) {
 					return (
-						<div ref={lastElementRef} key={feedPost._id}>
+						<div ref={setLastElement} key={feedPost._id}>
 							<PostMedia
 								{...props}
 								feedPost={feedPost}
@@ -214,13 +214,13 @@ const Profile: React.FC<Props> = ({currentUser}) => {
 				) : (
 					<PhotoPreview
 						{...props}
-						photo={user.profilePicture}
-						alt={user.username}
+						photo={user && user.profilePicture}
+						alt={user && user.username}
 						round={true}
 					/>
 				)}
 				<div className="tagline">
-					<Typography variant="h5">{user.username}</Typography>
+					<Typography variant="h5">{user && user.username}</Typography>
 					<Typography
 						style={{
 							fontStyle: "italic"

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {useHistory} from "react-router-dom";
+import {useHistory, RouteComponentProps} from "react-router-dom";
 import axios from "axios";
 import {FAB} from "../index";
 import EditIcon from "@material-ui/icons/Edit";
@@ -20,7 +20,18 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function PostModal(props) {
+interface Props extends RouteComponentProps {
+	isLogged: boolean;
+	user: User;
+	photo: Photo;
+	isUploading: boolean;
+	offline: boolean;
+	setNewPost: React.Dispatch<React.SetStateAction<Post[]>>;
+	handleCancel: () => void;
+	onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const PostModal: React.FC<Props> = (props) => {
 	const {
 		isLogged,
 		user,
@@ -35,15 +46,16 @@ export default function PostModal(props) {
 	const classes = useStyles();
 	const history = useHistory();
 	const {height} = useWindowDimensions();
-	const [show, setShow] = useState(false);
-	const [errorMsg, setErrorMsg] = useState("");
-	const [msg, setMsg] = useState("");
+	const [show, setShow] = useState<boolean>(false);
+	const [errorMsg, setErrorMsg] = useState<string>("");
+	const [msg, setMsg] = useState<string>("");
 
 	useEffect(() => {
 		if (props.location.hash !== "#feed-post") setShow(false);
 	}, [props.location.hash]);
 
-	const msgChange = (event) => setMsg(event.target.value);
+	const msgChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+		setMsg(event.target.value);
 
 	const handleClose = () => {
 		setErrorMsg("");
@@ -57,10 +69,14 @@ export default function PostModal(props) {
 		setErrorMsg("");
 	};
 
-	const handleSubmit = (event) => {
-		const username = user.username;
-		const email = user.email;
-		let subData;
+	const handleSubmit = (
+		event:
+			| React.MouseEvent<HTMLButtonElement, MouseEvent>
+			| React.FormEvent<HTMLFormElement>
+	) => {
+		const username: string | undefined = user.username;
+		const email: string | undefined = user.email;
+		let subData: SubPost;
 		if (!msg.trim() && !photo) {
 			setErrorMsg("Surely you'd like to write something!");
 		} else {
@@ -93,7 +109,7 @@ export default function PostModal(props) {
 						`feedPage1`,
 						JSON.stringify([
 							res.data,
-							...JSON.parse(localStorage.getItem(`feedPage1`))
+							...JSON.parse(localStorage.getItem(`feedPage1`) as string)
 						])
 					);
 					handleClose();
@@ -193,4 +209,6 @@ export default function PostModal(props) {
 			</Dialog>
 		</>
 	);
-}
+};
+
+export default PostModal;

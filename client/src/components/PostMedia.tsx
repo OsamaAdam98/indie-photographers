@@ -1,7 +1,6 @@
 import React, {useState, memo} from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
-import PropTypes from "prop-types";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import {
 	CardActions,
