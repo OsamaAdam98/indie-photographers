@@ -38,7 +38,7 @@ const Feed: React.FC<Props> = (props) => {
 	const [newPost, setNewPost] = useState<Post[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
-	const [hasMore, setHasMore] = useState<boolean>(false);
+	const [hasMore, setHasMore] = useState<boolean>(true);
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [openError, setOpenError] = useState<boolean>(false);
 	const [severity, setSeverity] = useState<
@@ -151,48 +151,51 @@ const Feed: React.FC<Props> = (props) => {
 
 	useEffect(() => {
 		setIsLoading(true);
+		if (hasMore) {
+			let cachedData: Post[] = JSON.parse(
+				localStorage.getItem(`feedPage${page}`) as string
+			);
+			if (cachedData) {
+				setPosts((prevPosts) => [...prevPosts, ...cachedData]);
+				setIsLoading(false);
+				setHasMore(cachedData.length === 10);
+			}
 
-		let cachedData: Post[] = JSON.parse(
-			localStorage.getItem(`feedPage${page}`) as string
-		);
-		if (cachedData) {
-			setPosts((prevPosts) => [...prevPosts, ...cachedData]);
+			axios
+				.get(`/api/feed/?page=${page}`)
+				.then((res) => {
+					const {data} = res;
+					let newData: Post[] = getNewPosts(data, cachedData);
+
+					if (newData) {
+						setNewPost((prevPosts) => [...prevPosts, ...newData]);
+					}
+
+					if (!cachedData) {
+						setPosts((prevPosts) => [...prevPosts, ...data]);
+					}
+
+					setHasMore(data.length === 10);
+					localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
+					setErrorMsg("");
+					setOpenError(false);
+					setOffline(false);
+					setIsLoading(false);
+				})
+				.catch((err) => {
+					if (err && page !== 1) {
+						setErrorMsg("Can't connect to the internet!");
+						setSeverity("warning");
+						setOffline(true);
+						setOpenError(true);
+						if (cachedData) setHasMore(cachedData.length === 10);
+					}
+					setIsLoading(false);
+				});
+		} else {
 			setIsLoading(false);
-			setHasMore(cachedData.length === 10);
 		}
-
-		axios
-			.get(`/api/feed/?page=${page}`)
-			.then((res) => {
-				const {data} = res;
-				let newData: Post[] = getNewPosts(data, cachedData);
-
-				if (newData) {
-					setNewPost((prevPosts) => [...prevPosts, ...newData]);
-				}
-
-				if (!cachedData) {
-					setPosts((prevPosts) => [...prevPosts, ...data]);
-				}
-
-				setHasMore(data.length === 10);
-				localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
-				setErrorMsg("");
-				setOpenError(false);
-				setOffline(false);
-				setIsLoading(false);
-			})
-			.catch((err) => {
-				if (err && page !== 1) {
-					setErrorMsg("Can't connect to the internet!");
-					setSeverity("warning");
-					setOffline(true);
-					setOpenError(true);
-					if (cachedData) setHasMore(cachedData.length === 10);
-				}
-				setIsLoading(false);
-			});
-	}, [page]);
+	}, [page, hasMore]);
 
 	const observer = useRef(
 		new IntersectionObserver((entries: IntersectionObserverEntry[]) => {

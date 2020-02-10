@@ -40,7 +40,7 @@ const Profile: React.FC<Props> = (props) => {
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
-	const [hasMore, setHasMore] = useState<boolean>(false);
+	const [hasMore, setHasMore] = useState<boolean>(true);
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [openError, setOpenError] = useState<boolean>(false);
 	const [severity, setSeverity] = useState<
@@ -71,59 +71,62 @@ const Profile: React.FC<Props> = (props) => {
 
 	useEffect(() => {
 		setIsLoading(true);
-		if (match.params.id) {
-			let cachedData: Post[] = JSON.parse(
-				localStorage.getItem(`${match.params.id}/page${page}`) as string
-			);
-			if (cachedData) {
-				setPosts((prevPosts) =>
-					[...prevPosts, ...cachedData].filter(
-						(post) => post.user._id === match.params.id
-					)
+		if (hasMore) {
+			console.log("Here");
+			if (match.params.id) {
+				let cachedData: Post[] = JSON.parse(
+					localStorage.getItem(`${match.params.id}/page${page}`) as string
 				);
-				setIsLoading(false);
-				setHasMore(cachedData.length === 10);
-			} else {
-				axios
-					.get(`/api/feed/user/${match.params.id}/?page=${page}`)
-					.then((res) => {
-						const data: Post[] = res.data;
+				if (cachedData) {
+					setPosts((prevPosts) =>
+						[...prevPosts, ...cachedData].filter(
+							(post) => post.user._id === match.params.id
+						)
+					);
+					setIsLoading(false);
+					setHasMore(cachedData.length === 10);
+				} else {
+					axios
+						.get(`/api/feed/user/${match.params.id}/?page=${page}`)
+						.then((res) => {
+							const data: Post[] = res.data;
 
-						setPosts((prevPosts) => [...prevPosts, ...data]);
+							setPosts((prevPosts) => [...prevPosts, ...data]);
 
-						setHasMore(data.length === 10);
-						localStorage.setItem(
-							`${match.params.id}/page${page}`,
-							JSON.stringify(
-								data.filter((post) => post.user._id === match.params.id)
-							)
-						);
-						setErrorMsg("");
-						setOpenError(false);
-						setIsLoading(false);
-					})
-					.catch((err) => {
-						if (err) {
-							if (cachedData) {
-								setHasMore(cachedData.length === 0);
-							} else {
-								setHasMore(false);
-							}
-							if (err) {
-								setErrorMsg("User not found");
-								setSeverity("error");
-								setOpenError(true);
-							} else {
-								setErrorMsg("Can't connect to the internet!");
-								setSeverity("warning");
-								setOpenError(true);
-							}
+							setHasMore(data.length === 10);
+							localStorage.setItem(
+								`${match.params.id}/page${page}`,
+								JSON.stringify(
+									data.filter((post) => post.user._id === match.params.id)
+								)
+							);
+							setErrorMsg("");
+							setOpenError(false);
 							setIsLoading(false);
-						}
-					});
+						})
+						.catch((err) => {
+							if (err) {
+								if (cachedData) {
+									setHasMore(cachedData.length === 0);
+								} else {
+									setHasMore(false);
+								}
+								if (err) {
+									setErrorMsg("User not found");
+									setSeverity("error");
+									setOpenError(true);
+								} else {
+									setErrorMsg("Can't connect to the internet!");
+									setSeverity("warning");
+									setOpenError(true);
+								}
+								setIsLoading(false);
+							}
+						});
+				}
 			}
-		}
-	}, [page, match.params.id]);
+		} else setIsLoading(false);
+	}, [page, match.params.id, hasMore]);
 
 	useEffect(() => {
 		if (match.params.id) {
