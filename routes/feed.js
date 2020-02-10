@@ -44,15 +44,8 @@ router.get("/", (req, res) => {
 router.post("/add", auth, (req, res) => {
 	const msg = req.body.msg;
 	const user = req.user.id;
-	let photo, photoId;
-
-	if (photo) {
-		photo = req.body.photo;
-		photoId = req.body.photoId;
-	} else {
-		photo = null;
-		photoId = null;
-	}
+	const photo = req.body.photo ? req.body.photo : "";
+	const photoId = req.body.photoId ? req.body.photoId : "";
 
 	const newPost = new Feed({
 		msg,

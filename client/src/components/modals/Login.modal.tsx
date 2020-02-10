@@ -80,7 +80,7 @@ const Login: React.FC<Props> = (props) => {
 					const token: string = res.data.token;
 					const user: User = res.data.user;
 					if (token) {
-						localStorage.setItem("token", JSON.stringify(token));
+						localStorage.setItem("token", token);
 						setEmail("");
 						setPassword("");
 						setIsLogged(true);

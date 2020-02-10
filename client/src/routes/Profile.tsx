@@ -53,9 +53,7 @@ const Profile: React.FC<Props> = (props) => {
 	const classes = useStyles();
 
 	const handleDelete = (id: string) => {
-		const token: string | null = JSON.parse(
-			localStorage.getItem("token") as string
-		);
+		const token: string | null = localStorage.getItem("token");
 
 		axios
 			.delete(`/api/feed/delete/${id}`, {

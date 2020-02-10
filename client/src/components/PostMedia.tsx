@@ -102,9 +102,8 @@ const PostMedia: React.FC<Props> = (props) => {
 	};
 
 	const handleLike = (id: string) => {
-		const token: string | null = JSON.parse(
-			localStorage.getItem("token") as string
-		);
+		const token: string | null = localStorage.getItem("token");
+
 		axios
 			.post(`/api/feed/like/${id}`, null, {
 				headers: {

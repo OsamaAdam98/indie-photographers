@@ -32,7 +32,7 @@ const GoogleBtn: React.FC<Props> = (props) => {
 			.then((res) => {
 				const {token, user} = res.data;
 				if (token) {
-					localStorage.setItem("token", JSON.stringify(token));
+					localStorage.setItem("token", token);
 					setIsLogged(true);
 				}
 				if (user) {

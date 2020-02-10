@@ -123,7 +123,7 @@ const Feed: React.FC<Props> = (props) => {
 	};
 
 	const handleDelete = useCallback((id: string) => {
-		const token: string = localStorage.getItem("token") as string;
+		const token: string | null = localStorage.getItem("token");
 
 		axios
 			.delete(`/api/feed/delete/${id}`, {
@@ -277,6 +277,7 @@ const Feed: React.FC<Props> = (props) => {
 					user={user}
 					setNewPost={setNewPost}
 					photo={photo}
+					setPhoto={setPhoto}
 					isUploading={isUploading}
 					onUpload={onUpload}
 					offline={offline}

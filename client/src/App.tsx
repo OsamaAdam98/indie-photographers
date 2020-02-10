@@ -22,7 +22,7 @@ const Profile = lazy(() => import("./routes/Profile"));
 
 const App: React.FC = () => {
 	const [isLogged, setIsLogged] = useState(
-		JSON.parse(localStorage.getItem("token") as string) ? true : false
+		localStorage.getItem("token") ? true : false
 	);
 
 	const {width} = useWindowDimensions();
@@ -104,9 +104,7 @@ const App: React.FC = () => {
 	};
 
 	useEffect(() => {
-		const token: string | null = JSON.parse(
-			localStorage.getItem("token") as string
-		);
+		const token: string | null = localStorage.getItem("token");
 		let userInfo: User = JSON.parse(localStorage.getItem("userInfo") as string);
 		if (userInfo && token && !userInfo.admin) {
 			setUser(userInfo);

@@ -17,6 +17,7 @@ interface Props extends RouteComponentProps {
 	isLogged: boolean;
 	user: User;
 	photo: Photo;
+	setPhoto: React.Dispatch<React.SetStateAction<Photo>>;
 	isUploading: boolean;
 	offline: boolean;
 	setNewPost: React.Dispatch<React.SetStateAction<Post[]>>;
@@ -30,6 +31,7 @@ const PostModal: React.FC<Props> = (props) => {
 		user,
 		setNewPost,
 		photo,
+		setPhoto,
 		isUploading,
 		onUpload,
 		offline,
@@ -39,7 +41,7 @@ const PostModal: React.FC<Props> = (props) => {
 	const history = useHistory();
 	const {height} = useWindowDimensions();
 	const [show, setShow] = useState<boolean>(false);
-	const [errorMsg, setErrorMsg] = useState<string>("");
+	const [errorMsg, setErrorMsg] = useState<string>(" ");
 	const [msg, setMsg] = useState<string>("");
 
 	useEffect(() => {
@@ -104,6 +106,8 @@ const PostModal: React.FC<Props> = (props) => {
 							...JSON.parse(localStorage.getItem(`feedPage1`) as string)
 						])
 					);
+					setPhoto({eager: [{secure_url: ""}]});
+					setMsg("");
 					handleClose();
 				})
 				.catch((err) => {
@@ -151,7 +155,6 @@ const PostModal: React.FC<Props> = (props) => {
 							fullWidth={true}
 							dir="auto"
 							error={errorMsg ? true : false}
-							helperText={errorMsg}
 						/>
 						<img
 							src={photo.eager[0].secure_url}
