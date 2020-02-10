@@ -42,7 +42,7 @@ const PostModal: React.FC<Props> = (props) => {
 	const {height} = useWindowDimensions();
 	const [show, setShow] = useState<boolean>(false);
 	const [errorMsg, setErrorMsg] = useState<string>(" ");
-	const [msg, setMsg] = useState<string>("");
+	const [msg, setMsg] = useState<string>(" ");
 
 	useEffect(() => {
 		if (props.location.hash !== "#feed-post") setShow(false);
@@ -71,7 +71,7 @@ const PostModal: React.FC<Props> = (props) => {
 		const username: string | undefined = user.username;
 		const email: string | undefined = user.email;
 		let subData: SubPost;
-		if (!msg.trim() && !photo) {
+		if (!msg.trim() && !photo.eager[0].secure_url.trim()) {
 			setErrorMsg("Surely you'd like to write something!");
 		} else {
 			if (photo) {
@@ -155,6 +155,7 @@ const PostModal: React.FC<Props> = (props) => {
 							fullWidth={true}
 							dir="auto"
 							error={errorMsg ? true : false}
+							helperText={errorMsg}
 						/>
 						<img
 							src={photo.eager[0].secure_url}

@@ -9,6 +9,7 @@ import "../css/feed.css";
 const useStyles = makeStyles({
 	progress: {
 		position: "fixed",
+		left: 0,
 		bottom: 0,
 		width: "100vw",
 		height: 4
