@@ -60,7 +60,7 @@ const FBButton: React.FC<Props> = (props) => {
 			.then((res) => {
 				const {token, user} = res.data;
 				if (token) {
-					localStorage.setItem("token", token);
+					localStorage.setItem("token", JSON.stringify(token));
 					setIsLogged(true);
 					handleClose();
 
