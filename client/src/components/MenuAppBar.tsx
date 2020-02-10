@@ -1,18 +1,18 @@
-import React, {useState, useEffect} from "react";
-import {withRouter, Link} from "react-router-dom";
+import React from "react";
+import {withRouter, Link, RouteComponentProps} from "react-router-dom";
 import {
-	makeStyles,
 	AppBar,
 	Toolbar,
 	Typography,
 	Avatar,
 	useScrollTrigger,
-	Slide
+	Slide,
+	makeStyles
 } from "@material-ui/core";
 import logo from "../assets/logo.png";
 import {useWindowDimensions, Login, LightSwitch, BottomBar} from ".";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles: any = makeStyles((theme: any) => ({
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1,
 		position: "relative",
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function HideOnScroll(props) {
+const HideOnScroll: React.FC = (props) => {
 	const {children} = props;
 	const trigger = useScrollTrigger();
 
@@ -58,18 +58,21 @@ function HideOnScroll(props) {
 			{children}
 		</Slide>
 	);
+};
+
+interface Props extends RouteComponentProps<MatchParams> {
+	isLogged: boolean;
+	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
+	user: User;
+	setUser: React.Dispatch<React.SetStateAction<User>>;
+	isLight: boolean;
+	setIsLight: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function MenuAppBar(props) {
+const MenuAppBar: React.FC<Props> = (props) => {
 	const {isLogged, setIsLogged, user, setUser, isLight, setIsLight} = props;
 	const {width} = useWindowDimensions();
 	const classes = useStyles();
-
-	const [show, setShow] = useState(false);
-
-	useEffect(() => {
-		if (props.location.hash === "") setShow(false);
-	}, [props.location.hash]);
 
 	return (
 		<>
@@ -95,8 +98,6 @@ function MenuAppBar(props) {
 							isLogged={isLogged}
 							setIsLogged={setIsLogged}
 							setUser={setUser}
-							show={show}
-							setShow={setShow}
 							{...props}
 						/>
 					</Toolbar>
@@ -107,6 +108,6 @@ function MenuAppBar(props) {
 			</div>
 		</>
 	);
-}
+};
 
 export default withRouter(MenuAppBar);

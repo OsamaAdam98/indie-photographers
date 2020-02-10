@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Link, useHistory} from "react-router-dom";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import {
 	IconButton,
@@ -38,12 +38,19 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function Likes(props) {
+interface Props {
+	users: User[];
+	liked: boolean;
+	currentUser: User;
+}
+
+const Likes: React.FC<Props> = (props) => {
 	const {users, liked, currentUser} = props;
 	const [show, setShow] = useState(false);
 	const {width} = useWindowDimensions();
 
 	const history = useHistory();
+	const location = useLocation();
 	const classes = useStyles();
 
 	const entering = () => {
@@ -52,12 +59,12 @@ export default function Likes(props) {
 
 	const handleClose = () => {
 		setShow(false);
-		if (props.location.hash === "#likes") history.goBack();
+		if (location.hash === "#likes") history.goBack();
 	};
 
 	useEffect(() => {
-		if (props.location.hash !== "#likes") setShow(false);
-	}, [props.location.hash]);
+		if (location.hash !== "#likes") setShow(false);
+	}, [location.hash]);
 
 	const handleShow = () => {
 		setShow(true);
@@ -180,4 +187,6 @@ export default function Likes(props) {
 			</Dialog>
 		</>
 	);
-}
+};
+
+export default Likes;

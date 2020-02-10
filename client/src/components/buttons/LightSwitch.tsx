@@ -1,8 +1,13 @@
 import React from "react";
 import {Switch} from "@material-ui/core";
 
-export default function LightSwitch({isLight, setIsLight}) {
-	const onChange = (event) => {
+interface Props {
+	isLight: boolean;
+	setIsLight: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const LightSwitch: React.FC<Props> = ({isLight, setIsLight}) => {
+	const onChange = (event: any) => {
 		setIsLight(event.target.checked);
 		localStorage.setItem("theme", JSON.stringify(event.target.checked));
 	};
@@ -12,4 +17,6 @@ export default function LightSwitch({isLight, setIsLight}) {
 			<Switch checked={isLight} color="primary" onChange={onChange} />
 		</div>
 	);
-}
+};
+
+export default LightSwitch;

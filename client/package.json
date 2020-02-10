@@ -45,5 +45,7 @@
 		]
 	},
 	"proxy": "http://localhost:5000",
-	"devDependencies": {}
+	"devDependencies": {
+		"@types/react-facebook-login": "^4.1.1"
+	}
 }

@@ -2,7 +2,7 @@ import React from "react";
 import "../../css/profile.css";
 import {Paper, Typography} from "@material-ui/core";
 
-export default function ProfileSkeleton() {
+const ProfileSkeleton: React.FC = () => {
 	return (
 		<div className="container">
 			<Paper className="main-block">
@@ -20,4 +20,6 @@ export default function ProfileSkeleton() {
 			</Paper>
 		</div>
 	);
-}
+};
+
+export default ProfileSkeleton;

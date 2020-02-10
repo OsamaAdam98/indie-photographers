@@ -40,7 +40,9 @@ const Feed: React.FC<Props> = (props) => {
 	const [hasMore, setHasMore] = useState<boolean>(false);
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [openError, setOpenError] = useState<boolean>(false);
-	const [severity, setSeverity] = useState<string>("");
+	const [severity, setSeverity] = useState<
+		"success" | "info" | "warning" | "error" | undefined
+	>(undefined);
 	const [photo, setPhoto] = useState<Photo>({eager: [{secure_url: ""}]});
 	const [isUploading, setIsUploading] = useState<boolean>(false);
 	const [offline, setOffline] = useState<boolean>(false);
@@ -217,7 +219,6 @@ const Feed: React.FC<Props> = (props) => {
 					<PostMedia
 						{...props}
 						feedPost={feedPost}
-						isLoading={isLoading}
 						currentUser={user}
 						handleDelete={handleDelete}
 					/>
@@ -230,7 +231,6 @@ const Feed: React.FC<Props> = (props) => {
 					<PostMedia
 						{...props}
 						feedPost={feedPost}
-						isLoading={isLoading}
 						currentUser={user}
 						handleDelete={handleDelete}
 					/>
@@ -244,7 +244,6 @@ const Feed: React.FC<Props> = (props) => {
 				<PostMedia
 					{...props}
 					feedPost={incoming}
-					isLoading={isLoading}
 					currentUser={user}
 					handleDelete={handleDelete}
 					key={incoming._id}
@@ -278,7 +277,6 @@ const Feed: React.FC<Props> = (props) => {
 					user={user}
 					setNewPost={setNewPost}
 					photo={photo}
-					setPhoto={setPhoto}
 					isUploading={isUploading}
 					onUpload={onUpload}
 					offline={offline}

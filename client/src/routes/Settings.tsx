@@ -5,7 +5,7 @@ import {LightSwitch} from "../components";
 interface Props {
 	isLight: boolean;
 	showBtn: boolean;
-	setIsLight: (event: React.Dispatch<React.SetStateAction<boolean>>) => void;
+	setIsLight: React.Dispatch<React.SetStateAction<boolean>>;
 	handleClick: () => void;
 }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import {withRouter} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import {Fab, Zoom, makeStyles, useTheme} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,48 +29,50 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function FAB(props) {
-	const {offline} = props;
+interface Props {
+	currentLocation: "/feed/";
+	offline: boolean;
+	icon: JSX.Element;
+	handleClick: () => void;
+}
+
+const FAB: React.FC<Props> = ({
+	currentLocation,
+	offline,
+	icon,
+	handleClick
+}) => {
 	const classes = useStyles();
 	const theme = useTheme();
+	const location = useLocation();
 
 	const transitionDuration = {
 		enter: theme.transitions.duration.enteringScreen,
 		exit: theme.transitions.duration.leavingScreen
 	};
 
-	const fab = {
-		color: "primary",
-		className: classes.customFab,
-		icon: props.icon,
-		label: "Edit"
-	};
-
 	return (
 		<Zoom
-			key={fab.color}
-			in={props.location.pathname === props.currentLocation}
+			in={location.pathname === currentLocation}
 			timeout={transitionDuration}
 			style={{
 				display: offline ? "none" : "",
 				transitionDelay: `${
-					props.location.pathname === props.currentLocation
-						? transitionDuration.exit
-						: 0
+					location.pathname === currentLocation ? transitionDuration.exit : 0
 				}ms`
 			}}
 			unmountOnExit
 		>
 			<Fab
-				aria-label={fab.label}
-				className={fab.className}
-				color={fab.color}
-				onClick={props.handleClick}
+				aria-label={"Edit"}
+				className={classes.customFab}
+				color={"primary"}
+				onClick={handleClick}
 			>
-				{fab.icon}
+				{icon}
 			</Fab>
 		</Zoom>
 	);
-}
+};
 
-export default withRouter(FAB);
+export default FAB;

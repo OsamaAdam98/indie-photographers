@@ -10,15 +10,8 @@ import {
 	DialogTitle,
 	DialogContent,
 	TextField,
-	Button,
-	makeStyles
+	Button
 } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) => ({
-	input: {
-		display: "none"
-	}
-}));
 
 interface Props extends RouteComponentProps {
 	isLogged: boolean;
@@ -43,7 +36,6 @@ const PostModal: React.FC<Props> = (props) => {
 		handleCancel
 	} = props;
 
-	const classes = useStyles();
 	const history = useHistory();
 	const {height} = useWindowDimensions();
 	const [show, setShow] = useState<boolean>(false);
@@ -162,8 +154,8 @@ const PostModal: React.FC<Props> = (props) => {
 							helperText={errorMsg}
 						/>
 						<img
-							src={photo && photo.eager[0].secure_url}
-							alt="uploaded"
+							src={photo.eager[0].secure_url}
+							alt=""
 							style={{
 								objectFit: "scale-down",
 								objectPosition: "50% 50%",
@@ -184,7 +176,7 @@ const PostModal: React.FC<Props> = (props) => {
 						>
 							<input
 								accept="image/*"
-								className={classes.input}
+								style={{display: "none"}}
 								id="outlined-button-file"
 								type="file"
 								onChange={onUpload}

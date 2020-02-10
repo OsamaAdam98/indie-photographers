@@ -22,7 +22,6 @@ import DoneAllIcon from "@material-ui/icons/DoneAll";
 import ImageIcon from "@material-ui/icons/Image";
 import WorkIcon from "@material-ui/icons/Work";
 import BeachAccessIcon from "@material-ui/icons/BeachAccess";
-import {Skeleton} from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -44,7 +43,9 @@ const Profile: React.FC<Props> = (props) => {
 	const [hasMore, setHasMore] = useState<boolean>(false);
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [openError, setOpenError] = useState<boolean>(false);
-	const [severity, setSeverity] = useState<string>("");
+	const [severity, setSeverity] = useState<
+		"success" | "info" | "warning" | "error" | undefined
+	>(undefined);
 	const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
 
 	const {currentUser, match} = props;
@@ -177,7 +178,6 @@ const Profile: React.FC<Props> = (props) => {
 							<PostMedia
 								{...props}
 								feedPost={feedPost}
-								isLoading={isLoading}
 								currentUser={currentUser}
 								handleDelete={handleDelete}
 							/>
@@ -190,7 +190,6 @@ const Profile: React.FC<Props> = (props) => {
 							<PostMedia
 								{...props}
 								feedPost={feedPost}
-								isLoading={isLoading}
 								currentUser={currentUser}
 								handleDelete={handleDelete}
 							/>
@@ -202,70 +201,66 @@ const Profile: React.FC<Props> = (props) => {
 
 	return (
 		<div className="container">
-			<Paper className="main-block">
-				<div className="cover-photo" />
-				{isLoading ? (
-					<Skeleton
-						height="100%"
-						width="auto"
-						variant="circle"
-						className="profile-photo"
-					/>
-				) : (
-					<PhotoPreview
-						{...props}
-						photo={user && user.profilePicture}
-						alt={user && user.username}
-						round={true}
-					/>
-				)}
-				<div className="tagline">
-					<Typography variant="h5">{user && user.username}</Typography>
-					<Typography
-						style={{
-							fontStyle: "italic"
-						}}
-					>
-						<span className="highlight">title</span>
-					</Typography>
-				</div>
-				<div className="main-info">
-					<Typography>
-						Irure culpa sint tempor Lorem Lorem eu eu consequat in elit. Laborum
-						id magna mollit pariatur. Incididunt velit mollit sit aliqua duis
-						esse nisi velit esse ad occaecat voluptate aliqua esse. Adipisicing
-						pariatur sint consequat ea et pariatur sint nisi anim.
-					</Typography>
-				</div>
-			</Paper>
-			<Paper className="details-block">
-				<List className={classes.root}>
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<ImageIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary="Placeholder" secondary="Placeholder" />
-					</ListItem>
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<WorkIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary="Placeholder" secondary="Placeholder" />
-					</ListItem>
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<BeachAccessIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary="Placeholder" secondary="Placeholder" />
-					</ListItem>
-				</List>
-			</Paper>
+			{user ? (
+				<>
+					<Paper className="main-block">
+						<div className="cover-photo" />
+						<PhotoPreview
+							photo={user.profilePicture}
+							alt={user.username}
+							round={true}
+						/>
+						<div className="tagline">
+							<Typography variant="h5">{user.username}</Typography>
+							<Typography
+								style={{
+									fontStyle: "italic"
+								}}
+							>
+								<span className="highlight">title</span>
+							</Typography>
+						</div>
+						<div className="main-info">
+							<Typography>
+								Irure culpa sint tempor Lorem Lorem eu eu consequat in elit.
+								Laborum id magna mollit pariatur. Incididunt velit mollit sit
+								aliqua duis esse nisi velit esse ad occaecat voluptate aliqua
+								esse. Adipisicing pariatur sint consequat ea et pariatur sint
+								nisi anim.
+							</Typography>
+						</div>
+					</Paper>
+					<Paper className="details-block">
+						<List className={classes.root}>
+							<ListItem>
+								<ListItemAvatar>
+									<Avatar>
+										<ImageIcon />
+									</Avatar>
+								</ListItemAvatar>
+								<ListItemText primary="Placeholder" secondary="Placeholder" />
+							</ListItem>
+							<ListItem>
+								<ListItemAvatar>
+									<Avatar>
+										<WorkIcon />
+									</Avatar>
+								</ListItemAvatar>
+								<ListItemText primary="Placeholder" secondary="Placeholder" />
+							</ListItem>
+							<ListItem>
+								<ListItemAvatar>
+									<Avatar>
+										<BeachAccessIcon />
+									</Avatar>
+								</ListItemAvatar>
+								<ListItemText primary="Placeholder" secondary="Placeholder" />
+							</ListItem>
+						</List>
+					</Paper>
+				</>
+			) : null}
+
 			<div className="post-block">
 				{postMedia}
 				{!hasMore && !isLoading ? (

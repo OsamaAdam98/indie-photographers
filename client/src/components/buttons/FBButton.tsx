@@ -42,13 +42,19 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function FBButton(props) {
+interface Props {
+	setUser: React.Dispatch<React.SetStateAction<User>>;
+	handleClose: () => void;
+	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const FBButton: React.FC<Props> = (props) => {
 	const {setUser, handleClose, setIsLogged} = props;
 	const classes = useStyles();
 
 	const componentClicked = () => console.log("Signing in using facebook.");
 
-	const responseFacebook = (res) => {
+	const responseFacebook = (res: any) => {
 		axios
 			.post("/api/auth/facebook-login", res)
 			.then((res) => {
@@ -78,7 +84,7 @@ export default function FBButton(props) {
 				onClick={componentClicked}
 				callback={responseFacebook}
 				disableMobileRedirect={true}
-				render={(renderProps) => (
+				render={(renderProps: any) => (
 					<Button
 						onClick={renderProps.onClick}
 						variant="contained"
@@ -99,4 +105,6 @@ export default function FBButton(props) {
 			/>
 		</>
 	);
-}
+};
+
+export default FBButton;

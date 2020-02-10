@@ -34,7 +34,9 @@ const App: React.FC = () => {
 	);
 	const [openError, setOpenError] = useState<boolean>(false);
 	const [errorMsg, setErrorMsg] = useState<string>("");
-	const [severity, setSeverity] = useState<string>("");
+	const [severity, setSeverity] = useState<
+		"success" | "info" | "warning" | "error" | undefined
+	>(undefined);
 	const [pwa, setPwa] = useState<any>();
 	const [showBtn, setShowBtn] = useState<boolean>(false);
 	const [isLight, setIsLight] = useState<boolean>(
@@ -43,7 +45,7 @@ const App: React.FC = () => {
 			: false
 	);
 
-	const theme: Theme = {
+	const theme: customTheme = {
 		darkTheme: {
 			palette: {
 				type: "dark",
@@ -154,7 +156,7 @@ const App: React.FC = () => {
 					setIsLight={setIsLight}
 				/>
 				<Switch>
-					<Route exact path="/" render={(props) => <Home {...props} />} />
+					<Route exact path="/" render={() => <Home />} />
 					<Route
 						path="/profile/:id"
 						render={(props) => (

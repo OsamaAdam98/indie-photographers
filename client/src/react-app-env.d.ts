@@ -4,14 +4,16 @@ declare module "*.jpg" {
 	export = value;
 }
 
+declare module "react-facebook-login/dist/facebook-login-render-props";
+
 interface User {
 	admin: boolean;
-	email?: string;
+	email: string;
 	profilePicture?: string;
-	registerDate?: Date;
-	username?: string;
+	registerDate: Date;
+	username: string;
 	__v?: number;
-	_id?: string;
+	_id: string;
 }
 
 interface SubUser {
@@ -19,7 +21,7 @@ interface SubUser {
 	password: string;
 }
 
-interface Theme {
+interface customTheme {
 	darkTheme?: object;
 	lightTheme?: object;
 }

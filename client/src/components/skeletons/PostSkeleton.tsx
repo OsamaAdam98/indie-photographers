@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 		height: "15.625rem"
 	}
 }));
-export default function PostSkeleton() {
+const PostSkeleton: React.FC = () => {
 	const classes = useStyles();
 
 	return (
@@ -47,4 +47,6 @@ export default function PostSkeleton() {
 			</CardActions>
 		</Card>
 	);
-}
+};
+
+export default PostSkeleton;

@@ -1,9 +1,9 @@
 import React from "react";
 import axios from "axios";
 import {GoogleLogin} from "react-google-login";
-import {makeStyles, Typography} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	gBtn: {
 		width: "100%"
 	},
@@ -15,12 +15,18 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function GoogleBtn(props) {
+interface Props {
+	setUser: React.Dispatch<React.SetStateAction<User>>;
+	handleClose: () => void;
+	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const GoogleBtn: React.FC<Props> = (props) => {
 	const {setUser, handleClose, setIsLogged} = props;
 
 	const classes = useStyles();
 
-	const onResponse = (res) => {
+	const onResponse = (res: any) => {
 		axios
 			.post("/api/auth/google-login", res)
 			.then((res) => {
@@ -47,14 +53,11 @@ export default function GoogleBtn(props) {
 			onSuccess={onResponse}
 			onFailure={onResponse}
 			cookiePolicy={"single_host_origin"}
-			buttonText={
-				<Typography variant="button" className={classes.gType}>
-					Google
-				</Typography>
-			}
+			buttonText={"Google"}
 			className={classes.gBtn}
-			icon={true}
 			theme="dark"
 		/>
 	);
-}
+};
+
+export default GoogleBtn;

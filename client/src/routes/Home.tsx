@@ -2,7 +2,7 @@ import React from "react";
 import "../css/home.css";
 import * as homeCover from "../assets/home-cover.jpg";
 
-export default function Home() {
+const Home = () => {
 	return (
 		<div className="home-container">
 			<img className="main-img" alt="Home cover" src={homeCover} />
@@ -11,4 +11,6 @@ export default function Home() {
 			</h2>
 		</div>
 	);
-}
+};
+
+export default Home;

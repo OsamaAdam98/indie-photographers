@@ -1,5 +1,5 @@
 import React, {useState, memo} from "react";
-import {Link} from "react-router-dom";
+import {Link, RouteComponentProps} from "react-router-dom";
 import axios from "axios";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import {
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-interface Props {
+interface Props extends RouteComponentProps<MatchParams> {
 	currentUser: User;
 	feedPost: Post;
 	handleDelete: (id: string) => void;
@@ -226,7 +226,6 @@ const PostMedia: React.FC<Props> = (props) => {
 							photo={feedPost.photo}
 							alt={feedPost.user.username}
 							maxHeight={250}
-							{...props}
 						/>
 					</CardMedia>
 				) : (
@@ -236,7 +235,6 @@ const PostMedia: React.FC<Props> = (props) => {
 					liked={liked}
 					users={post && post.likes.map((like) => like.user)}
 					currentUser={currentUser}
-					{...props}
 				/>
 				<CardActions disableSpacing>
 					<IconButton

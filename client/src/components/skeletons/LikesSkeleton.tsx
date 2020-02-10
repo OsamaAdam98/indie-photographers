@@ -2,9 +2,13 @@ import React from "react";
 import {Skeleton} from "@material-ui/lab";
 import {ListItem, ListItemText, ListItemAvatar} from "@material-ui/core";
 
-export default function LikesSkeleton(props) {
+interface Props {
+	likes: number;
+}
+
+const LikesSkeleton: React.FC<Props> = (props) => {
 	const {likes} = props;
-	let skeleton = [];
+	let skeleton: any = [];
 
 	for (let i = 0; i < likes; i++) {
 		skeleton = [
@@ -22,4 +26,6 @@ export default function LikesSkeleton(props) {
 	}
 
 	return <>{skeleton}</>;
-}
+};
+
+export default LikesSkeleton;

@@ -1,15 +1,27 @@
 import React from "react";
-import MuiAlert from "@material-ui/lab/Alert";
+import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
 import {Snackbar} from "@material-ui/core";
 
-function Alert(props) {
+const Alert = (props: AlertProps) => {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
+
+interface Props {
+	severity: "success" | "info" | "warning" | "error" | undefined;
+	openError: boolean;
+	setOpenError: React.Dispatch<React.SetStateAction<boolean>>;
+	errorMsg: string;
 }
 
-export default function SnackAlert(props) {
+const SnackAlert: React.FC<Props> = (props) => {
 	const {severity, openError, setOpenError, errorMsg} = props;
 
-	const handleClose = (event, reason) => {
+	const handleClose = (
+		event:
+			| React.SyntheticEvent<any, Event>
+			| React.MouseEvent<HTMLDivElement, MouseEvent>,
+		reason?: string
+	) => {
 		if (reason === "clickaway") {
 			return;
 		}
@@ -33,4 +45,6 @@ export default function SnackAlert(props) {
 			</Snackbar>
 		</>
 	);
-}
+};
+
+export default SnackAlert;

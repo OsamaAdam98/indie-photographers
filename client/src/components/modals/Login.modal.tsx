@@ -36,10 +36,10 @@ const Login: React.FC<Props> = (props) => {
 	const classes = useStyles();
 	const history = useHistory();
 
-	const [show, setShow] = useState(false);
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [errorMsg, setErrorMsg] = useState("");
+	const [show, setShow] = useState<boolean>(false);
+	const [email, setEmail] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
+	const [errorMsg, setErrorMsg] = useState<string>("");
 
 	useEffect(() => {
 		if (props.location.hash !== "#login-window") setShow(false);

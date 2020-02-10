@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {useHistory, withRouter} from "react-router-dom";
+import {useHistory, withRouter, RouteComponentProps} from "react-router-dom";
 import {Avatar, Tab, Tabs, Paper, makeStyles} from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import ViewDayIcon from "@material-ui/icons/ViewDay";
@@ -14,9 +14,13 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function BottomBar(props) {
+interface Props extends RouteComponentProps<MatchParams> {
+	user: User;
+}
+
+const BottomBar: React.FC<Props> = (props) => {
 	const {user} = props;
-	const [value, setValue] = useState(false);
+	const [value, setValue] = useState<number | boolean>(0);
 
 	const classes = useStyles();
 	const {width} = useWindowDimensions();
@@ -43,7 +47,7 @@ function BottomBar(props) {
 
 	const history = useHistory();
 
-	const handleChange = (event, val) => {
+	const handleChange = (event: any, val: number | boolean) => {
 		setValue(val);
 
 		switch (val) {
@@ -118,6 +122,6 @@ function BottomBar(props) {
 			</Tabs>
 		</Paper>
 	);
-}
+};
 
 export default withRouter(BottomBar);

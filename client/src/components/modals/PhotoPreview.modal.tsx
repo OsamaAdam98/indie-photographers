@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {useHistory} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 import {Dialog, makeStyles} from "@material-ui/core";
 
 const useStyles = makeStyles({
@@ -17,17 +17,25 @@ const useStyles = makeStyles({
 	}
 });
 
-export default function PhotoPreview(props) {
+interface Props {
+	photo: string | undefined | null;
+	alt: string;
+	maxHeight?: number;
+	round?: boolean;
+}
+
+const PhotoPreview: React.FC<Props> = (props) => {
 	const {photo, maxHeight, round, alt} = props;
 
 	const [show, setShow] = useState(false);
 
 	const history = useHistory();
+	const location = useLocation();
 	const classes = useStyles();
 
 	useEffect(() => {
-		if (props.location.hash !== "#photo-preview") setShow(false);
-	}, [props.location.hash]);
+		if (location.hash !== "#photo-preview") setShow(false);
+	}, [location.hash]);
 
 	const handleShow = () => {
 		setShow(true);
@@ -41,14 +49,14 @@ export default function PhotoPreview(props) {
 
 	const ImagePreview = () => (
 		<img
-			src={photo}
+			src={photo ? photo : ""}
 			alt={alt}
 			onClick={handleShow}
 			style={{
 				objectFit: "cover",
 				objectPosition: "50% 50%",
 				width: "100%",
-				maxHeight: maxHeight
+				maxHeight: maxHeight ? maxHeight : ""
 			}}
 			className={`hover-img ${round ? "profile-photo" : ""}`}
 		/>
@@ -56,7 +64,7 @@ export default function PhotoPreview(props) {
 
 	const FullImage = () => (
 		<img
-			src={photo}
+			src={photo ? photo : ""}
 			alt={`max width and height`}
 			className={classes.fullPrev}
 		/>
@@ -79,4 +87,6 @@ export default function PhotoPreview(props) {
 			</Dialog>
 		</>
 	);
-}
+};
+
+export default PhotoPreview;
