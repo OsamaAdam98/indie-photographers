@@ -43,9 +43,7 @@ const Profile: React.FC<Props> = (props) => {
 	const [hasMore, setHasMore] = useState<boolean>(true);
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [openError, setOpenError] = useState<boolean>(false);
-	const [severity, setSeverity] = useState<
-		"success" | "info" | "warning" | "error" | undefined
-	>(undefined);
+	const [severity, setSeverity] = useState<Severity>(undefined);
 	const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
 
 	const {currentUser, match} = props;
@@ -72,7 +70,6 @@ const Profile: React.FC<Props> = (props) => {
 	useEffect(() => {
 		setIsLoading(true);
 		if (hasMore) {
-			console.log("Here");
 			if (match.params.id) {
 				let cachedData: Post[] = JSON.parse(
 					localStorage.getItem(`${match.params.id}/page${page}`) as string

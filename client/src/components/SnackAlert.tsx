@@ -7,7 +7,7 @@ const Alert = (props: AlertProps) => {
 };
 
 interface Props {
-	severity: "success" | "info" | "warning" | "error" | undefined;
+	severity: Severity;
 	openError: boolean;
 	setOpenError: React.Dispatch<React.SetStateAction<boolean>>;
 	errorMsg: string;

@@ -5,13 +5,13 @@ import {Dialog, makeStyles} from "@material-ui/core";
 const useStyles = makeStyles({
 	fullPrev: {
 		objectFit: "contain",
-		objectPosition: "50% 50%",
-		maxWidth: `100vw`,
-		maxHeight: `100vh`,
-		overflow: "hidden"
+		maxWidth: "100vw",
+		maxHeight: "100vh",
+		margin: "auto"
 	},
 	dialog: {
 		display: "flex",
+		flexDirection: "row",
 		justifyContent: "center",
 		alignContent: "center"
 	}
@@ -75,7 +75,7 @@ const PhotoPreview: React.FC<Props> = (props) => {
 			<ImagePreview />
 			<Dialog
 				open={show}
-				fullWidth={true}
+				fullScreen
 				className={classes.dialog}
 				onClick={handleClose}
 				transitionDuration={{

@@ -85,3 +85,5 @@ interface Photo {
 interface MatchParams {
 	id: string;
 }
+
+type Severity = "success" | "info" | "warning" | "error" | undefined;

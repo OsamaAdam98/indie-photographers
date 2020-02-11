@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import axios from "axios";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import {Button, makeStyles, Typography} from "@material-ui/core";
+import {SnackAlert} from "../index";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -52,6 +53,10 @@ const FBButton: React.FC<Props> = (props) => {
 	const {setUser, handleClose, setIsLogged} = props;
 	const classes = useStyles();
 
+	const [errorMsg, setErrorMsg] = useState<string>("");
+	const [openError, setOpenError] = useState<boolean>(false);
+	const [severity, setSeverity] = useState<Severity>(undefined);
+
 	const componentClicked = () => console.log("Signing in using facebook.");
 
 	const responseFacebook = (res: any) => {
@@ -72,7 +77,11 @@ const FBButton: React.FC<Props> = (props) => {
 					setUser(user);
 				}
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				setErrorMsg("Login failed!");
+				setSeverity("error");
+				setOpenError(true);
+			});
 	};
 
 	return (
@@ -102,6 +111,12 @@ const FBButton: React.FC<Props> = (props) => {
 						</Typography>
 					</Button>
 				)}
+			/>
+			<SnackAlert
+				errorMsg={errorMsg}
+				openError={openError}
+				setOpenError={setOpenError}
+				severity={severity}
 			/>
 		</>
 	);

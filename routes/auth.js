@@ -35,67 +35,72 @@ router.post("/", (req, res) => {
 });
 
 router.post("/facebook-login", (req, res) => {
-	const {email, name} = req.body;
-	const {url} = req.body.picture.data;
+	if (req.body.status !== "unknown") {
+		console.log(req.body);
+		const {email, name} = req.body;
+		const {url} = req.body.picture.data;
 
-	Users.findOne({email}).then((user) => {
-		if (user) {
-			jwt.sign({id: user._id}, process.env.jwtSecret, (err, token) => {
-				if (err) throw err;
-				res.json({
-					token,
-					user: {
-						id: user._id,
-						username: user.username,
-						email: user.email,
-						profilePicture: user.profilePicture,
-						admin: user.admin
-					}
-				});
-			});
-			Users.updateOne({email}, {$set: {profilePicture: url}}, (err) => {
-				if (err) throw err;
-			});
-		} else {
-			const newUser = new Users({
-				username: name,
-				email: email,
-				password: req.body.accessToken,
-				profilePicture: url
-			});
+		Users.findOne({email})
+			.then((user) => {
+				if (user) {
+					jwt.sign({id: user._id}, process.env.jwtSecret, (err, token) => {
+						if (err) throw err;
+						res.json({
+							token,
+							user: {
+								id: user._id,
+								username: user.username,
+								email: user.email,
+								profilePicture: user.profilePicture,
+								admin: user.admin
+							}
+						});
+					});
+					Users.updateOne({email}, {$set: {profilePicture: url}}, (err) => {
+						if (err) throw err;
+					});
+				} else {
+					const newUser = new Users({
+						username: name,
+						email: email,
+						password: req.body.accessToken,
+						profilePicture: url
+					});
 
-			bcrypt.genSalt(10, (err, salt) => {
-				if (err) throw err;
-				bcrypt.hash(newUser.password, salt, (err, hash) => {
-					if (err) throw err;
-					newUser.password = hash;
-					newUser
-						.save()
-						.then((user) => {
-							jwt.sign(
-								{id: user._id},
-								process.env.jwtSecret,
-								{expiresIn: 3600},
-								(err, token) => {
-									if (err) throw err;
-									res.json({
-										token,
-										user: {
-											id: user._id,
-											username: user.username,
-											email: user.email,
-											admin: user.admin,
-											profilePicture: user.profilePicture
+					bcrypt.genSalt(10, (err, salt) => {
+						if (err) throw err;
+						bcrypt.hash(newUser.password, salt, (err, hash) => {
+							if (err) throw err;
+							newUser.password = hash;
+							newUser
+								.save()
+								.then((user) => {
+									jwt.sign(
+										{id: user._id},
+										process.env.jwtSecret,
+										{expiresIn: 3600},
+										(err, token) => {
+											if (err) throw err;
+											res.json({
+												token,
+												user: {
+													id: user._id,
+													username: user.username,
+													email: user.email,
+													admin: user.admin,
+													profilePicture: user.profilePicture
+												}
+											});
 										}
-									});
-								}
-							);
-						})
-						.catch((err) => res.status(400).json(err));
-				});
-			});
-		}
-	});
+									);
+								})
+								.catch((err) => res.status(400).json(err));
+						});
+					});
+				}
+			})
+			.catch(() => res.status(400).json("Sign in failed!"));
+	}
 });
 
 router.post("/google-login", (req, res) => {

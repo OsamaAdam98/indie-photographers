@@ -34,9 +34,7 @@ const App: React.FC = () => {
 	);
 	const [openError, setOpenError] = useState<boolean>(false);
 	const [errorMsg, setErrorMsg] = useState<string>("");
-	const [severity, setSeverity] = useState<
-		"success" | "info" | "warning" | "error" | undefined
-	>(undefined);
+	const [severity, setSeverity] = useState<Severity>(undefined);
 	const [pwa, setPwa] = useState<any>();
 	const [showBtn, setShowBtn] = useState<boolean>(false);
 	const [isLight, setIsLight] = useState<boolean>(

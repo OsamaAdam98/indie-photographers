@@ -41,9 +41,7 @@ const Feed: React.FC<Props> = (props) => {
 	const [hasMore, setHasMore] = useState<boolean>(true);
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [openError, setOpenError] = useState<boolean>(false);
-	const [severity, setSeverity] = useState<
-		"success" | "info" | "warning" | "error" | undefined
-	>(undefined);
+	const [severity, setSeverity] = useState<Severity>(undefined);
 	const [photo, setPhoto] = useState<Photo>({eager: [{secure_url: ""}]});
 	const [isUploading, setIsUploading] = useState<boolean>(false);
 	const [offline, setOffline] = useState<boolean>(false);
@@ -82,7 +80,7 @@ const Feed: React.FC<Props> = (props) => {
 	};
 
 	const handleCancel = () => {
-		if (photo) {
+		if (photo.eager[0].secure_url.trim()) {
 			axios
 				.delete(`/api/feed/delete-photo/${photo.public_id}`)
 				.then((res) => {
