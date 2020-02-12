@@ -1,27 +1,27 @@
-import React, {useState, useEffect, useRef} from "react";
-import {RouteComponentProps} from "react-router-dom";
-import axios from "axios";
 import {
-	Paper,
-	Typography,
+	Avatar,
 	List,
 	ListItem,
 	ListItemAvatar,
 	ListItemText,
-	Avatar,
-	makeStyles
+	makeStyles,
+	Paper,
+	Typography
 } from "@material-ui/core";
-import "../css/profile.css";
-import {
-	PostMedia,
-	PostSkeleton,
-	SnackAlert,
-	PhotoPreview
-} from "../components/index";
+import BeachAccessIcon from "@material-ui/icons/BeachAccess";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import ImageIcon from "@material-ui/icons/Image";
 import WorkIcon from "@material-ui/icons/Work";
-import BeachAccessIcon from "@material-ui/icons/BeachAccess";
+import axios from "axios";
+import React, {useEffect, useRef, useState} from "react";
+import {RouteComponentProps} from "react-router-dom";
+import {
+	PhotoPreview,
+	PostMedia,
+	PostSkeleton,
+	SnackAlert
+} from "../components/index";
+import "../css/profile.css";
 
 const useStyles = makeStyles((theme) => ({
 	root: {

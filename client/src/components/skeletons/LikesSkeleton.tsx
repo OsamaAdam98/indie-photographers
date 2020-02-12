@@ -1,6 +1,6 @@
-import React from "react";
+import {ListItem, ListItemAvatar, ListItemText} from "@material-ui/core";
 import {Skeleton} from "@material-ui/lab";
-import {ListItem, ListItemText, ListItemAvatar} from "@material-ui/core";
+import React from "react";
 
 interface Props {
 	likes: number;

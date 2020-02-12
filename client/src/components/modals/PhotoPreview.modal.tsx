@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
-import {useHistory, useLocation} from "react-router-dom";
 import {Dialog, makeStyles} from "@material-ui/core";
+import React, {useEffect, useState} from "react";
+import {useHistory, useLocation} from "react-router-dom";
 
 const useStyles = makeStyles({
 	fullPrev: {

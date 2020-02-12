@@ -1,7 +1,7 @@
+import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import SettingsIcon from "@material-ui/icons/Settings";
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
-import {Menu, MenuItem, IconButton} from "@material-ui/core";
-import SettingsIcon from "@material-ui/icons/Settings";
 
 interface Props {
 	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;

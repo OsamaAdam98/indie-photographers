@@ -1,9 +1,9 @@
-import React, {useState, useEffect, useRef, useCallback} from "react";
-import {useHistory, useLocation, RouteComponentProps} from "react-router-dom";
-import axios from "axios";
-import DoneAllIcon from "@material-ui/icons/DoneAll";
-import {PostModal, PostSkeleton, SnackAlert, PostMedia} from "../components";
 import {LinearProgress, makeStyles} from "@material-ui/core";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
+import axios from "axios";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {RouteComponentProps, useHistory, useLocation} from "react-router-dom";
+import {PostMedia, PostModal, PostSkeleton, SnackAlert} from "../components";
 import "../css/feed.css";
 
 const useStyles = makeStyles({

@@ -1,7 +1,7 @@
-import React from "react";
-import axios from "axios";
-import {GoogleLogin} from "react-google-login";
 import {makeStyles} from "@material-ui/core";
+import axios from "axios";
+import React from "react";
+import {GoogleLogin} from "react-google-login";
 
 const useStyles = makeStyles(() => ({
 	gBtn: {

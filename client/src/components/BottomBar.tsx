@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from "react";
-import {useHistory, withRouter, RouteComponentProps} from "react-router-dom";
-import {Avatar, Tab, Tabs, Paper, makeStyles} from "@material-ui/core";
+import {Avatar, makeStyles, Paper, Tab, Tabs} from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
-import ViewDayIcon from "@material-ui/icons/ViewDay";
 import SettingsIcon from "@material-ui/icons/Settings";
+import ViewDayIcon from "@material-ui/icons/ViewDay";
+import React, {useEffect, useState} from "react";
+import {RouteComponentProps, useHistory, withRouter} from "react-router-dom";
 import {useWindowDimensions} from "./index";
 
 const useStyles = makeStyles((theme) => ({

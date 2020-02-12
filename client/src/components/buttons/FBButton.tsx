@@ -1,8 +1,8 @@
+import {Button, makeStyles, Typography} from "@material-ui/core";
+import FacebookIcon from "@material-ui/icons/Facebook";
+import axios from "axios";
 import React, {useState} from "react";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import axios from "axios";
-import FacebookIcon from "@material-ui/icons/Facebook";
-import {Button, makeStyles, Typography} from "@material-ui/core";
 import {SnackAlert} from "../index";
 
 const useStyles = makeStyles((theme) => ({

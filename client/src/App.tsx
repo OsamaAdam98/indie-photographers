@@ -1,21 +1,21 @@
-import React, {useState, useEffect, lazy, Suspense} from "react";
-import axios from "axios";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import "./css/style.css";
-import "./css/feed.css";
-import {MuiThemeProvider, createMuiTheme} from "@material-ui/core";
+import {createMuiTheme, MuiThemeProvider} from "@material-ui/core";
 import {yellow} from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import axios from "axios";
+import React, {lazy, Suspense, useEffect, useState} from "react";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {
 	Home,
 	MenuAppBar,
-	SnackAlert,
-	useWindowDimensions,
-	Settings,
 	NotFound,
 	PostSkeleton,
-	ProfileSkeleton
+	ProfileSkeleton,
+	Settings,
+	SnackAlert,
+	useWindowDimensions
 } from "./components";
+import "./css/feed.css";
+import "./css/style.css";
 
 const Feed = lazy(() => import("./routes/Feed"));
 const Profile = lazy(() => import("./routes/Profile"));

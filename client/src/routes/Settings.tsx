@@ -1,5 +1,5 @@
+import {Button, Container, Typography} from "@material-ui/core";
 import React from "react";
-import {Container, Typography, Button} from "@material-ui/core";
 import {LightSwitch} from "../components";
 
 interface Props {

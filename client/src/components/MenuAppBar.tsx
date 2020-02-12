@@ -1,16 +1,16 @@
-import React from "react";
-import {withRouter, Link, RouteComponentProps} from "react-router-dom";
 import {
 	AppBar,
+	Avatar,
+	makeStyles,
+	Slide,
 	Toolbar,
 	Typography,
-	Avatar,
-	useScrollTrigger,
-	Slide,
-	makeStyles
+	useScrollTrigger
 } from "@material-ui/core";
+import React from "react";
+import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import {BottomBar, LightSwitch, Login, useWindowDimensions} from ".";
 import logo from "../assets/logo.png";
-import {useWindowDimensions, Login, LightSwitch, BottomBar} from ".";
 
 const useStyles: any = makeStyles((theme: any) => ({
 	appBar: {

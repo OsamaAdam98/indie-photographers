@@ -1,17 +1,17 @@
-import React, {useState, useEffect} from "react";
-import {useHistory, RouteComponentProps} from "react-router-dom";
-import axios from "axios";
-import {FAB} from "../index";
-import EditIcon from "@material-ui/icons/Edit";
-import useWindowDimensions from "../utilities/WindowDimensions";
 import {
+	Button,
 	Dialog,
 	DialogActions,
-	DialogTitle,
 	DialogContent,
-	TextField,
-	Button
+	DialogTitle,
+	TextField
 } from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
+import axios from "axios";
+import React, {useEffect, useState} from "react";
+import {RouteComponentProps, useHistory} from "react-router-dom";
+import {FAB} from "../index";
+import useWindowDimensions from "../utilities/WindowDimensions";
 
 interface Props extends RouteComponentProps {
 	isLogged: boolean;

@@ -1,24 +1,24 @@
-import React, {useState, memo} from "react";
-import {Link, RouteComponentProps} from "react-router-dom";
-import axios from "axios";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import {
+	Avatar,
+	Card,
 	CardActions,
+	CardContent,
+	CardHeader,
+	CardMedia,
+	IconButton,
+	makeStyles,
 	Menu,
 	MenuItem,
-	makeStyles,
-	Card,
-	CardHeader,
-	CardContent,
-	CardMedia,
-	Avatar,
-	Typography,
-	IconButton
+	Typography
 } from "@material-ui/core";
-import ShareIcon from "@material-ui/icons/Share";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import {Likes, PhotoPreview} from "./index";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import ShareIcon from "@material-ui/icons/Share";
+import axios from "axios";
 import moment from "moment";
+import React, {memo, useState} from "react";
+import {Link, RouteComponentProps} from "react-router-dom";
+import {Likes, PhotoPreview} from "./index";
 
 const useStyles = makeStyles((theme) => ({
 	card: {

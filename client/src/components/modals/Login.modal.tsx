@@ -1,17 +1,17 @@
-import React, {useState, useEffect} from "react";
-import {useHistory, RouteComponentProps} from "react-router-dom";
-import axios from "axios";
 import {
+	Button,
 	Dialog,
 	DialogActions,
 	DialogContent,
 	DialogTitle,
-	TextField,
-	Button,
+	Grid,
 	makeStyles,
-	Grid
+	TextField
 } from "@material-ui/core";
-import {FBButton, ProfileAvatar, GoogleBtn} from "..";
+import axios from "axios";
+import React, {useEffect, useState} from "react";
+import {RouteComponentProps, useHistory} from "react-router-dom";
+import {FBButton, GoogleBtn, ProfileAvatar} from "..";
 
 const useStyles = makeStyles((theme) => ({
 	root: {

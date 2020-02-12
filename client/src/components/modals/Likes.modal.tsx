@@ -1,21 +1,21 @@
-import React, {useState, useEffect} from "react";
-import {Link, useHistory, useLocation} from "react-router-dom";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import {
-	IconButton,
-	List,
-	ListItem,
-	ListItemText,
-	ListItemAvatar,
+	Avatar,
+	Badge,
 	Dialog,
 	DialogContent,
 	DialogTitle,
-	Avatar,
 	Divider,
-	makeStyles,
-	Badge
+	IconButton,
+	List,
+	ListItem,
+	ListItemAvatar,
+	ListItemText,
+	makeStyles
 } from "@material-ui/core";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import {AvatarGroup} from "@material-ui/lab";
+import React, {useEffect, useState} from "react";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import {useWindowDimensions} from "..";
 
 const useStyles = makeStyles((theme) => ({
