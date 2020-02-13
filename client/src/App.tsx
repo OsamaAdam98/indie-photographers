@@ -155,16 +155,16 @@ const App: React.FC = () => {
 					<Route exact path="/" render={() => <Home />} />
 					<Route
 						path="/profile/:id"
-						render={(props) => (
+						render={() => (
 							<Suspense fallback={<ProfileSkeleton />}>
-								<Profile {...props} currentUser={user} />
+								<Profile currentUser={user} />
 							</Suspense>
 						)}
 					/>
 					<Route
 						exact
 						path="/feed"
-						render={(props) => (
+						render={() => (
 							<Suspense
 								fallback={
 									<div className="feed-container">
@@ -174,16 +174,15 @@ const App: React.FC = () => {
 									</div>
 								}
 							>
-								<Feed {...props} isLogged={isLogged} user={user} />
+								<Feed isLogged={isLogged} user={user} />
 							</Suspense>
 						)}
 					/>
 					<Route
 						exact
 						path="/settings"
-						render={(props) => (
+						render={() => (
 							<Settings
-								{...props}
 								isLight={isLight}
 								setIsLight={setIsLight}
 								handleClick={handleClick}

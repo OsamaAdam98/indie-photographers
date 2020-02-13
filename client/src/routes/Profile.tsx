@@ -14,7 +14,7 @@ import ImageIcon from "@material-ui/icons/Image";
 import WorkIcon from "@material-ui/icons/Work";
 import axios from "axios";
 import React, {useEffect, useRef, useState} from "react";
-import {RouteComponentProps} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {
 	PhotoPreview,
 	PostMedia,
@@ -31,11 +31,11 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-interface Props extends RouteComponentProps<MatchParams> {
+interface Props {
 	currentUser: User;
 }
 
-const Profile: React.FC<Props> = (props) => {
+const Profile: React.FC<Props> = ({currentUser}) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -46,9 +46,8 @@ const Profile: React.FC<Props> = (props) => {
 	const [severity, setSeverity] = useState<Severity>(undefined);
 	const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
 
-	const {currentUser, match} = props;
-
 	const classes = useStyles();
+	const params: {id?: string} = useParams();
 
 	const handleDelete = (id: string) => {
 		const token: string | null = localStorage.getItem("token");
@@ -70,21 +69,21 @@ const Profile: React.FC<Props> = (props) => {
 	useEffect(() => {
 		setIsLoading(true);
 		if (hasMore) {
-			if (match.params.id) {
+			if (params.id) {
 				let cachedData: Post[] = JSON.parse(
-					localStorage.getItem(`${match.params.id}/page${page}`) as string
+					localStorage.getItem(`${params.id}/page${page}`) as string
 				);
 				if (cachedData) {
 					setPosts((prevPosts) =>
 						[...prevPosts, ...cachedData].filter(
-							(post) => post.user._id === match.params.id
+							(post) => post.user._id === params.id
 						)
 					);
 					setIsLoading(false);
 					setHasMore(cachedData.length === 10);
 				} else {
 					axios
-						.get(`/api/feed/user/${match.params.id}/?page=${page}`)
+						.get(`/api/feed/user/${params.id}/?page=${page}`)
 						.then((res) => {
 							const data: Post[] = res.data;
 
@@ -92,9 +91,9 @@ const Profile: React.FC<Props> = (props) => {
 
 							setHasMore(data.length === 10);
 							localStorage.setItem(
-								`${match.params.id}/page${page}`,
+								`${params.id}/page${page}`,
 								JSON.stringify(
-									data.filter((post) => post.user._id === match.params.id)
+									data.filter((post) => post.user._id === params.id)
 								)
 							);
 							setErrorMsg("");
@@ -123,21 +122,21 @@ const Profile: React.FC<Props> = (props) => {
 				}
 			}
 		} else setIsLoading(false);
-	}, [page, match.params.id, hasMore]);
+	}, [page, params.id, hasMore]);
 
 	useEffect(() => {
-		if (match.params.id) {
+		if (params.id) {
 			let cachedData: User = JSON.parse(
-				localStorage.getItem(`${match.params.id}`) as string
+				localStorage.getItem(`${params.id}`) as string
 			);
 			if (cachedData) setUser(cachedData);
 
 			axios
-				.get(`/api/users/${match.params.id}`)
+				.get(`/api/users/${params.id}`)
 				.then((res) => {
 					const data: User = res.data;
 					setUser(data);
-					localStorage.setItem(`${match.params.id}`, JSON.stringify(data));
+					localStorage.setItem(`${params.id}`, JSON.stringify(data));
 				})
 				.catch((err) => {
 					if (err) {
@@ -147,7 +146,7 @@ const Profile: React.FC<Props> = (props) => {
 					}
 				});
 		}
-	}, [match.params.id]);
+	}, [params.id]);
 
 	const observer = useRef(
 		new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
@@ -174,7 +173,6 @@ const Profile: React.FC<Props> = (props) => {
 					return (
 						<div ref={setLastElement} key={feedPost._id}>
 							<PostMedia
-								{...props}
 								feedPost={feedPost}
 								currentUser={currentUser}
 								handleDelete={handleDelete}
@@ -186,7 +184,6 @@ const Profile: React.FC<Props> = (props) => {
 					return (
 						<div key={feedPost._id}>
 							<PostMedia
-								{...props}
 								feedPost={feedPost}
 								currentUser={currentUser}
 								handleDelete={handleDelete}

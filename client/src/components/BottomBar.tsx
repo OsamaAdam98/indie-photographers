@@ -3,7 +3,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ViewDayIcon from "@material-ui/icons/ViewDay";
 import React, {useEffect, useState} from "react";
-import {RouteComponentProps, useHistory, withRouter} from "react-router-dom";
+import {useLocation, useHistory} from "react-router-dom";
 import {useWindowDimensions} from "./index";
 
 const useStyles = makeStyles((theme) => ({
@@ -14,19 +14,19 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-interface Props extends RouteComponentProps<MatchParams> {
+interface Props {
 	user: User;
 }
 
-const BottomBar: React.FC<Props> = (props) => {
-	const {user} = props;
+const BottomBar: React.FC<Props> = ({user}) => {
 	const [value, setValue] = useState<number | boolean>(0);
 
 	const classes = useStyles();
+	const location = useLocation();
 	const {width} = useWindowDimensions();
 
 	useEffect(() => {
-		switch (props.location.pathname) {
+		switch (location.pathname) {
 			case "/feed/":
 				setValue(1);
 				break;
@@ -43,7 +43,7 @@ const BottomBar: React.FC<Props> = (props) => {
 				setValue(false);
 				break;
 		}
-	}, [props.location.pathname, user._id]);
+	}, [location.pathname, user._id]);
 
 	const history = useHistory();
 
@@ -55,7 +55,7 @@ const BottomBar: React.FC<Props> = (props) => {
 				history.push("/");
 				break;
 			case 1:
-				if (props.location.pathname === "/feed/")
+				if (location.pathname === "/feed/")
 					window.scroll({
 						top: 0,
 						left: 0,
@@ -64,7 +64,7 @@ const BottomBar: React.FC<Props> = (props) => {
 				history.push("/feed/");
 				break;
 			case 2:
-				if (props.location.pathname === `/profile/${user._id}`)
+				if (location.pathname === `/profile/${user._id}`)
 					window.scroll({
 						top: 0,
 						left: 0,
@@ -124,4 +124,4 @@ const BottomBar: React.FC<Props> = (props) => {
 	);
 };
 
-export default withRouter(BottomBar);
+export default BottomBar;

@@ -2,7 +2,7 @@ import {LinearProgress, makeStyles} from "@material-ui/core";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import axios from "axios";
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import {RouteComponentProps, useHistory, useLocation} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 import {PostMedia, PostModal, PostSkeleton, SnackAlert} from "../components";
 import "../css/feed.css";
 
@@ -23,13 +23,12 @@ const useStyles = makeStyles({
 	}
 });
 
-interface Props extends RouteComponentProps<MatchParams> {
+interface Props {
 	isLogged: boolean;
 	user: User;
 }
 
-const Feed: React.FC<Props> = (props) => {
-	const {isLogged, user} = props;
+const Feed: React.FC<Props> = ({isLogged, user}) => {
 	const classes = useStyles();
 	const history = useHistory();
 	const location = useLocation();
@@ -219,7 +218,6 @@ const Feed: React.FC<Props> = (props) => {
 			return (
 				<div ref={setLastElement} key={feedPost._id}>
 					<PostMedia
-						{...props}
 						feedPost={feedPost}
 						currentUser={user}
 						handleDelete={handleDelete}
@@ -231,7 +229,6 @@ const Feed: React.FC<Props> = (props) => {
 			return (
 				<div key={feedPost._id}>
 					<PostMedia
-						{...props}
 						feedPost={feedPost}
 						currentUser={user}
 						handleDelete={handleDelete}
@@ -244,7 +241,6 @@ const Feed: React.FC<Props> = (props) => {
 	const newPosts = newPost
 		? newPost.map((incoming) => (
 				<PostMedia
-					{...props}
 					feedPost={incoming}
 					currentUser={user}
 					handleDelete={handleDelete}
@@ -274,7 +270,6 @@ const Feed: React.FC<Props> = (props) => {
 					errorMsg={errorMsg}
 				/>
 				<PostModal
-					{...props}
 					isLogged={isLogged}
 					user={user}
 					setNewPost={setNewPost}

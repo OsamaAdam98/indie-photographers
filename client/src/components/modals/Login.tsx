@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import React, {useEffect, useState} from "react";
-import {RouteComponentProps, useHistory} from "react-router-dom";
+import {useLocation, useHistory} from "react-router-dom";
 import {FBButton, GoogleBtn, ProfileAvatar} from "..";
 
 const useStyles = makeStyles((theme) => ({
@@ -24,17 +24,16 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-interface Props extends RouteComponentProps {
+interface Props {
 	isLogged: boolean;
 	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
 	setUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
-const Login: React.FC<Props> = (props) => {
-	const {isLogged, setIsLogged, setUser} = props;
-
+const Login: React.FC<Props> = ({isLogged, setIsLogged, setUser}) => {
 	const classes = useStyles();
 	const history = useHistory();
+	const location = useLocation();
 
 	const [show, setShow] = useState<boolean>(false);
 	const [email, setEmail] = useState<string>("");
@@ -42,13 +41,13 @@ const Login: React.FC<Props> = (props) => {
 	const [errorMsg, setErrorMsg] = useState<string>("");
 
 	useEffect(() => {
-		if (props.location.hash !== "#login-window") setShow(false);
-	}, [props.location.hash]);
+		if (location.hash !== "#login-window") setShow(false);
+	}, [location.hash]);
 
 	const handleClose = () => {
 		setShow(false);
 		setErrorMsg("");
-		if (props.location.hash === "#login-window") history.goBack();
+		if (location.hash === "#login-window") history.goBack();
 	};
 
 	const handleShow = () => {

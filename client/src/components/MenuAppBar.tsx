@@ -8,7 +8,7 @@ import {
 	useScrollTrigger
 } from "@material-ui/core";
 import React from "react";
-import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {BottomBar, LightSwitch, Login, useWindowDimensions} from ".";
 import logo from "../assets/logo.png";
 
@@ -49,8 +49,7 @@ const useStyles: any = makeStyles((theme: any) => ({
 	}
 }));
 
-const HideOnScroll: React.FC = (props) => {
-	const {children} = props;
+const HideOnScroll: React.FC = ({children}) => {
 	const trigger = useScrollTrigger();
 
 	return (
@@ -60,7 +59,7 @@ const HideOnScroll: React.FC = (props) => {
 	);
 };
 
-interface Props extends RouteComponentProps<MatchParams> {
+interface Props {
 	isLogged: boolean;
 	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
 	user: User;
@@ -98,7 +97,6 @@ const MenuAppBar: React.FC<Props> = (props) => {
 							isLogged={isLogged}
 							setIsLogged={setIsLogged}
 							setUser={setUser}
-							{...props}
 						/>
 					</Toolbar>
 				</AppBar>
@@ -110,4 +108,4 @@ const MenuAppBar: React.FC<Props> = (props) => {
 	);
 };
 
-export default withRouter(MenuAppBar);
+export default MenuAppBar;

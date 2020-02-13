@@ -9,11 +9,11 @@ import {
 import EditIcon from "@material-ui/icons/Edit";
 import axios from "axios";
 import React, {useEffect, useState} from "react";
-import {RouteComponentProps, useHistory} from "react-router-dom";
+import {useLocation, useHistory} from "react-router-dom";
 import {FAB} from "../index";
 import useWindowDimensions from "../utilities/WindowDimensions";
 
-interface Props extends RouteComponentProps {
+interface Props {
 	isLogged: boolean;
 	user: User;
 	photo: Photo;
@@ -39,14 +39,15 @@ const PostModal: React.FC<Props> = (props) => {
 	} = props;
 
 	const history = useHistory();
+	const location = useLocation();
 	const {height} = useWindowDimensions();
 	const [show, setShow] = useState<boolean>(false);
 	const [errorMsg, setErrorMsg] = useState<string>(" ");
 	const [msg, setMsg] = useState<string>(" ");
 
 	useEffect(() => {
-		if (props.location.hash !== "#feed-post") setShow(false);
-	}, [props.location.hash]);
+		if (location.hash !== "#feed-post") setShow(false);
+	}, [location.hash]);
 
 	const msgChange = (event: React.ChangeEvent<HTMLInputElement>) =>
 		setMsg(event.target.value);
@@ -54,7 +55,7 @@ const PostModal: React.FC<Props> = (props) => {
 	const handleClose = () => {
 		setErrorMsg("");
 		setShow(false);
-		if (props.location.hash === "#feed-post") history.goBack();
+		if (location.hash === "#feed-post") history.goBack();
 	};
 
 	const handleShow = () => {

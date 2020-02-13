@@ -17,7 +17,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import axios from "axios";
 import moment from "moment";
 import React, {memo, useState} from "react";
-import {Link, RouteComponentProps} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {Likes, PhotoPreview} from "./index";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,14 +30,13 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-interface Props extends RouteComponentProps<MatchParams> {
+interface Props {
 	currentUser: User;
 	feedPost: Post;
 	handleDelete: (id: string) => void;
 }
 
-const PostMedia: React.FC<Props> = (props) => {
-	const {currentUser, handleDelete, feedPost} = props;
+const PostMedia: React.FC<Props> = ({currentUser, feedPost, handleDelete}) => {
 	const {user} = feedPost;
 	const classes = useStyles();
 
