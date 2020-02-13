@@ -1,10 +1,19 @@
 import {LinearProgress, makeStyles} from "@material-ui/core";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import axios from "axios";
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+	lazy,
+	Suspense
+} from "react";
 import {useHistory, useLocation} from "react-router-dom";
-import {PostMedia, PostModal, PostSkeleton, SnackAlert} from "../components";
+import {PostModal, PostSkeleton, SnackAlert} from "../components";
 import "../css/feed.css";
+
+const PostMedia = lazy(() => import("../components/PostMedia"));
 
 const useStyles = makeStyles({
 	progress: {
@@ -217,22 +226,26 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 		if (posts.length === i + 1) {
 			return (
 				<div ref={setLastElement} key={feedPost._id}>
-					<PostMedia
-						feedPost={feedPost}
-						currentUser={user}
-						handleDelete={handleDelete}
-					/>
+					<Suspense fallback={<PostSkeleton />}>
+						<PostMedia
+							feedPost={feedPost}
+							currentUser={user}
+							handleDelete={handleDelete}
+						/>
+					</Suspense>
 					{hasMore && <PostSkeleton />}
 				</div>
 			);
 		} else {
 			return (
 				<div key={feedPost._id}>
-					<PostMedia
-						feedPost={feedPost}
-						currentUser={user}
-						handleDelete={handleDelete}
-					/>
+					<Suspense fallback={<PostSkeleton />}>
+						<PostMedia
+							feedPost={feedPost}
+							currentUser={user}
+							handleDelete={handleDelete}
+						/>
+					</Suspense>
 				</div>
 			);
 		}
@@ -240,12 +253,14 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 
 	const newPosts = newPost
 		? newPost.map((incoming) => (
-				<PostMedia
-					feedPost={incoming}
-					currentUser={user}
-					handleDelete={handleDelete}
-					key={incoming._id}
-				/>
+				<Suspense fallback={<PostSkeleton />}>
+					<PostMedia
+						feedPost={incoming}
+						currentUser={user}
+						handleDelete={handleDelete}
+						key={incoming._id}
+					/>
+				</Suspense>
 		  ))
 		: null;
 

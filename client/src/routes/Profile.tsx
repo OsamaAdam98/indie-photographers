@@ -13,15 +13,12 @@ import DoneAllIcon from "@material-ui/icons/DoneAll";
 import ImageIcon from "@material-ui/icons/Image";
 import WorkIcon from "@material-ui/icons/Work";
 import axios from "axios";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState, lazy, Suspense} from "react";
 import {useParams} from "react-router-dom";
-import {
-	PhotoPreview,
-	PostMedia,
-	PostSkeleton,
-	SnackAlert
-} from "../components/index";
+import {PhotoPreview, PostSkeleton, SnackAlert} from "../components/index";
 import "../css/profile.css";
+
+const PostMedia = lazy(() => import("../components/PostMedia"));
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -172,22 +169,26 @@ const Profile: React.FC<Props> = ({currentUser}) => {
 				if (posts.length === i + 1) {
 					return (
 						<div ref={setLastElement} key={feedPost._id}>
-							<PostMedia
-								feedPost={feedPost}
-								currentUser={currentUser}
-								handleDelete={handleDelete}
-							/>
+							<Suspense fallback={<PostSkeleton />}>
+								<PostMedia
+									feedPost={feedPost}
+									currentUser={currentUser}
+									handleDelete={handleDelete}
+								/>
+							</Suspense>
 							{hasMore ? <PostSkeleton /> : null}
 						</div>
 					);
 				} else {
 					return (
 						<div key={feedPost._id}>
-							<PostMedia
-								feedPost={feedPost}
-								currentUser={currentUser}
-								handleDelete={handleDelete}
-							/>
+							<Suspense fallback={<PostSkeleton />}>
+								<PostMedia
+									feedPost={feedPost}
+									currentUser={currentUser}
+									handleDelete={handleDelete}
+								/>
+							</Suspense>
 						</div>
 					);
 				}
