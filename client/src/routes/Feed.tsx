@@ -2,12 +2,12 @@ import {LinearProgress, makeStyles} from "@material-ui/core";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import axios from "axios";
 import React, {
+	lazy,
+	Suspense,
 	useCallback,
 	useEffect,
 	useRef,
-	useState,
-	lazy,
-	Suspense
+	useState
 } from "react";
 import {useHistory, useLocation} from "react-router-dom";
 import {PostModal, PostSkeleton, SnackAlert} from "../components";

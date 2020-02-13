@@ -13,7 +13,7 @@ import DoneAllIcon from "@material-ui/icons/DoneAll";
 import ImageIcon from "@material-ui/icons/Image";
 import WorkIcon from "@material-ui/icons/Work";
 import axios from "axios";
-import React, {useEffect, useRef, useState, lazy, Suspense} from "react";
+import React, {lazy, Suspense, useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
 import {PhotoPreview, PostSkeleton, SnackAlert} from "../components/index";
 import "../css/profile.css";
