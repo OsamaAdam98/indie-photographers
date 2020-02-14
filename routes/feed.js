@@ -42,9 +42,6 @@ router.post("/add", [upload.single("image"), auth], (req, res) => {
 	const user = req.user.id;
 	const {msg} = JSON.parse(req.body.data);
 	const filePath = req.file ? req.file.path : null;
-	console.log(req.file);
-	console.log(msg);
-	console.log(user);
 
 	Users.findById(user)
 		.exec()

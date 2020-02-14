@@ -90,11 +90,11 @@ const PostModal: React.FC<Props> = (props) => {
 					}
 				})
 				.then((res) => {
-					setNewPost((prevPost) => [res.data, ...prevPost]);
-					localStorage.setItem(
-						`feedPage1`,
-						JSON.stringify([res.data, ...JSON.parse(localStorage.getItem(`feedPage1`) as string)])
-					);
+					setNewPost((prevPost) => [...prevPost, res.data]);
+					// localStorage.setItem(
+					// 	`feedPage1`,
+					// 	JSON.stringify([...JSON.parse(localStorage.getItem(`feedPage1`) as string), res.data])
+					// );
 					setPhoto("");
 					setMsg("");
 					setIsUploading(false);

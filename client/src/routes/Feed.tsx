@@ -124,6 +124,8 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 				setErrorMsg(res.data as string);
 				setSeverity("success");
 				setOpenError(true);
+				// TODO: Temporary fix, fix when possible.
+				window.location.reload();
 			})
 			.catch((err) => console.log(err));
 	}, []);
@@ -145,7 +147,7 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 					const {data} = res;
 					let newData: Post[] = getNewPosts(data, cachedData);
 
-					if (newData) {
+					if (newData.length) {
 						setNewPost((prevPosts) => [...prevPosts, ...newData]);
 					}
 
