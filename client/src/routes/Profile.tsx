@@ -1,13 +1,4 @@
-import {
-	Avatar,
-	List,
-	ListItem,
-	ListItemAvatar,
-	ListItemText,
-	makeStyles,
-	Paper,
-	Typography
-} from "@material-ui/core";
+import {Avatar, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography} from "@material-ui/core";
 import BeachAccessIcon from "@material-ui/icons/BeachAccess";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import ImageIcon from "@material-ui/icons/Image";
@@ -32,7 +23,7 @@ interface Props {
 	currentUser: User;
 }
 
-const Profile: React.FC<Props> = ({currentUser}) => {
+const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -64,68 +55,56 @@ const Profile: React.FC<Props> = ({currentUser}) => {
 	};
 
 	useEffect(() => {
-		setIsLoading(true);
 		if (hasMore) {
-			if (params.id) {
-				let cachedData: Post[] = JSON.parse(
-					localStorage.getItem(`${params.id}/page${page}`) as string
-				);
-				if (cachedData) {
-					setPosts((prevPosts) =>
-						[...prevPosts, ...cachedData].filter(
-							(post) => post.user._id === params.id
-						)
-					);
-					setIsLoading(false);
-					setHasMore(cachedData.length === 10);
-				} else {
-					axios
-						.get(`/api/feed/user/${params.id}/?page=${page}`)
-						.then((res) => {
-							const data: Post[] = res.data;
+			let cachedData: Post[] = JSON.parse(localStorage.getItem(`${params.id}/page${page}`) as string);
+			if (cachedData) {
+				setPosts((prevPosts) => [...prevPosts, ...cachedData].filter((post) => post.user._id === params.id));
+				setIsLoading(false);
+				setHasMore(cachedData.length === 10);
+			} else {
+				setIsLoading(true);
+				axios
+					.get(`/api/feed/user/${params.id}/?page=${page}`)
+					.then((res) => {
+						const data: Post[] = res.data;
 
-							setPosts((prevPosts) => [...prevPosts, ...data]);
+						setPosts((prevPosts) => [...prevPosts, ...data]);
 
-							setHasMore(data.length === 10);
-							localStorage.setItem(
-								`${params.id}/page${page}`,
-								JSON.stringify(
-									data.filter((post) => post.user._id === params.id)
-								)
-							);
-							setErrorMsg("");
-							setOpenError(false);
-							setIsLoading(false);
-						})
-						.catch((err) => {
-							if (err) {
-								if (cachedData) {
-									setHasMore(cachedData.length === 0);
-								} else {
-									setHasMore(false);
-								}
-								if (err) {
-									setErrorMsg("User not found");
-									setSeverity("error");
-									setOpenError(true);
-								} else {
-									setErrorMsg("Can't connect to the internet!");
-									setSeverity("warning");
-									setOpenError(true);
-								}
-								setIsLoading(false);
+						setHasMore(data.length === 10);
+						localStorage.setItem(
+							`${params.id}/page${page}`,
+							JSON.stringify(data.filter((post) => post.user._id === params.id))
+						);
+						setErrorMsg("");
+						setOpenError(false);
+						setIsLoading(false);
+					})
+					.catch((err) => {
+						if (err) {
+							if (cachedData) {
+								setHasMore(cachedData.length === 0);
+							} else {
+								setHasMore(false);
 							}
-						});
-				}
+							if (err) {
+								setErrorMsg("User not found");
+								setSeverity("error");
+								setOpenError(true);
+							} else {
+								setErrorMsg("Can't connect to the internet!");
+								setSeverity("warning");
+								setOpenError(true);
+							}
+							setIsLoading(false);
+						}
+					});
 			}
 		} else setIsLoading(false);
 	}, [page, params.id, hasMore]);
 
 	useEffect(() => {
 		if (params.id) {
-			let cachedData: User = JSON.parse(
-				localStorage.getItem(`${params.id}`) as string
-			);
+			let cachedData: User = JSON.parse(localStorage.getItem(`${params.id}`) as string);
 			if (cachedData) setUser(cachedData);
 
 			axios
@@ -143,6 +122,11 @@ const Profile: React.FC<Props> = ({currentUser}) => {
 					}
 				});
 		}
+		return () => {
+			setPosts([]);
+			setPage(1);
+			setHasMore(true);
+		};
 	}, [params.id]);
 
 	const observer = useRef(
@@ -169,26 +153,14 @@ const Profile: React.FC<Props> = ({currentUser}) => {
 				if (posts.length === i + 1) {
 					return (
 						<div ref={setLastElement} key={feedPost._id}>
-							<Suspense fallback={<PostSkeleton />}>
-								<PostMedia
-									feedPost={feedPost}
-									currentUser={currentUser}
-									handleDelete={handleDelete}
-								/>
-							</Suspense>
+							<PostMedia feedPost={feedPost} currentUser={currentUser} handleDelete={handleDelete} />
 							{hasMore ? <PostSkeleton /> : null}
 						</div>
 					);
 				} else {
 					return (
 						<div key={feedPost._id}>
-							<Suspense fallback={<PostSkeleton />}>
-								<PostMedia
-									feedPost={feedPost}
-									currentUser={currentUser}
-									handleDelete={handleDelete}
-								/>
-							</Suspense>
+							<PostMedia feedPost={feedPost} currentUser={currentUser} handleDelete={handleDelete} />
 						</div>
 					);
 				}
@@ -201,11 +173,7 @@ const Profile: React.FC<Props> = ({currentUser}) => {
 				<>
 					<Paper className="main-block">
 						<div className="cover-photo" />
-						<PhotoPreview
-							photo={user.profilePicture}
-							alt={user.username}
-							round={true}
-						/>
+						<PhotoPreview photo={user.profilePicture} alt={user.username} round={true} />
 						<div className="tagline">
 							<Typography variant="h5">{user.username}</Typography>
 							<Typography
@@ -218,11 +186,9 @@ const Profile: React.FC<Props> = ({currentUser}) => {
 						</div>
 						<div className="main-info">
 							<Typography>
-								Irure culpa sint tempor Lorem Lorem eu eu consequat in elit.
-								Laborum id magna mollit pariatur. Incididunt velit mollit sit
-								aliqua duis esse nisi velit esse ad occaecat voluptate aliqua
-								esse. Adipisicing pariatur sint consequat ea et pariatur sint
-								nisi anim.
+								Irure culpa sint tempor Lorem Lorem eu eu consequat in elit. Laborum id magna mollit pariatur.
+								Incididunt velit mollit sit aliqua duis esse nisi velit esse ad occaecat voluptate aliqua esse.
+								Adipisicing pariatur sint consequat ea et pariatur sint nisi anim.
 							</Typography>
 						</div>
 					</Paper>
@@ -258,7 +224,7 @@ const Profile: React.FC<Props> = ({currentUser}) => {
 			) : null}
 
 			<div className="post-block">
-				{postMedia}
+				<Suspense fallback={<PostSkeleton />}>{postMedia}</Suspense>
 				{!hasMore && !isLoading ? (
 					<DoneAllIcon
 						style={{
@@ -269,12 +235,7 @@ const Profile: React.FC<Props> = ({currentUser}) => {
 					/>
 				) : null}
 			</div>
-			<SnackAlert
-				severity={severity}
-				openError={openError}
-				setOpenError={setOpenError}
-				errorMsg={errorMsg}
-			/>
+			<SnackAlert severity={severity} openError={openError} setOpenError={setOpenError} errorMsg={errorMsg} />
 		</div>
 	);
 };

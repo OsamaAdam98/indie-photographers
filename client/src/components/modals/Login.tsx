@@ -56,15 +56,9 @@ const Login: React.FC<Props> = ({isLogged, setIsLogged, setUser}) => {
 		setErrorMsg("");
 	};
 
-	const emailChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-		setEmail(event.target.value);
-	const passwordChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-		setPassword(event.target.value);
-	const handleSubmit = (
-		event:
-			| React.MouseEvent<HTMLButtonElement, MouseEvent>
-			| React.FormEvent<HTMLFormElement>
-	) => {
+	const emailChange = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value);
+	const passwordChange = (event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value);
+	const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent<HTMLFormElement>) => {
 		if (!email.trim() || !password.trim()) {
 			setErrorMsg("Please enter all fields");
 			event.preventDefault();
@@ -151,18 +145,10 @@ const Login: React.FC<Props> = ({isLogged, setIsLogged, setUser}) => {
 						/>
 						<Grid container direction="row" spacing={1}>
 							<Grid item xs>
-								<FBButton
-									setUser={setUser}
-									handleClose={handleClose}
-									setIsLogged={setIsLogged}
-								/>
+								<FBButton setUser={setUser} handleClose={handleClose} setIsLogged={setIsLogged} />
 							</Grid>
 							<Grid item xs>
-								<GoogleBtn
-									setUser={setUser}
-									handleClose={handleClose}
-									setIsLogged={setIsLogged}
-								/>
+								<GoogleBtn setUser={setUser} handleClose={handleClose} setIsLogged={setIsLogged} />
 							</Grid>
 						</Grid>
 					</DialogContent>

@@ -1,14 +1,7 @@
 import {LinearProgress, makeStyles} from "@material-ui/core";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import axios from "axios";
-import React, {
-	lazy,
-	Suspense,
-	useCallback,
-	useEffect,
-	useRef,
-	useState
-} from "react";
+import React, {lazy, Suspense, useCallback, useEffect, useRef, useState} from "react";
 import {useHistory, useLocation} from "react-router-dom";
 import {PostModal, PostSkeleton, SnackAlert} from "../components";
 import "../css/feed.css";
@@ -60,9 +53,7 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 		const formData = new FormData();
 		formData.append("image", files[0]);
 
-		setErrorMsg(
-			"Uploading photo, we'll notify you when the upload is complete."
-		);
+		setErrorMsg("Uploading photo, we'll notify you when the upload is complete.");
 		setSeverity("info");
 		setOpenError(true);
 		setIsUploading(true);
@@ -105,23 +96,14 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 		let targetHit: boolean;
 		let cachedData: Post[];
 		do {
-			cachedData = JSON.parse(
-				localStorage.getItem(`feedPage${index}`) as string
-			);
+			cachedData = JSON.parse(localStorage.getItem(`feedPage${index}`) as string);
 			if (cachedData) {
-				targetHit = cachedData.filter((data) => data._id === id).length
-					? true
-					: false;
+				targetHit = cachedData.filter((data) => data._id === id).length ? true : false;
 				if (targetHit) {
 					setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
-					setNewPost((prevPosts) =>
-						prevPosts.filter((post) => post._id !== id)
-					);
+					setNewPost((prevPosts) => prevPosts.filter((post) => post._id !== id));
 
-					localStorage.setItem(
-						`feedPage${index}`,
-						JSON.stringify(cachedData.filter((data) => data._id !== id))
-					);
+					localStorage.setItem(`feedPage${index}`, JSON.stringify(cachedData.filter((data) => data._id !== id)));
 					break;
 				}
 				index++;
@@ -156,48 +138,46 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 	};
 
 	useEffect(() => {
-		setIsLoading(true);
 		if (hasMore) {
-			let cachedData: Post[] = JSON.parse(
-				localStorage.getItem(`feedPage${page}`) as string
-			);
+			let cachedData: Post[] = JSON.parse(localStorage.getItem(`feedPage${page}`) as string);
 			if (cachedData) {
 				setPosts((prevPosts) => [...prevPosts, ...cachedData]);
 				setIsLoading(false);
 				setHasMore(cachedData.length === 10);
+			} else {
+				setIsLoading(true);
+				axios
+					.get(`/api/feed/?page=${page}`)
+					.then((res) => {
+						const {data} = res;
+						let newData: Post[] = getNewPosts(data, cachedData);
+
+						if (newData) {
+							setNewPost((prevPosts) => [...prevPosts, ...newData]);
+						}
+
+						if (!cachedData) {
+							setPosts((prevPosts) => [...prevPosts, ...data]);
+						}
+
+						setHasMore(data.length === 10);
+						localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
+						setErrorMsg("");
+						setOpenError(false);
+						setOffline(false);
+						setIsLoading(false);
+					})
+					.catch((err) => {
+						if (err && page !== 1) {
+							setErrorMsg("Can't connect to the internet!");
+							setSeverity("warning");
+							setOffline(true);
+							setOpenError(true);
+							if (cachedData) setHasMore(cachedData.length === 10);
+						}
+						setIsLoading(false);
+					});
 			}
-
-			axios
-				.get(`/api/feed/?page=${page}`)
-				.then((res) => {
-					const {data} = res;
-					let newData: Post[] = getNewPosts(data, cachedData);
-
-					if (newData) {
-						setNewPost((prevPosts) => [...prevPosts, ...newData]);
-					}
-
-					if (!cachedData) {
-						setPosts((prevPosts) => [...prevPosts, ...data]);
-					}
-
-					setHasMore(data.length === 10);
-					localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
-					setErrorMsg("");
-					setOpenError(false);
-					setOffline(false);
-					setIsLoading(false);
-				})
-				.catch((err) => {
-					if (err && page !== 1) {
-						setErrorMsg("Can't connect to the internet!");
-						setSeverity("warning");
-						setOffline(true);
-						setOpenError(true);
-						if (cachedData) setHasMore(cachedData.length === 10);
-					}
-					setIsLoading(false);
-				});
 		} else {
 			setIsLoading(false);
 		}
@@ -226,26 +206,14 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 		if (posts.length === i + 1) {
 			return (
 				<div ref={setLastElement} key={feedPost._id}>
-					<Suspense fallback={<PostSkeleton />}>
-						<PostMedia
-							feedPost={feedPost}
-							currentUser={user}
-							handleDelete={handleDelete}
-						/>
-					</Suspense>
+					<PostMedia feedPost={feedPost} currentUser={user} handleDelete={handleDelete} />
 					{hasMore && <PostSkeleton />}
 				</div>
 			);
 		} else {
 			return (
 				<div key={feedPost._id}>
-					<Suspense fallback={<PostSkeleton />}>
-						<PostMedia
-							feedPost={feedPost}
-							currentUser={user}
-							handleDelete={handleDelete}
-						/>
-					</Suspense>
+					<PostMedia feedPost={feedPost} currentUser={user} handleDelete={handleDelete} />
 				</div>
 			);
 		}
@@ -253,22 +221,17 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 
 	const newPosts = newPost
 		? newPost.map((incoming) => (
-				<Suspense fallback={<PostSkeleton />}>
-					<PostMedia
-						feedPost={incoming}
-						currentUser={user}
-						handleDelete={handleDelete}
-						key={incoming._id}
-					/>
-				</Suspense>
+				<PostMedia feedPost={incoming} currentUser={user} handleDelete={handleDelete} key={incoming._id} />
 		  ))
 		: null;
 
 	return (
 		<div className="feed-container">
 			<div className="feed-post-block">
-				{newPost && newPosts}
-				{postMedia}
+				<Suspense fallback={<PostSkeleton />}>
+					{newPost && newPosts}
+					{postMedia}
+				</Suspense>
 				{!hasMore && !isLoading ? (
 					<DoneAllIcon
 						style={{
@@ -278,12 +241,7 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 						}}
 					/>
 				) : null}
-				<SnackAlert
-					severity={severity}
-					openError={openError}
-					setOpenError={setOpenError}
-					errorMsg={errorMsg}
-				/>
+				<SnackAlert severity={severity} openError={openError} setOpenError={setOpenError} errorMsg={errorMsg} />
 				<PostModal
 					isLogged={isLogged}
 					user={user}
@@ -297,9 +255,7 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 				/>
 			</div>
 
-			{isUploading && (
-				<LinearProgress color="primary" className={classes.progress} />
-			)}
+			{isUploading && <LinearProgress color="primary" className={classes.progress} />}
 		</div>
 	);
 };

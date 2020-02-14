@@ -21,26 +21,20 @@ const Feed = lazy(() => import("./routes/Feed"));
 const Profile = lazy(() => import("./routes/Profile"));
 
 const App: React.FC = () => {
-	const [isLogged, setIsLogged] = useState(
-		localStorage.getItem("token") ? true : false
-	);
+	const [isLogged, setIsLogged] = useState(localStorage.getItem("token") ? true : false);
 
 	const {width} = useWindowDimensions();
 
 	const [user, setUser] = useState<User>(
-		isLogged
-			? JSON.parse(localStorage.getItem("userInfo") as string)
-			: {admin: false}
+		isLogged ? JSON.parse(localStorage.getItem("userInfo") as string) : {admin: false}
 	);
 	const [openError, setOpenError] = useState<boolean>(false);
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [severity, setSeverity] = useState<Severity>(undefined);
-	const [pwa, setPwa] = useState<any>();
+	const [pwa, setPwa] = useState<any>(null);
 	const [showBtn, setShowBtn] = useState<boolean>(false);
 	const [isLight, setIsLight] = useState<boolean>(
-		(JSON.parse(localStorage.getItem("theme") as string) as boolean)
-			? true
-			: false
+		(JSON.parse(localStorage.getItem("theme") as string) as boolean) ? true : false
 	);
 
 	const theme: customTheme = {
@@ -63,11 +57,10 @@ const App: React.FC = () => {
 	};
 
 	window.addEventListener("beforeinstallprompt", (event) => {
+		event.preventDefault();
 		setPwa(event);
 		if (
-			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-				navigator.userAgent
-			) &&
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
 			!window.matchMedia("(display-mode: standalone)").matches
 		) {
 			setShowBtn(true);
@@ -83,21 +76,21 @@ const App: React.FC = () => {
 
 	const handleClick = () => {
 		if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-			setErrorMsg(
-				`Please, open the share menu and select "Add to Home Screen"`
-			);
+			setErrorMsg(`Please, open the share menu and select "Add to Home Screen"`);
 			setSeverity("info");
 			setOpenError(true);
 		} else {
-			pwa.prompt();
-			pwa.userChoice.then((choiceResult: {outcome: string}) => {
-				if (choiceResult.outcome === "accepted") {
-					setErrorMsg("App downloading in the background..");
-					setSeverity("info");
-					setOpenError(true);
-				}
-				setPwa(null);
-			});
+			if (pwa) {
+				pwa.prompt();
+				pwa.userChoice.then((choiceResult: {outcome: string}) => {
+					if (choiceResult.outcome === "accepted") {
+						setErrorMsg("App downloading in the background..");
+						setSeverity("info");
+						setOpenError(true);
+					}
+					setPwa(null);
+				});
+			}
 		}
 	};
 
@@ -134,13 +127,7 @@ const App: React.FC = () => {
 	}, [isLogged]);
 
 	return (
-		<MuiThemeProvider
-			theme={
-				isLight
-					? createMuiTheme(theme.lightTheme)
-					: createMuiTheme(theme.darkTheme)
-			}
-		>
+		<MuiThemeProvider theme={isLight ? createMuiTheme(theme.lightTheme) : createMuiTheme(theme.darkTheme)}>
 			<CssBaseline />
 			<Router>
 				<MenuAppBar
@@ -182,23 +169,13 @@ const App: React.FC = () => {
 						exact
 						path="/settings"
 						render={() => (
-							<Settings
-								isLight={isLight}
-								setIsLight={setIsLight}
-								handleClick={handleClick}
-								showBtn={showBtn}
-							/>
+							<Settings isLight={isLight} setIsLight={setIsLight} handleClick={handleClick} showBtn={showBtn} />
 						)}
 					/>
 					<Route component={NotFound} />
 				</Switch>
 			</Router>
-			<SnackAlert
-				severity={severity}
-				errorMsg={errorMsg}
-				setOpenError={setOpenError}
-				openError={openError}
-			/>
+			<SnackAlert severity={severity} errorMsg={errorMsg} setOpenError={setOpenError} openError={openError} />
 			<div
 				style={{
 					height: 48,
