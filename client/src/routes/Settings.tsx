@@ -1,6 +1,14 @@
-import {Button, Container, Typography} from "@material-ui/core";
+import {Button, Container, Typography, makeStyles} from "@material-ui/core";
 import React from "react";
 import {LightSwitch} from "../components";
+
+const useStyles = makeStyles(() => ({
+	btnStyle: {
+		"@media all and (display-mode: standalone)": {
+			display: "none"
+		}
+	}
+}));
 
 interface Props {
 	isLight: boolean;
@@ -9,12 +17,9 @@ interface Props {
 	handleClick: () => void;
 }
 
-const Settings: React.FC<Props> = ({
-	isLight,
-	showBtn,
-	setIsLight,
-	handleClick
-}) => {
+const Settings: React.FC<Props> = ({isLight, showBtn, setIsLight, handleClick}) => {
+	const classes = useStyles();
+
 	return (
 		<Container maxWidth="lg">
 			<Typography>Light mode</Typography>
@@ -24,6 +29,7 @@ const Settings: React.FC<Props> = ({
 				color="primary"
 				variant="contained"
 				onClick={handleClick}
+				className={classes.btnStyle}
 				style={{
 					display: showBtn ? "" : "none"
 				}}

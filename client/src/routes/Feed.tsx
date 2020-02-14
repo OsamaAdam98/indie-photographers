@@ -140,43 +140,42 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 	useEffect(() => {
 		if (hasMore) {
 			let cachedData: Post[] = JSON.parse(localStorage.getItem(`feedPage${page}`) as string);
+			axios
+				.get(`/api/feed/?page=${page}`)
+				.then((res) => {
+					const {data} = res;
+					let newData: Post[] = getNewPosts(data, cachedData);
+
+					if (newData) {
+						setNewPost((prevPosts) => [...prevPosts, ...newData]);
+					}
+
+					if (!cachedData) {
+						setPosts((prevPosts) => [...prevPosts, ...data]);
+					}
+
+					setHasMore(data.length === 10);
+					localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
+					setErrorMsg("");
+					setOpenError(false);
+					setOffline(false);
+					setIsLoading(false);
+				})
+				.catch((err) => {
+					if (err && page !== 1) {
+						setErrorMsg("Can't connect to the internet!");
+						setSeverity("warning");
+						setOffline(true);
+						setOpenError(true);
+					}
+					setIsLoading(false);
+				});
 			if (cachedData) {
 				setPosts((prevPosts) => [...prevPosts, ...cachedData]);
 				setIsLoading(false);
 				setHasMore(cachedData.length === 10);
 			} else {
 				setIsLoading(true);
-				axios
-					.get(`/api/feed/?page=${page}`)
-					.then((res) => {
-						const {data} = res;
-						let newData: Post[] = getNewPosts(data, cachedData);
-
-						if (newData) {
-							setNewPost((prevPosts) => [...prevPosts, ...newData]);
-						}
-
-						if (!cachedData) {
-							setPosts((prevPosts) => [...prevPosts, ...data]);
-						}
-
-						setHasMore(data.length === 10);
-						localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
-						setErrorMsg("");
-						setOpenError(false);
-						setOffline(false);
-						setIsLoading(false);
-					})
-					.catch((err) => {
-						if (err && page !== 1) {
-							setErrorMsg("Can't connect to the internet!");
-							setSeverity("warning");
-							setOffline(true);
-							setOpenError(true);
-							if (cachedData) setHasMore(cachedData.length === 10);
-						}
-						setIsLoading(false);
-					});
 			}
 		} else {
 			setIsLoading(false);
@@ -219,17 +218,15 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 		}
 	});
 
-	const newPosts = newPost
-		? newPost.map((incoming) => (
-				<PostMedia feedPost={incoming} currentUser={user} handleDelete={handleDelete} key={incoming._id} />
-		  ))
-		: null;
+	const newPosts = newPost.map((incoming) => (
+		<PostMedia feedPost={incoming} currentUser={user} handleDelete={handleDelete} key={incoming._id} />
+	));
 
 	return (
 		<div className="feed-container">
 			<div className="feed-post-block">
 				<Suspense fallback={<PostSkeleton />}>
-					{newPost && newPosts}
+					{newPosts}
 					{postMedia}
 				</Suspense>
 				{!hasMore && !isLoading ? (

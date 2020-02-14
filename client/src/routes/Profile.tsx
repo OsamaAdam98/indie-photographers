@@ -19,10 +19,6 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-interface Props {
-	currentUser: User;
-}
-
 const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [posts, setPosts] = useState<Post[]>([]);
@@ -57,47 +53,42 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 	useEffect(() => {
 		if (hasMore) {
 			let cachedData: Post[] = JSON.parse(localStorage.getItem(`${params.id}/page${page}`) as string);
+			axios
+				.get(`/api/feed/user/${params.id}/?page=${page}`)
+				.then((res) => {
+					const data: Post[] = res.data;
+
+					if (!cachedData) setPosts((prevPosts) => [...prevPosts, ...data]);
+
+					setHasMore(data.length === 10);
+					localStorage.setItem(
+						`${params.id}/page${page}`,
+						JSON.stringify(data.filter((post) => post.user._id === params.id))
+					);
+					setErrorMsg("");
+					setOpenError(false);
+					setIsLoading(false);
+				})
+				.catch((err) => {
+					if (err) {
+						if (err) {
+							setErrorMsg("User not found");
+							setSeverity("error");
+							setOpenError(true);
+						} else {
+							setErrorMsg("Can't connect to the internet!");
+							setSeverity("warning");
+							setOpenError(true);
+						}
+						setIsLoading(false);
+					}
+				});
 			if (cachedData) {
 				setPosts((prevPosts) => [...prevPosts, ...cachedData].filter((post) => post.user._id === params.id));
 				setIsLoading(false);
 				setHasMore(cachedData.length === 10);
 			} else {
 				setIsLoading(true);
-				axios
-					.get(`/api/feed/user/${params.id}/?page=${page}`)
-					.then((res) => {
-						const data: Post[] = res.data;
-
-						setPosts((prevPosts) => [...prevPosts, ...data]);
-
-						setHasMore(data.length === 10);
-						localStorage.setItem(
-							`${params.id}/page${page}`,
-							JSON.stringify(data.filter((post) => post.user._id === params.id))
-						);
-						setErrorMsg("");
-						setOpenError(false);
-						setIsLoading(false);
-					})
-					.catch((err) => {
-						if (err) {
-							if (cachedData) {
-								setHasMore(cachedData.length === 0);
-							} else {
-								setHasMore(false);
-							}
-							if (err) {
-								setErrorMsg("User not found");
-								setSeverity("error");
-								setOpenError(true);
-							} else {
-								setErrorMsg("Can't connect to the internet!");
-								setSeverity("warning");
-								setOpenError(true);
-							}
-							setIsLoading(false);
-						}
-					});
 			}
 		} else setIsLoading(false);
 	}, [page, params.id, hasMore]);
@@ -106,7 +97,6 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 		if (params.id) {
 			let cachedData: User = JSON.parse(localStorage.getItem(`${params.id}`) as string);
 			if (cachedData) setUser(cachedData);
-
 			axios
 				.get(`/api/users/${params.id}`)
 				.then((res) => {

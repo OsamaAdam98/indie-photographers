@@ -59,12 +59,7 @@ const App: React.FC = () => {
 	window.addEventListener("beforeinstallprompt", (event) => {
 		event.preventDefault();
 		setPwa(event);
-		if (
-			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) &&
-			!window.matchMedia("(display-mode: standalone)").matches
-		) {
-			setShowBtn(true);
-		}
+		setShowBtn(true);
 	});
 
 	window.addEventListener("appinstalled", (e) => {
@@ -82,7 +77,7 @@ const App: React.FC = () => {
 		} else {
 			if (pwa) {
 				pwa.prompt();
-				pwa.userChoice.then((choiceResult: {outcome: string}) => {
+				pwa.userChoice.then((choiceResult: {outcome: "accepted" | "refused"}) => {
 					if (choiceResult.outcome === "accepted") {
 						setErrorMsg("App downloading in the background..");
 						setSeverity("info");
