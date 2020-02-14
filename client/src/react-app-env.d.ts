@@ -31,18 +31,17 @@ interface Post {
 	date: Date;
 	likes: Likes[];
 	msg: string | null;
-	photo: string | null;
+	photo: Photo;
 	user: User;
 	__v?: number;
 	_id: string;
 }
 
 interface SubPost {
-	username?: string;
-	email?: string;
+	username: string;
+	email: string;
 	msg?: string;
-	photo?: string;
-	photoId?: string;
+	realPhoto?: FormData | null;
 }
 
 interface Likes {
@@ -67,14 +66,14 @@ interface Photo {
 	type?: string;
 	etag?: string;
 	url?: string;
-	eager: [
+	eager?: [
 		{
 			transformation?: string;
 			width?: number;
 			height?: number;
 			bytes?: number;
 			url?: string;
-			secure_url: string;
+			secure_url?: string;
 		}
 	];
 	secure_url?: string;

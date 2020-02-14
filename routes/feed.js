@@ -25,10 +25,7 @@ router.get("/", (req, res) => {
 		.limit(10)
 		.skip(page >= 1 ? 10 * (page - 1) : 0)
 		.select("-photoId")
-		.populate(
-			"user comments likes",
-			"-password -registerDate -__v -posts -email"
-		)
+		.populate("user comments likes", "-password -registerDate -__v -posts -email")
 		.populate({
 			path: "likes",
 			populate: {
@@ -41,18 +38,13 @@ router.get("/", (req, res) => {
 		.catch((err) => res.status(500).json(err));
 });
 
-router.post("/add", auth, (req, res) => {
-	const msg = req.body.msg;
+router.post("/add", [upload.single("image"), auth], (req, res) => {
 	const user = req.user.id;
-	const photo = req.body.photo ? req.body.photo : "";
-	const photoId = req.body.photoId ? req.body.photoId : "";
-
-	const newPost = new Feed({
-		msg,
-		photo,
-		photoId,
-		user
-	});
+	const {msg} = JSON.parse(req.body.data);
+	const filePath = req.file ? req.file.path : null;
+	console.log(req.file);
+	console.log(msg);
+	console.log(user);
 
 	Users.findById(user)
 		.exec()
@@ -66,23 +58,62 @@ router.post("/add", auth, (req, res) => {
 					if (result) date = new Date(result.date);
 
 					if (date ? moment().diff(date, "minutes") > 15 : true || user.admin) {
-						newPost
-							.save()
-							.then(() => {
-								Feed.findById(newPost._id)
-									.populate(
-										"user comments likes",
-										"-password -registerDate -__v -posts"
-									)
-									.exec()
-									.then((result) => res.status(201).json(result))
-									.catch((err) => res.status(404).json(err));
-							})
-							.catch((err) => res.status(400).json(err));
+						if (filePath) {
+							cloudinary.uploader.unsigned_upload(
+								filePath,
+								"hahlpxqe",
+								{cloud_name: process.env.CLOUD_NAME},
+								(err, result) => {
+									if (err) {
+										res.status(500).json("upload failed!");
+									} else {
+										const photo = result;
+										fs.unlinkSync(req.file.path);
+
+										const newPost = new Feed({
+											msg,
+											photo,
+											user
+										});
+
+										newPost
+											.save()
+											.then(() => {
+												Feed.findById(newPost._id)
+													.populate("user comments likes", "-password -registerDate -__v -posts")
+													.exec()
+													.then((result) => res.status(201).json(result))
+													.catch((err) => res.status(404).json(err));
+											})
+											.catch((err) => {
+												res.status(400).json(err);
+												console.log(err);
+											});
+									}
+								}
+							);
+						} else {
+							const newPost = new Feed({
+								msg,
+								user
+							});
+
+							newPost
+								.save()
+								.then(() => {
+									Feed.findById(newPost._id)
+										.populate("user comments likes", "-password -registerDate -__v -posts")
+										.exec()
+										.then((result) => res.status(201).json(result))
+										.catch((err) => res.status(404).json(err));
+								})
+								.catch((err) => {
+									res.status(400).json(err);
+									console.log(err);
+								});
+						}
 					} else {
-						res
-							.status(403)
-							.json("Can't post more than 2 posts in a 15 minutes span!");
+						res.status(403).json("Can't post more than 2 posts in a 15 minutes span!");
 					}
 				})
 				.catch((err) => console.log(err));
@@ -122,13 +153,9 @@ router.post("/comment/:id", auth, (req, res) => {
 	newComment
 		.save()
 		.then(() => {
-			Feed.findByIdAndUpdate(
-				post,
-				{$push: {comments: newComment._id}},
-				(err) => {
-					if (err) throw err;
-				}
-			);
+			Feed.findByIdAndUpdate(post, {$push: {comments: newComment._id}}, (err) => {
+				if (err) throw err;
+			});
 			res.status(200).json("Comment submitted");
 		})
 		.catch((err) => res.status(500).json(err));
@@ -155,14 +182,10 @@ router.post("/like/:id", auth, (req, res) => {
 						likeIterator === like._id;
 					});
 					if (postLike.length === 0) {
-						Feed.findByIdAndUpdate(
-							post._id,
-							{$push: {likes: like._id}},
-							(err) => {
-								if (err) throw err;
-								res.status(200).json({like: true});
-							}
-						);
+						Feed.findByIdAndUpdate(post._id, {$push: {likes: like._id}}, (err) => {
+							if (err) throw err;
+							res.status(200).json({like: true});
+						});
 					}
 				})
 				.catch((err) => res.status(400).json(err));
@@ -268,10 +291,7 @@ router.get("/user/:id/", (req, res) => {
 		.sort({date: "desc"})
 		.limit(10)
 		.skip(page >= 1 ? 10 * (page - 1) : 0)
-		.populate(
-			"user comments likes",
-			"-password -registerDate -__v -posts -email"
-		)
+		.populate("user comments likes", "-password -registerDate -__v -posts -email")
 		.populate({
 			path: "likes",
 			populate: {

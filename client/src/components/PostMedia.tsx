@@ -43,9 +43,7 @@ const PostMedia: React.FC<Props> = ({currentUser, feedPost, handleDelete}) => {
 	const [anchorEl, setAnchorEl] = useState<any>(null);
 	const [post, setPost] = useState<Post>(feedPost);
 	const [liked, setLiked] = useState<boolean>(
-		feedPost.likes.filter((like) => like.user._id === currentUser._id).length
-			? true
-			: false
+		feedPost.likes.filter((like) => like.user._id === currentUser._id).length ? true : false
 	);
 
 	const open = Boolean(anchorEl);
@@ -56,20 +54,14 @@ const PostMedia: React.FC<Props> = ({currentUser, feedPost, handleDelete}) => {
 		let cachedData: Post[];
 
 		do {
-			cachedData = JSON.parse(
-				localStorage.getItem(`feedPage${index}`) as string
-			);
+			cachedData = JSON.parse(localStorage.getItem(`feedPage${index}`) as string);
 			if (cachedData !== null) {
-				targetHit = cachedData.filter((post) => post._id === id).length
-					? true
-					: false;
+				targetHit = cachedData.filter((post) => post._id === id).length ? true : false;
 				if (targetHit) {
 					if (!like) {
 						cachedData = cachedData.map((post) => {
 							if (post._id === id) {
-								post.likes = post.likes.filter(
-									(like) => like.user._id !== currentUser._id
-								);
+								post.likes = post.likes.filter((like) => like.user._id !== currentUser._id);
 								setPost(post);
 							}
 							return post;
@@ -117,9 +109,7 @@ const PostMedia: React.FC<Props> = ({currentUser, feedPost, handleDelete}) => {
 			.catch((err) => console.log(err));
 	};
 
-	const handleMenu = (
-		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-	) => {
+	const handleMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		setAnchorEl(event.currentTarget);
 	};
 
@@ -139,10 +129,7 @@ const PostMedia: React.FC<Props> = ({currentUser, feedPost, handleDelete}) => {
 				<CardHeader
 					avatar={
 						<Link to={`/profile/${user._id}`}>
-							<Avatar
-								alt="user avatar"
-								src={user.profilePicture ? user.profilePicture : ""}
-							/>
+							<Avatar alt="user avatar" src={user.profilePicture ? user.profilePicture : ""} />
 						</Link>
 					}
 					action={
@@ -177,9 +164,7 @@ const PostMedia: React.FC<Props> = ({currentUser, feedPost, handleDelete}) => {
 									}}
 								>
 									<MenuItem>Edit</MenuItem>
-									<MenuItem onClick={() => handleDelete(feedPost._id)}>
-										Delete
-									</MenuItem>
+									<MenuItem onClick={() => handleDelete(feedPost._id)}>Delete</MenuItem>
 								</Menu>
 							</>
 						) : null
@@ -221,7 +206,9 @@ const PostMedia: React.FC<Props> = ({currentUser, feedPost, handleDelete}) => {
 				{feedPost.photo ? (
 					<CardMedia className={classes.media}>
 						<PhotoPreview
-							photo={feedPost.photo}
+							realPhoto={feedPost.photo}
+							// TODO: super hacky, remove before production!
+							photo={feedPost.photo as string}
 							alt={feedPost.user.username}
 							maxHeight={250}
 						/>
@@ -229,16 +216,9 @@ const PostMedia: React.FC<Props> = ({currentUser, feedPost, handleDelete}) => {
 				) : (
 					""
 				)}
-				<Likes
-					liked={liked}
-					users={post && post.likes.map((like) => like.user)}
-					currentUser={currentUser}
-				/>
+				<Likes liked={liked} users={post && post.likes.map((like) => like.user)} currentUser={currentUser} />
 				<CardActions disableSpacing>
-					<IconButton
-						aria-label="love"
-						onClick={() => handleLike(feedPost._id)}
-					>
+					<IconButton aria-label="love" onClick={() => handleLike(feedPost._id)}>
 						<FavoriteIcon color={liked ? "secondary" : "disabled"} />
 					</IconButton>
 					<IconButton aria-label="share">

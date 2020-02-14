@@ -43,7 +43,8 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [openError, setOpenError] = useState<boolean>(false);
 	const [severity, setSeverity] = useState<Severity>(undefined);
-	const [photo, setPhoto] = useState<Photo>({eager: [{secure_url: ""}]});
+	const [photo, setPhoto] = useState<string>("");
+	const [realPhoto, setRealPhoto] = useState<Blob | undefined>();
 	const [isUploading, setIsUploading] = useState<boolean>(false);
 	const [offline, setOffline] = useState<boolean>(false);
 	const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
@@ -53,41 +54,39 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 		const formData = new FormData();
 		formData.append("image", files[0]);
 
-		setErrorMsg("Uploading photo, we'll notify you when the upload is complete.");
-		setSeverity("info");
-		setOpenError(true);
-		setIsUploading(true);
+		setPhoto(URL.createObjectURL(files[0]));
+		setRealPhoto(files[0]);
 
-		axios
-			.post("/api/feed/upload", formData)
-			.then((res) => {
-				setIsUploading(false);
-				const {data} = res;
-				setPhoto(data);
-				setErrorMsg("Upload complete!");
-				setSeverity("success");
-				setOpenError(true);
-			})
-			.catch((err) => {
-				if (err) {
-					setErrorMsg("Upload failed!");
-					setSeverity("error");
-					setOpenError(true);
-					setIsUploading(false);
-				}
-			});
+		// axios
+		// 	.post("/api/feed/upload", formData)
+		// 	.then((res) => {
+		// 		setIsUploading(false);
+		// 		const {data} = res;
+		// 		setPhoto(data);
+		// 		setErrorMsg("Upload complete!");
+		// 		setSeverity("success");
+		// 		setOpenError(true);
+		// 	})
+		// 	.catch((err) => {
+		// 		if (err) {
+		// 			setErrorMsg("Upload failed!");
+		// 			setSeverity("error");
+		// 			setOpenError(true);
+		// 			setIsUploading(false);
+		// 		}
+		// 	});
 	};
 
 	const handleCancel = () => {
-		if (photo.eager[0].secure_url.trim()) {
-			axios
-				.delete(`/api/feed/delete-photo/${photo.public_id}`)
-				.then((res) => {
-					console.log(res.data);
-				})
-				.catch((err) => console.log(err));
-		}
-		setPhoto({eager: [{secure_url: ""}]});
+		// if (photo.eager[0].secure_url.trim()) {
+		// 	axios
+		// 		.delete(`/api/feed/delete-photo/${photo.public_id}`)
+		// 		.then((res) => {
+		// 			console.log(res.data);
+		// 		})
+		// 		.catch((err) => console.log(err));
+		// }
+		setPhoto("");
 		if (location.hash === "#feed-post") history.goBack();
 	};
 
@@ -249,6 +248,8 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 					onUpload={onUpload}
 					offline={offline}
 					handleCancel={handleCancel}
+					realPhoto={realPhoto}
+					setIsUploading={setIsUploading}
 				/>
 			</div>
 

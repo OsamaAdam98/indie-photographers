@@ -1,11 +1,4 @@
-import {
-	Button,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	TextField
-} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import axios from "axios";
 import React, {useEffect, useState} from "react";
@@ -16,11 +9,13 @@ import useWindowDimensions from "../utilities/WindowDimensions";
 interface Props {
 	isLogged: boolean;
 	user: User;
-	photo: Photo;
-	setPhoto: React.Dispatch<React.SetStateAction<Photo>>;
+	photo: string;
+	setPhoto: React.Dispatch<React.SetStateAction<string>>;
+	realPhoto: Blob | undefined;
 	isUploading: boolean;
 	offline: boolean;
 	setNewPost: React.Dispatch<React.SetStateAction<Post[]>>;
+	setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
 	handleCancel: () => void;
 	onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -35,7 +30,9 @@ const PostModal: React.FC<Props> = (props) => {
 		isUploading,
 		onUpload,
 		offline,
-		handleCancel
+		handleCancel,
+		realPhoto,
+		setIsUploading
 	} = props;
 
 	const history = useHistory();
@@ -49,8 +46,7 @@ const PostModal: React.FC<Props> = (props) => {
 		if (location.hash !== "#feed-post") setShow(false);
 	}, [location.hash]);
 
-	const msgChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-		setMsg(event.target.value);
+	const msgChange = (event: React.ChangeEvent<HTMLInputElement>) => setMsg(event.target.value);
 
 	const handleClose = () => {
 		setErrorMsg("");
@@ -64,36 +60,31 @@ const PostModal: React.FC<Props> = (props) => {
 		setErrorMsg("");
 	};
 
-	const handleSubmit = (
-		event:
-			| React.MouseEvent<HTMLButtonElement, MouseEvent>
-			| React.FormEvent<HTMLFormElement>
-	) => {
+	const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent<HTMLFormElement>) => {
 		const username: string | undefined = user.username;
 		const email: string | undefined = user.email;
+		const formData = new FormData();
 		let subData: SubPost;
-		if (!msg.trim() && !photo.eager[0].secure_url.trim()) {
+		if (!msg.trim() && !photo.trim()) {
 			setErrorMsg("Surely you'd like to write something!");
 		} else {
-			if (photo) {
-				subData = {
-					username,
-					email,
-					msg,
-					photo: photo.eager[0].secure_url,
-					photoId: photo.public_id
-				};
-			} else {
-				subData = {
-					username,
-					email,
-					msg
-				};
+			if (realPhoto) {
+				setIsUploading(true);
+				formData.append("image", realPhoto);
 			}
+
 			const token = localStorage.getItem("token");
 
+			subData = {
+				username,
+				email,
+				msg
+			};
+
+			formData.append("data", JSON.stringify(subData));
+
 			axios
-				.post("/api/feed/add", subData, {
+				.post("/api/feed/add", formData, {
 					headers: {
 						"x-auth-token": `${token}`
 					}
@@ -102,30 +93,22 @@ const PostModal: React.FC<Props> = (props) => {
 					setNewPost((prevPost) => [res.data, ...prevPost]);
 					localStorage.setItem(
 						`feedPage1`,
-						JSON.stringify([
-							res.data,
-							...JSON.parse(localStorage.getItem(`feedPage1`) as string)
-						])
+						JSON.stringify([res.data, ...JSON.parse(localStorage.getItem(`feedPage1`) as string)])
 					);
-					setPhoto({eager: [{secure_url: ""}]});
+					setPhoto("");
 					setMsg("");
-					handleClose();
+					setIsUploading(false);
 				})
 				.catch((err) => {
 					setErrorMsg(err.response.data);
 				});
 		}
-
+		handleClose();
 		event.preventDefault();
 	};
 
 	const subButton = isLogged ? (
-		<FAB
-			handleClick={handleShow}
-			offline={offline}
-			currentLocation="/feed/"
-			icon={<EditIcon />}
-		/>
+		<FAB handleClick={handleShow} offline={offline} currentLocation="/feed/" icon={<EditIcon />} />
 	) : null;
 
 	return (
@@ -159,7 +142,7 @@ const PostModal: React.FC<Props> = (props) => {
 							helperText={errorMsg}
 						/>
 						<img
-							src={photo.eager[0].secure_url}
+							src={photo}
 							alt=""
 							style={{
 								objectFit: "scale-down",
@@ -188,16 +171,12 @@ const PostModal: React.FC<Props> = (props) => {
 							/>
 							<label htmlFor="outlined-button-file">
 								<Button component="span" color="primary" disabled={isUploading}>
-									Upload
+									Upload a photo
 								</Button>
 							</label>
 						</div>
 
-						<Button
-							onClick={handleSubmit}
-							color="primary"
-							disabled={isUploading}
-						>
+						<Button onClick={handleSubmit} color="primary" disabled={isUploading}>
 							Post
 						</Button>
 						<Button onClick={handleCancel}>Cancel</Button>

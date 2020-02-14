@@ -18,14 +18,15 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-	photo: string | undefined | null;
+	photo?: string;
+	realPhoto?: Photo;
 	alt: string;
 	maxHeight?: number;
 	round?: boolean;
 }
 
 const PhotoPreview: React.FC<Props> = (props) => {
-	const {photo, maxHeight, round, alt} = props;
+	const {photo, maxHeight, round, alt, realPhoto} = props;
 
 	const [show, setShow] = useState(false);
 
@@ -49,7 +50,7 @@ const PhotoPreview: React.FC<Props> = (props) => {
 
 	const ImagePreview = () => (
 		<img
-			src={photo ? photo : ""}
+			src={realPhoto?.secure_url || photo}
 			alt={alt}
 			onClick={handleShow}
 			style={{
@@ -64,9 +65,9 @@ const PhotoPreview: React.FC<Props> = (props) => {
 
 	const FullImage = () => (
 		<img
-			src={photo ? photo : ""}
+			src={realPhoto?.secure_url?.trim() ? realPhoto.secure_url : photo}
 			alt={`max width and height`}
-			className={classes.fullPrev}
+			className={`hover-img ${classes.fullPrev}`}
 		/>
 	);
 
