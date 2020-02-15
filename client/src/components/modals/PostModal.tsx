@@ -171,7 +171,7 @@ const PostModal: React.FC<Props> = (props) => {
 							/>
 							<label htmlFor="outlined-button-file">
 								<Button component="span" color="primary" disabled={isUploading}>
-									Upload a photo
+									Upload photo
 								</Button>
 							</label>
 						</div>
