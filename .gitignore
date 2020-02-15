@@ -2,3 +2,4 @@
 /node_modules
 /client/build
 /uploads
+/server/dist
