@@ -1,15 +1,16 @@
-const bcrypt = require("bcryptjs");
-const router = require("express").Router();
-const jwt = require("jsonwebtoken");
-let Users = require("../models/users.model");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import auth from "../middleware/auth.middleware";
+import {Router} from "express";
+const router = Router();
 
-const auth = require("../middleware/auth.middleware");
+import Users from "../models/users.model";
 
 // sign in and token generation
 
 router.post("/", (req, res) => {
-	const {password} = req.body;
-	const email = req.body.email.toLowerCase();
+	const email: string = req.body.email.toLowerCase();
+	const password: string = req.body.password;
 	if (!email || !password) {
 		return res.status(400).json({msg: "Please enter all fields"});
 	}
@@ -18,7 +19,7 @@ router.post("/", (req, res) => {
 		bcrypt.compare(password, user.password).then((isMatch) => {
 			if (!isMatch) return res.status(400).json({msg: "Invalid credentials"});
 
-			jwt.sign({id: user._id}, process.env.jwtSecret, (err, token) => {
+			jwt.sign({id: user._id}, process.env.jwtSecret, (err: jwt.VerifyErrors, token: string) => {
 				if (err) throw err;
 				res.json({
 					token,
@@ -43,7 +44,7 @@ router.post("/facebook-login", (req, res) => {
 		Users.findOne({email})
 			.then((user) => {
 				if (user) {
-					jwt.sign({id: user._id}, process.env.jwtSecret, (err, token) => {
+					jwt.sign({id: user._id}, process.env.jwtSecret, (err: jwt.JsonWebTokenError, token: string) => {
 						if (err) throw err;
 						res.json({
 							token,
@@ -75,24 +76,19 @@ router.post("/facebook-login", (req, res) => {
 							newUser
 								.save()
 								.then((user) => {
-									jwt.sign(
-										{id: user._id},
-										process.env.jwtSecret,
-										{expiresIn: 3600},
-										(err, token) => {
-											if (err) throw err;
-											res.json({
-												token,
-												user: {
-													id: user._id,
-													username: user.username,
-													email: user.email,
-													admin: user.admin,
-													profilePicture: user.profilePicture
-												}
-											});
-										}
-									);
+									jwt.sign({id: user._id}, process.env.jwtSecret, {expiresIn: 3600}, (err, token) => {
+										if (err) throw err;
+										res.json({
+											token,
+											user: {
+												id: user._id,
+												username: user.username,
+												email: user.email,
+												admin: user.admin,
+												profilePicture: user.profilePicture
+											}
+										});
+									});
 								})
 								.catch((err) => res.status(400).json(err));
 						});
@@ -105,15 +101,11 @@ router.post("/facebook-login", (req, res) => {
 
 router.post("/google-login", (req, res) => {
 	const {email, name} = req.body.profileObj;
-	const imageUrl = req.body.profileObj.imageUrl.replace(
-		"s96-c",
-		"s384-c",
-		true
-	);
+	const imageUrl = req.body.profileObj.imageUrl.replace("s96-c", "s384-c", true);
 
 	Users.findOne({email}).then((user) => {
 		if (user) {
-			jwt.sign({id: user._id}, process.env.jwtSecret, (err, token) => {
+			jwt.sign({id: user._id}, process.env.jwtSecret, (err: jwt.JsonWebTokenError, token: string) => {
 				if (err) throw err;
 				res.json({
 					token,
@@ -142,24 +134,19 @@ router.post("/google-login", (req, res) => {
 					newUser
 						.save()
 						.then((user) => {
-							jwt.sign(
-								{id: user._id},
-								process.env.jwtSecret,
-								{expiresIn: 3600},
-								(err, token) => {
-									if (err) throw err;
-									res.json({
-										token,
-										user: {
-											id: user._id,
-											username: user.username,
-											email: user.email,
-											admin: user.admin,
-											profilePicture: user.profilePicture
-										}
-									});
-								}
-							);
+							jwt.sign({id: user._id}, process.env.jwtSecret, {expiresIn: 3600}, (err, token) => {
+								if (err) throw err;
+								res.json({
+									token,
+									user: {
+										id: user._id,
+										username: user.username,
+										email: user.email,
+										admin: user.admin,
+										profilePicture: user.profilePicture
+									}
+								});
+							});
 						})
 						.catch((err) => res.status(400).json(err));
 				});
@@ -171,10 +158,10 @@ router.post("/google-login", (req, res) => {
 // user data
 
 router.get("/user", auth, (req, res) => {
-	Users.findById(req.user.id)
+	Users.findById(req.body.user.id)
 		.select("-password")
 		.then((user) => res.json(user))
 		.catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
-module.exports = router;
+export default router;

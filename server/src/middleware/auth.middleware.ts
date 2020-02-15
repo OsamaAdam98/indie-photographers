@@ -1,17 +1,21 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import {Request, Response, NextFunction} from "express";
 
-function auth(req, res, next) {
+function auth(req: Request, res: Response, next: NextFunction) {
 	const token = req.header("x-auth-token");
 
 	if (!token) return res.status(401).json({msg: "Authorization denied."});
 
 	try {
 		const decrypted = jwt.verify(token, process.env.jwtSecret);
-		req.user = decrypted;
+		req.body = {
+			...req.body,
+			user: decrypted
+		};
 		next();
 	} catch (e) {
 		res.status(401).json({msg: "Not a valid token"});
 	}
 }
 
-module.exports = auth;
+export default auth;

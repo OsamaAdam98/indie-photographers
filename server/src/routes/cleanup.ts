@@ -1,13 +1,15 @@
-const router = require("express").Router();
-const auth = require("../middleware/auth.middleware");
-let Feed = require("../models/feed.model");
-let Likes = require("../models/likes.model");
-let Comments = require("../models/comments.model");
-let Users = require("../models/users.model");
+import {Router} from "express";
+import auth from "../middleware/auth.middleware";
+import Feed from "../models/feed.model";
+import Likes from "../models/likes.model";
+import Comments from "../models/comments.model";
+import Users from "../models/users.model";
+
+const router = Router();
 
 router.get("/user/:id", auth, (req, res) => {
 	const id = req.params.id;
-	Users.findById(req.user.id)
+	Users.findById(req.body.user.id)
 		.exec()
 		.then((user) => {
 			if (user.admin) {
@@ -43,4 +45,4 @@ router.get("/user/:id", auth, (req, res) => {
 		.catch((err) => console.log(err));
 });
 
-module.exports = router;
+export default router;

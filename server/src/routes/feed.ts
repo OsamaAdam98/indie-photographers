@@ -1,15 +1,16 @@
-const router = require("express").Router();
-const moment = require("moment");
-const fs = require("fs");
+import moment from "moment";
+import fs from "fs";
+import auth from "../middleware/auth.middleware";
+import upload from "../middleware/upload.middleware";
+import {Router} from "express";
+
+import Feed from "../models/feed.model";
+import Comment from "../models/comments.model";
+import Likes from "../models/likes.model";
+import Users from "../models/users.model";
+
+const router = Router();
 const cloudinary = require("cloudinary").v2;
-
-let Feed = require("../models/feed.model");
-let Comment = require("../models/comments.model");
-let Likes = require("../models/likes.model");
-let Users = require("../models/users.model");
-
-const auth = require("../middleware/auth.middleware");
-const upload = require("../middleware/upload.middleware");
 
 cloudinary.config({
 	cloud_name: process.env.CLOUD_NAME,
@@ -38,8 +39,8 @@ router.get("/", (req, res) => {
 		.catch((err) => res.status(500).json(err));
 });
 
-router.post("/add", [upload.single("image"), auth], (req, res) => {
-	const user = req.user.id;
+router.post("/add", [upload.single("image"), auth], (req: any, res: any) => {
+	const user = req.body.user.id;
 	const {msg} = JSON.parse(req.body.data);
 	const filePath = req.file ? req.file.path : null;
 
@@ -60,7 +61,7 @@ router.post("/add", [upload.single("image"), auth], (req, res) => {
 								filePath,
 								"hahlpxqe",
 								{cloud_name: process.env.CLOUD_NAME},
-								(err, result) => {
+								(err: Error, result: any) => {
 									if (err) {
 										res.status(500).json("upload failed!");
 									} else {
@@ -123,7 +124,7 @@ router.post("/upload", upload.single("image"), (req, res) => {
 		req.file.path,
 		"hahlpxqe",
 		{cloud_name: process.env.CLOUD_NAME},
-		(err, result) => {
+		(err: Error, result: any) => {
 			if (err) {
 				res.status(500).json("upload failed!");
 			} else {
@@ -137,7 +138,7 @@ router.post("/upload", upload.single("image"), (req, res) => {
 router.post("/comment/:id", auth, (req, res) => {
 	const msg = req.body.msg;
 	const photo = req.body.photo;
-	const user = req.user.id;
+	const user = req.body.user.id;
 	const post = req.params.id;
 
 	const newComment = new Comment({
@@ -160,7 +161,7 @@ router.post("/comment/:id", auth, (req, res) => {
 
 router.post("/like/:id", auth, (req, res) => {
 	const id = req.params.id;
-	const user = req.user.id;
+	const user = req.body.user.id;
 	const customID = `${user}${id}`;
 
 	const like = new Likes({
@@ -175,7 +176,7 @@ router.post("/like/:id", auth, (req, res) => {
 			Feed.findById(id)
 				.exec()
 				.then((post) => {
-					postLike = post.likes.filter((likeIterator) => {
+					const postLike = post.likes.filter((likeIterator) => {
 						likeIterator === like._id;
 					});
 					if (postLike.length === 0) {
@@ -195,19 +196,13 @@ router.post("/like/:id", auth, (req, res) => {
 						Feed.findById(like[0].post)
 							.exec()
 							.then((post) => {
-								Feed.findByIdAndUpdate(
-									post._id,
-									// prettier-ignore
-									{$pull: {likes: like[0]._id}},
-									{safe: true, upsert: true},
-									(err) => {
-										if (err) throw err;
-										Likes.findByIdAndDelete(like[0]._id)
-											.exec()
-											.then(() => res.status(200).json({like: false}))
-											.catch(() => res.status(404).json("like not found"));
-									}
-								);
+								Feed.findByIdAndUpdate(post._id, {$pull: {likes: like[0]._id}}, {upsert: true}, (err) => {
+									if (err) throw err;
+									Likes.findByIdAndDelete(like[0]._id)
+										.exec()
+										.then(() => res.status(200).json({like: false}))
+										.catch(() => res.status(404).json("like not found"));
+								});
 							});
 					})
 					.catch((err) => res.status(400).json(err));
@@ -231,55 +226,57 @@ router.delete("/delete/:id", auth, (req, res) => {
 	Feed.findById(req.params.id)
 		.exec()
 		.then((post) => {
-			if (post.photoId) {
-				cloudinary.api.delete_resources(
-					[`${post.photoId}`],
-					{
-						cloud_name: process.env.CLOUD_NAME,
-						api_key: process.env.CLOUDINAY_API_KEY,
-						api_secret: process.env.CLOUDINARY_API_SECRET
-					},
-					(err, result) => {
-						if (err) console.log(err);
+			Feed.findByIdAndDelete(post._id)
+				.then(() => {
+					res.status(200).json(`Post deleted!`);
+					if (post.photo.public_id) {
+						cloudinary.api.delete_resources(
+							[`${post.photo.public_id}`],
+							{
+								cloud_name: process.env.CLOUD_NAME,
+								api_key: process.env.CLOUDINAY_API_KEY,
+								api_secret: process.env.CLOUDINARY_API_SECRET
+							},
+							(err: Error, result: any) => {
+								if (err) console.log(err);
+							}
+						);
 					}
-				);
-			}
-			Feed.findByIdAndDelete(req.params.id)
-				.then(() => res.json(`Post deleted!`))
+				})
 				.catch((err) => res.status(400).json(err));
 		})
 		.catch((err) => res.status(404).json("Post not found"));
 });
 
-router.delete("/delete-photo/:photoId", (req, res) => {
-	cloudinary.api.delete_resources(
-		[`${req.params.photoId}`],
-		{
-			cloud_name: process.env.CLOUD_NAME,
-			api_key: process.env.CLOUDINAY_API_KEY,
-			api_secret: process.env.CLOUDINARY_API_SECRET
-		},
-		(err, result) => {
-			if (err) console.log(err);
-			res.status(200).json("Photo deleted");
-		}
-	);
-});
+// router.delete("/delete-photo/:photoId", (req, res) => {
+// 	cloudinary.api.delete_resources(
+// 		[`${req.params.photoId}`],
+// 		{
+// 			cloud_name: process.env.CLOUD_NAME,
+// 			api_key: process.env.CLOUDINAY_API_KEY,
+// 			api_secret: process.env.CLOUDINARY_API_SECRET
+// 		},
+// 		(err, result) => {
+// 			if (err) console.log(err);
+// 			res.status(200).json("Photo deleted");
+// 		}
+// 	);
+// });
 
-router.post("/update/:id", auth, (req, res) => {
-	Feed.findById(req.params.id)
-		.then((item) => {
-			item.email = req.body.email;
-			item.msg = req.body.msg;
-			item.photo = req.body.photo;
+// router.post("/update/:id", auth, (req, res) => {
+// 	Feed.findById(req.params.id)
+// 		.then((item) => {
+// 			item.email = req.body.email;
+// 			item.msg = req.body.msg;
+// 			item.photo = req.body.photo;
 
-			item
-				.save()
-				.then(() => res.json(`item updated.`))
-				.catch((err) => res.status(400).json(err));
-		})
-		.catch((err) => res.status(400).json(err));
-});
+// 			item
+// 				.save()
+// 				.then(() => res.json(`item updated.`))
+// 				.catch((err) => res.status(400).json(err));
+// 		})
+// 		.catch((err) => res.status(400).json(err));
+// });
 
 router.get("/user/:id/", (req, res) => {
 	const {page} = req.query;
@@ -301,4 +298,4 @@ router.get("/user/:id/", (req, res) => {
 		.catch((err) => res.status(404).json(err));
 });
 
-module.exports = router;
+export default router;

@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import path from "path";
 import sslRedirect from "./middleware/sslRedirect.middleware";
 
-import marketRoute from "./routes/marketplace";
 import usersRoute from "./routes/users";
 import authRoute from "./routes/auth";
 import feedRoute from "./routes/feed";
@@ -34,7 +33,6 @@ const connection = mongoose.connection;
 
 connection.once("open", () => console.log("Database connection established successfully."));
 
-app.use("/api/items", marketRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/feed", feedRoute);

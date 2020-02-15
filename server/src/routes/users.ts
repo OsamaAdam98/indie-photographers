@@ -1,10 +1,10 @@
-const bcrypt = require("bcryptjs");
-const router = require("express").Router();
-const jwt = require("jsonwebtoken");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import {Router} from "express";
+import auth from "../middleware/auth.middleware";
+import Users from "../models/users.model";
 
-let Users = require("../models/users.model");
-
-const auth = require("../middleware/auth.middleware");
+const router = Router();
 
 // User registeration
 
@@ -34,25 +34,20 @@ router.post("/", (req, res) => {
 				newUser
 					.save()
 					.then((user) => {
-						jwt.sign(
-							{id: user._id},
-							process.env.jwtSecret,
-							{expiresIn: 3600},
-							(err, token) => {
-								if (err) throw err;
-								res.json({
-									token,
-									user: {
-										id: user._id,
-										username: user.username,
-										email: user.email,
-										admin: user.admin,
-										profilePicture: user.profilePicture
-									}
-								});
-								console.log(user);
-							}
-						);
+						jwt.sign({id: user._id}, process.env.jwtSecret, {expiresIn: 3600}, (err, token) => {
+							if (err) throw err;
+							res.json({
+								token,
+								user: {
+									id: user._id,
+									username: user.username,
+									email: user.email,
+									admin: user.admin,
+									profilePicture: user.profilePicture
+								}
+							});
+							console.log(user);
+						});
 					})
 					.catch((err) => res.status(400).json(`Error: ${err}`));
 			});
@@ -80,9 +75,9 @@ router.get("/:id", (req, res) => {
 		.catch((err) => res.status(404).json(err));
 });
 
-router.put("/update", auth, (req, res) => {
-	//TODO: finish this one
-	Users.findByIdAndUpdate(req.user);
-});
+// router.put("/update", auth, (req, res) => {
+// 	//TODO: finish this one
+// 	Users.findByIdAndUpdate(req.user);
+// });
 
-module.exports = router;
+export default router;
