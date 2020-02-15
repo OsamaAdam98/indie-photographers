@@ -14,11 +14,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-interface Props {
-	user: User;
-}
-
-const BottomBar: React.FC<Props> = ({user}) => {
+const BottomBar: React.FC<{user: User}> = ({user}) => {
 	const [value, setValue] = useState<number | boolean>(0);
 
 	const classes = useStyles();

@@ -5,7 +5,7 @@
 	"main": "./server/src/index.js",
 	"scripts": {
 		"start": "npm run server:build && npm run server:prod",
-		"server": "nodemon ./server/src/server.ts",
+		"server": "nodemon",
 		"server:build": "cd server && tsc",
 		"server:prod": "node ./server/dist/server.js",
 		"client": "npm start --prefix client",
@@ -37,7 +37,6 @@
 	},
 	"devDependencies": {
 		"concurrently": "^5.1.0",
-		"nodemon": "^2.0.2",
-		"ts-node": "^8.6.2"
+		"nodemon": "^2.0.2"
 	}
 }
