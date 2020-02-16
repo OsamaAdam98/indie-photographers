@@ -56,36 +56,9 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 
 		setPhoto(URL.createObjectURL(files[0]));
 		setRealPhoto(files[0]);
-
-		// axios
-		// 	.post("/api/feed/upload", formData)
-		// 	.then((res) => {
-		// 		setIsUploading(false);
-		// 		const {data} = res;
-		// 		setPhoto(data);
-		// 		setErrorMsg("Upload complete!");
-		// 		setSeverity("success");
-		// 		setOpenError(true);
-		// 	})
-		// 	.catch((err) => {
-		// 		if (err) {
-		// 			setErrorMsg("Upload failed!");
-		// 			setSeverity("error");
-		// 			setOpenError(true);
-		// 			setIsUploading(false);
-		// 		}
-		// 	});
 	};
 
 	const handleCancel = () => {
-		// if (photo.eager[0].secure_url.trim()) {
-		// 	axios
-		// 		.delete(`/api/feed/delete-photo/${photo.public_id}`)
-		// 		.then((res) => {
-		// 			console.log(res.data);
-		// 		})
-		// 		.catch((err) => console.log(err));
-		// }
 		setPhoto("");
 		if (location.hash === "#feed-post") history.goBack();
 	};
@@ -101,8 +74,10 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 				if (targetHit) {
 					setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
 					setNewPost((prevPosts) => prevPosts.filter((post) => post._id !== id));
-
-					localStorage.setItem(`feedPage${index}`, JSON.stringify(cachedData.filter((data) => data._id !== id)));
+					for (let i = 1; i <= index; i++) {
+						localStorage.removeItem(`feedPage${i}`);
+					}
+					// localStorage.setItem(`feedPage${index}`, JSON.stringify(cachedData.filter((data) => data._id !== id)));
 					break;
 				}
 				index++;
@@ -124,10 +99,8 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 				setErrorMsg(res.data as string);
 				setSeverity("success");
 				setOpenError(true);
-				// TODO: Temporary fix, fix when possible.
-				window.location.reload();
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => console.log(err.response.data));
 	}, []);
 
 	const getNewPosts = (newPosts: Post[], cachedData: Post[]) => {

@@ -19,7 +19,7 @@ router.post("/", (req, res) => {
 		bcrypt.compare(password, user.password).then((isMatch) => {
 			if (!isMatch) return res.status(400).json({msg: "Invalid credentials"});
 
-			jwt.sign({id: user._id}, process.env.jwtSecret, (err: jwt.VerifyErrors, token: string) => {
+			jwt.sign({id: user._id, admin: user.admin}, process.env.jwtSecret, (err: jwt.VerifyErrors, token: string) => {
 				if (err) throw err;
 				res.json({
 					token,
@@ -44,19 +44,23 @@ router.post("/facebook-login", (req, res) => {
 		Users.findOne({email})
 			.then((user) => {
 				if (user) {
-					jwt.sign({id: user._id}, process.env.jwtSecret, (err: jwt.JsonWebTokenError, token: string) => {
-						if (err) throw err;
-						res.json({
-							token,
-							user: {
-								id: user._id,
-								username: user.username,
-								email: user.email,
-								profilePicture: user.profilePicture,
-								admin: user.admin
-							}
-						});
-					});
+					jwt.sign(
+						{id: user._id, admin: user.admin},
+						process.env.jwtSecret,
+						(err: jwt.JsonWebTokenError, token: string) => {
+							if (err) throw err;
+							res.json({
+								token,
+								user: {
+									id: user._id,
+									username: user.username,
+									email: user.email,
+									profilePicture: user.profilePicture,
+									admin: user.admin
+								}
+							});
+						}
+					);
 					Users.updateOne({email}, {$set: {profilePicture: url}}, (err) => {
 						if (err) throw err;
 					});
@@ -76,19 +80,24 @@ router.post("/facebook-login", (req, res) => {
 							newUser
 								.save()
 								.then((user) => {
-									jwt.sign({id: user._id}, process.env.jwtSecret, {expiresIn: 3600}, (err, token) => {
-										if (err) throw err;
-										res.json({
-											token,
-											user: {
-												id: user._id,
-												username: user.username,
-												email: user.email,
-												admin: user.admin,
-												profilePicture: user.profilePicture
-											}
-										});
-									});
+									jwt.sign(
+										{id: user._id, admin: user.admin},
+										process.env.jwtSecret,
+										{expiresIn: 3600},
+										(err, token) => {
+											if (err) throw err;
+											res.json({
+												token,
+												user: {
+													id: user._id,
+													username: user.username,
+													email: user.email,
+													admin: user.admin,
+													profilePicture: user.profilePicture
+												}
+											});
+										}
+									);
 								})
 								.catch((err) => res.status(400).json(err));
 						});
@@ -105,19 +114,23 @@ router.post("/google-login", (req, res) => {
 
 	Users.findOne({email}).then((user) => {
 		if (user) {
-			jwt.sign({id: user._id}, process.env.jwtSecret, (err: jwt.JsonWebTokenError, token: string) => {
-				if (err) throw err;
-				res.json({
-					token,
-					user: {
-						id: user._id,
-						username: user.username,
-						email: user.email,
-						profilePicture: user.profilePicture,
-						admin: user.admin
-					}
-				});
-			});
+			jwt.sign(
+				{id: user._id, admin: user.admin},
+				process.env.jwtSecret,
+				(err: jwt.JsonWebTokenError, token: string) => {
+					if (err) throw err;
+					res.json({
+						token,
+						user: {
+							id: user._id,
+							username: user.username,
+							email: user.email,
+							profilePicture: user.profilePicture,
+							admin: user.admin
+						}
+					});
+				}
+			);
 		} else {
 			const newUser = new Users({
 				username: name,
@@ -134,7 +147,7 @@ router.post("/google-login", (req, res) => {
 					newUser
 						.save()
 						.then((user) => {
-							jwt.sign({id: user._id}, process.env.jwtSecret, {expiresIn: 3600}, (err, token) => {
+							jwt.sign({id: user._id, admin: user.admin}, process.env.jwtSecret, {expiresIn: 3600}, (err, token) => {
 								if (err) throw err;
 								res.json({
 									token,

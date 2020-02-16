@@ -39,8 +39,8 @@ const PostModal: React.FC<Props> = (props) => {
 	const location = useLocation();
 	const {height} = useWindowDimensions();
 	const [show, setShow] = useState<boolean>(false);
-	const [errorMsg, setErrorMsg] = useState<string>(" ");
-	const [msg, setMsg] = useState<string>(" ");
+	const [errorMsg, setErrorMsg] = useState<string>("");
+	const [msg, setMsg] = useState<string>("");
 
 	useEffect(() => {
 		if (location.hash !== "#feed-post") setShow(false);
@@ -50,6 +50,8 @@ const PostModal: React.FC<Props> = (props) => {
 
 	const handleClose = () => {
 		setErrorMsg("");
+		setMsg("");
+		setPhoto("");
 		setShow(false);
 		if (location.hash === "#feed-post") history.goBack();
 	};
@@ -91,19 +93,15 @@ const PostModal: React.FC<Props> = (props) => {
 				})
 				.then((res) => {
 					setNewPost((prevPost) => [...prevPost, res.data]);
-					// localStorage.setItem(
-					// 	`feedPage1`,
-					// 	JSON.stringify([...JSON.parse(localStorage.getItem(`feedPage1`) as string), res.data])
-					// );
 					setPhoto("");
 					setMsg("");
 					setIsUploading(false);
+					handleClose();
 				})
 				.catch((err) => {
 					setErrorMsg(err.response.data);
 				});
 		}
-		handleClose();
 		event.preventDefault();
 	};
 
@@ -138,7 +136,7 @@ const PostModal: React.FC<Props> = (props) => {
 							onChange={msgChange}
 							fullWidth={true}
 							dir="auto"
-							error={errorMsg ? true : false}
+							error={errorMsg.trim() ? true : false}
 							helperText={errorMsg}
 						/>
 						<img
