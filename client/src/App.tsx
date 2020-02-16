@@ -114,39 +114,11 @@ const App: React.FC = () => {
 		}
 	}, [isLogged]);
 
-	// return (
-	// 	<Router>
-	// 		<MuiThemeProvider theme={isLight ? createMuiTheme(theme.lightTheme) : createMuiTheme(theme.darkTheme)}>
-	// 			<CssBaseline />
-	// 			<Link to="/feed/">Feed</Link>
-	// 			<Switch>
-	// 				<Route
-	// 					exact
-	// 					path="/feed"
-	// 					render={() => (
-	// 						<Suspense fallback={<div>Loading...</div>}>
-	// 							<Feed isLogged={isLogged} user={user} />
-	// 						</Suspense>
-	// 					)}
-	// 				/>
-	// 				<Route
-	// 					path="/profile/:id"
-	// 					render={() => (
-	// 						<Suspense fallback={<div>Loading..</div>}>
-	// 							<Profile currentUser={user} />
-	// 						</Suspense>
-	// 					)}
-	// 				/>
-	// 			</Switch>
-	// 		</MuiThemeProvider>
-	// 	</Router>
-	// );
-
 	return (
 		<MuiThemeProvider theme={isLight ? createMuiTheme(theme.lightTheme) : createMuiTheme(theme.darkTheme)}>
 			<CssBaseline />
 			<Router>
-				<Suspense fallback={<div>Nav Bar</div>}>
+				<Suspense fallback={<div />}>
 					<Route
 						path="/"
 						render={() => (
@@ -164,60 +136,24 @@ const App: React.FC = () => {
 						)}
 					/>
 				</Suspense>
-				<Switch>
-					<Route
-						exact
-						path="/"
-						render={() => (
-							<Suspense fallback={<div>loading..</div>}>
-								<Home />
-							</Suspense>
-						)}
-					/>
+				<Suspense fallback={<div />}>
+					<Switch>
+						<Route exact path="/" render={() => <Home />} />
 
-					<Route
-						exact
-						path="/profile/:id"
-						render={() => (
-							<Suspense fallback={<div>loading..</div>}>
-								<Profile />
-							</Suspense>
-						)}
-					/>
+						<Route exact path="/profile/:id" render={() => <Profile />} />
 
-					<Route
-						exact
-						path="/feed"
-						render={() => (
-							<Suspense fallback={<div>loading..</div>}>
-								<Feed isLogged={isLogged} user={user} />
-							</Suspense>
-						)}
-					/>
+						<Route exact path="/feed" render={() => <Feed isLogged={isLogged} user={user} />} />
 
-					<Route
-						exact
-						path="/settings"
-						render={() => (
-							<Suspense fallback={<div>loading..</div>}>
+						<Route
+							exact
+							path="/settings"
+							render={() => (
 								<Settings isLight={isLight} setIsLight={setIsLight} handleClick={handleClick} showBtn={showBtn} />
-							</Suspense>
-						)}
-					/>
-					<Route
-						render={() => (
-							<Suspense fallback={<div>loading..</div>}>
-								<NotFound />
-							</Suspense>
-						)}
-					/>
-				</Switch>
-				{/* <div
-					style={{
-						height: 48,
-						display: width < 500 ? "" : "none"
-					}}
-				/> */}
+							)}
+						/>
+						<Route render={() => <NotFound />} />
+					</Switch>
+				</Suspense>
 			</Router>
 		</MuiThemeProvider>
 	);
