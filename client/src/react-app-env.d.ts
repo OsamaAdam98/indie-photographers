@@ -10,7 +10,7 @@ interface User {
 	admin: boolean;
 	email: string;
 	profilePicture?: string;
-	registerDate: Date;
+	registerDate?: Date;
 	username: string;
 	__v?: number;
 	_id: string;

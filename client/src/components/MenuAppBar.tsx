@@ -1,12 +1,4 @@
-import {
-	AppBar,
-	Avatar,
-	makeStyles,
-	Slide,
-	Toolbar,
-	Typography,
-	useScrollTrigger
-} from "@material-ui/core";
+import {AppBar, Avatar, makeStyles, Slide, Toolbar, Typography, useScrollTrigger} from "@material-ui/core";
 import React from "react";
 import {Link} from "react-router-dom";
 import {BottomBar, LightSwitch, Login, useWindowDimensions} from ".";
@@ -90,14 +82,8 @@ const MenuAppBar: React.FC<Props> = (props) => {
 						<Typography variant="h5" className={classes.title}>
 							Indie
 						</Typography>
-						{width > 500 && (
-							<LightSwitch isLight={isLight} setIsLight={setIsLight} />
-						)}
-						<Login
-							isLogged={isLogged}
-							setIsLogged={setIsLogged}
-							setUser={setUser}
-						/>
+						{width > 500 && <LightSwitch isLight={isLight} setIsLight={setIsLight} />}
+						<Login isLogged={isLogged} setIsLogged={setIsLogged} setUser={setUser} />
 					</Toolbar>
 				</AppBar>
 			</HideOnScroll>

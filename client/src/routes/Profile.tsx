@@ -19,7 +19,13 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
+const Profile: React.FC = () => {
+	const [currentUser, setCurrentUser] = useState<User>({
+		username: "",
+		_id: "",
+		admin: false,
+		email: ""
+	});
 	const [user, setUser] = useState<User | null>(null);
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -95,6 +101,7 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 
 	useEffect(() => {
 		if (params.id) {
+			setCurrentUser(JSON.parse(localStorage.getItem("userInfo") as string));
 			let cachedData: User = JSON.parse(localStorage.getItem(`${params.id}`) as string);
 			if (cachedData) setUser(cachedData);
 			axios

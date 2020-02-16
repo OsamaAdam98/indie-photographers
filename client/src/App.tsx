@@ -4,26 +4,19 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import axios from "axios";
 import React, {lazy, Suspense, useEffect, useState} from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import {
-	Home,
-	MenuAppBar,
-	NotFound,
-	PostSkeleton,
-	ProfileSkeleton,
-	Settings,
-	SnackAlert,
-	useWindowDimensions
-} from "./components";
 import "./css/feed.css";
 import "./css/style.css";
 
 const Feed = lazy(() => import("./routes/Feed"));
 const Profile = lazy(() => import("./routes/Profile"));
+const Home = lazy(() => import("./routes/Home"));
+const Settings = lazy(() => import("./routes/Settings"));
+const NotFound = lazy(() => import("./routes/NotFound"));
+const MenuAppBar = lazy(() => import("./components/MenuAppBar"));
+const SnackAlert = lazy(() => import("./components/SnackAlert"));
 
 const App: React.FC = () => {
 	const [isLogged, setIsLogged] = useState(localStorage.getItem("token") ? true : false);
-
-	const {width} = useWindowDimensions();
 
 	const [user, setUser] = useState<User>(
 		isLogged ? JSON.parse(localStorage.getItem("userInfo") as string) : {admin: false}
@@ -121,62 +114,111 @@ const App: React.FC = () => {
 		}
 	}, [isLogged]);
 
+	// return (
+	// 	<Router>
+	// 		<MuiThemeProvider theme={isLight ? createMuiTheme(theme.lightTheme) : createMuiTheme(theme.darkTheme)}>
+	// 			<CssBaseline />
+	// 			<Link to="/feed/">Feed</Link>
+	// 			<Switch>
+	// 				<Route
+	// 					exact
+	// 					path="/feed"
+	// 					render={() => (
+	// 						<Suspense fallback={<div>Loading...</div>}>
+	// 							<Feed isLogged={isLogged} user={user} />
+	// 						</Suspense>
+	// 					)}
+	// 				/>
+	// 				<Route
+	// 					path="/profile/:id"
+	// 					render={() => (
+	// 						<Suspense fallback={<div>Loading..</div>}>
+	// 							<Profile currentUser={user} />
+	// 						</Suspense>
+	// 					)}
+	// 				/>
+	// 			</Switch>
+	// 		</MuiThemeProvider>
+	// 	</Router>
+	// );
+
 	return (
 		<MuiThemeProvider theme={isLight ? createMuiTheme(theme.lightTheme) : createMuiTheme(theme.darkTheme)}>
 			<CssBaseline />
 			<Router>
-				<MenuAppBar
-					isLogged={isLogged}
-					setIsLogged={setIsLogged}
-					user={user}
-					setUser={setUser}
-					isLight={isLight}
-					setIsLight={setIsLight}
-				/>
-				<Switch>
-					<Route exact path="/" render={() => <Home />} />
+				<Suspense fallback={<div>Nav Bar</div>}>
 					<Route
-						path="/profile/:id"
+						path="/"
 						render={() => (
-							<Suspense fallback={<ProfileSkeleton />}>
-								<Profile currentUser={user} />
+							<>
+								<MenuAppBar
+									isLogged={isLogged}
+									setIsLogged={setIsLogged}
+									user={user}
+									setUser={setUser}
+									isLight={isLight}
+									setIsLight={setIsLight}
+								/>
+								<SnackAlert severity={severity} errorMsg={errorMsg} setOpenError={setOpenError} openError={openError} />
+							</>
+						)}
+					/>
+				</Suspense>
+				<Switch>
+					<Route
+						exact
+						path="/"
+						render={() => (
+							<Suspense fallback={<div>loading..</div>}>
+								<Home />
 							</Suspense>
 						)}
 					/>
+
+					<Route
+						exact
+						path="/profile/:id"
+						render={() => (
+							<Suspense fallback={<div>loading..</div>}>
+								<Profile />
+							</Suspense>
+						)}
+					/>
+
 					<Route
 						exact
 						path="/feed"
 						render={() => (
-							<Suspense
-								fallback={
-									<div className="feed-container">
-										<div className="feed-post-block">
-											<PostSkeleton />
-										</div>
-									</div>
-								}
-							>
+							<Suspense fallback={<div>loading..</div>}>
 								<Feed isLogged={isLogged} user={user} />
 							</Suspense>
 						)}
 					/>
+
 					<Route
 						exact
 						path="/settings"
 						render={() => (
-							<Settings isLight={isLight} setIsLight={setIsLight} handleClick={handleClick} showBtn={showBtn} />
+							<Suspense fallback={<div>loading..</div>}>
+								<Settings isLight={isLight} setIsLight={setIsLight} handleClick={handleClick} showBtn={showBtn} />
+							</Suspense>
 						)}
 					/>
-					<Route component={NotFound} />
+					<Route
+						render={() => (
+							<Suspense fallback={<div>loading..</div>}>
+								<NotFound />
+							</Suspense>
+						)}
+					/>
 				</Switch>
+				{/* <div
+					style={{
+						height: 48,
+						display: width < 500 ? "" : "none"
+					}}
+				/> */}
 			</Router>
-			<SnackAlert severity={severity} errorMsg={errorMsg} setOpenError={setOpenError} openError={openError} />
-			<div
-				style={{
-					height: 48,
-					display: width < 500 ? "" : "none"
-				}}
-			/>
 		</MuiThemeProvider>
 	);
 };
