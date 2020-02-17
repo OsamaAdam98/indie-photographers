@@ -10,7 +10,7 @@ import GoogleBtn from "./buttons/GoogleBtn";
 import LightSwitch from "./buttons/LightSwitch";
 import MenuAppBar from "./MenuAppBar";
 import PostModal from "./modals/PostModal";
-import Likes from "./modals/Likes.modal";
+import Likes from "./modals/Likes";
 import Login from "./modals/Login";
 import PhotoPreview from "./modals/PhotoPreview";
 import PostMedia from "./PostMedia";

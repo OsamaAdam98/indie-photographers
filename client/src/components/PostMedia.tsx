@@ -163,7 +163,6 @@ const PostMedia: React.FC<Props> = ({currentUser, feedPost, handleDelete}) => {
 										exit: 0
 									}}
 								>
-									<MenuItem>Edit</MenuItem>
 									<MenuItem onClick={() => handleDelete(feedPost._id)}>Delete</MenuItem>
 								</Menu>
 							</>

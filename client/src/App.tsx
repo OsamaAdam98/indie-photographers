@@ -121,19 +121,17 @@ const App: React.FC = () => {
 				<Route
 					path="/"
 					render={() => (
-						<>
-							<Suspense fallback={<div>Loading...</div>}>
-								<MenuAppBar
-									isLogged={isLogged}
-									setIsLogged={setIsLogged}
-									user={user}
-									setUser={setUser}
-									isLight={isLight}
-									setIsLight={setIsLight}
-								/>
-								<SnackAlert severity={severity} errorMsg={errorMsg} setOpenError={setOpenError} openError={openError} />
-							</Suspense>
-						</>
+						<Suspense fallback={<div />}>
+							<MenuAppBar
+								isLogged={isLogged}
+								setIsLogged={setIsLogged}
+								user={user}
+								setUser={setUser}
+								isLight={isLight}
+								setIsLight={setIsLight}
+							/>
+							<SnackAlert severity={severity} errorMsg={errorMsg} setOpenError={setOpenError} openError={openError} />
+						</Suspense>
 					)}
 				/>
 				<Switch>
@@ -141,7 +139,7 @@ const App: React.FC = () => {
 						exact
 						path="/"
 						render={() => (
-							<Suspense fallback={<div>Loading...</div>}>
+							<Suspense fallback={<div />}>
 								<Home />
 							</Suspense>
 						)}
@@ -151,7 +149,7 @@ const App: React.FC = () => {
 						exact
 						path="/profile/:id"
 						render={() => (
-							<Suspense fallback={<div>Loading...</div>}>
+							<Suspense fallback={<div />}>
 								<Profile currentUser={user} />
 							</Suspense>
 						)}
@@ -161,7 +159,7 @@ const App: React.FC = () => {
 						exact
 						path="/feed"
 						render={() => (
-							<Suspense fallback={<div>Loading...</div>}>
+							<Suspense fallback={<div />}>
 								<Feed isLogged={isLogged} user={user} />
 							</Suspense>
 						)}
@@ -171,14 +169,14 @@ const App: React.FC = () => {
 						exact
 						path="/settings"
 						render={() => (
-							<Suspense fallback={<div>Loading...</div>}>
+							<Suspense fallback={<div />}>
 								<Settings isLight={isLight} setIsLight={setIsLight} handleClick={handleClick} showBtn={showBtn} />
 							</Suspense>
 						)}
 					/>
 					<Route
 						render={() => (
-							<Suspense fallback={<div>Loading...</div>}>
+							<Suspense fallback={<div />}>
 								<NotFound />
 							</Suspense>
 						)}
