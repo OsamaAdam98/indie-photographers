@@ -3,10 +3,12 @@ import DoneAllIcon from "@material-ui/icons/DoneAll";
 import axios from "axios";
 import React, {lazy, Suspense, useCallback, useEffect, useRef, useState} from "react";
 import {useHistory, useLocation} from "react-router-dom";
-import {PostModal, PostSkeleton, SnackAlert} from "../components";
 import "../css/feed.css";
 
 const PostMedia = lazy(() => import("../components/PostMedia"));
+const PostModal = lazy(() => import("../components/modals/PostModal"));
+const PostSkeleton = lazy(() => import("../components/skeletons/PostSkeleton"));
+const SnackAlert = lazy(() => import("../components/SnackAlert"));
 
 const useStyles = makeStyles({
 	progress: {
@@ -197,39 +199,41 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 	));
 
 	return (
-		<div className="feed-container">
-			<div className="feed-post-block">
-				<Suspense fallback={<PostSkeleton />}>
-					{newPosts}
-					{postMedia}
-				</Suspense>
-				{!hasMore && !isLoading ? (
-					<DoneAllIcon
-						style={{
-							position: "relative",
-							width: "100%",
-							textAlign: "center"
-						}}
+		<Suspense fallback={<div />}>
+			<div className="feed-container">
+				<div className="feed-post-block">
+					<Suspense fallback={<PostSkeleton />}>
+						{newPosts}
+						{postMedia}
+					</Suspense>
+					{!hasMore && !isLoading ? (
+						<DoneAllIcon
+							style={{
+								position: "relative",
+								width: "100%",
+								textAlign: "center"
+							}}
+						/>
+					) : null}
+					<SnackAlert severity={severity} openError={openError} setOpenError={setOpenError} errorMsg={errorMsg} />
+					<PostModal
+						isLogged={isLogged}
+						user={user}
+						setNewPost={setNewPost}
+						photo={photo}
+						setPhoto={setPhoto}
+						isUploading={isUploading}
+						onUpload={onUpload}
+						offline={offline}
+						handleCancel={handleCancel}
+						realPhoto={realPhoto}
+						setIsUploading={setIsUploading}
 					/>
-				) : null}
-				<SnackAlert severity={severity} openError={openError} setOpenError={setOpenError} errorMsg={errorMsg} />
-				<PostModal
-					isLogged={isLogged}
-					user={user}
-					setNewPost={setNewPost}
-					photo={photo}
-					setPhoto={setPhoto}
-					isUploading={isUploading}
-					onUpload={onUpload}
-					offline={offline}
-					handleCancel={handleCancel}
-					realPhoto={realPhoto}
-					setIsUploading={setIsUploading}
-				/>
-			</div>
+				</div>
 
-			{isUploading && <LinearProgress color="primary" className={classes.progress} />}
-		</div>
+				{isUploading && <LinearProgress color="primary" className={classes.progress} />}
+			</div>
+		</Suspense>
 	);
 };
 

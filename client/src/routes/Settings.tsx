@@ -1,6 +1,7 @@
 import {Button, Container, Typography, makeStyles} from "@material-ui/core";
-import React from "react";
-import {LightSwitch} from "../components";
+import React, {Suspense} from "react";
+
+const LightSwitch = React.lazy(() => import("../components/buttons/LightSwitch"));
 
 const useStyles = makeStyles(() => ({
 	btnStyle: {
@@ -23,7 +24,9 @@ const Settings: React.FC<Props> = ({isLight, showBtn, setIsLight, handleClick}) 
 	return (
 		<Container maxWidth="lg">
 			<Typography>Light mode</Typography>
-			<LightSwitch isLight={isLight} setIsLight={setIsLight} />
+			<Suspense fallback={<div />}>
+				<LightSwitch isLight={isLight} setIsLight={setIsLight} />
+			</Suspense>
 			<Button
 				size="large"
 				color="primary"
