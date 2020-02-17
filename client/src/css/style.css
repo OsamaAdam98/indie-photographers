@@ -21,3 +21,13 @@ body {
 .hover-img:hover {
 	cursor: pointer;
 }
+
+.invisibleDiv {
+	height: 3rem;
+}
+
+@media (min-width: 31.25rem) {
+	.invisibleDiv {
+		display: none;
+	}
+}

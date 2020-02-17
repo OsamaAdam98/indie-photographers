@@ -1,4 +1,4 @@
-import {createMuiTheme, MuiThemeProvider} from "@material-ui/core";
+import {createMuiTheme, ThemeProvider} from "@material-ui/core";
 import {yellow} from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import axios from "axios";
@@ -30,24 +30,23 @@ const App: React.FC = () => {
 		(JSON.parse(localStorage.getItem("theme") as string) as boolean) ? true : false
 	);
 
-	const theme: customTheme = {
-		darkTheme: {
-			palette: {
-				type: "dark",
-				primary: {
-					main: yellow[600]
-				}
-			}
-		},
-		lightTheme: {
-			palette: {
-				type: "light",
-				primary: {
-					main: yellow[700]
-				}
+	const lightTheme = createMuiTheme({
+		palette: {
+			type: "light",
+			primary: {
+				main: yellow[700]
 			}
 		}
-	};
+	});
+
+	const darkTheme = createMuiTheme({
+		palette: {
+			type: "dark",
+			primary: {
+				main: yellow[600]
+			}
+		}
+	});
 
 	window.addEventListener("beforeinstallprompt", (event) => {
 		event.preventDefault();
@@ -115,7 +114,7 @@ const App: React.FC = () => {
 	}, [isLogged]);
 
 	return (
-		<MuiThemeProvider theme={isLight ? createMuiTheme(theme.lightTheme) : createMuiTheme(theme.darkTheme)}>
+		<ThemeProvider theme={isLight ? lightTheme : darkTheme}>
 			<CssBaseline />
 			<Router>
 				<Route
@@ -183,7 +182,7 @@ const App: React.FC = () => {
 					/>
 				</Switch>
 			</Router>
-		</MuiThemeProvider>
+		</ThemeProvider>
 	);
 };
 

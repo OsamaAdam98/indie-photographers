@@ -1,9 +1,15 @@
 import {Snackbar} from "@material-ui/core";
-import MuiAlert, {AlertProps} from "@material-ui/lab/Alert";
-import React from "react";
+import {AlertProps} from "@material-ui/lab/Alert";
+import React, {Suspense} from "react";
+
+const MuiAlert = React.lazy(() => import("@material-ui/lab/Alert"));
 
 const Alert = (props: AlertProps) => {
-	return <MuiAlert elevation={6} variant="filled" {...props} />;
+	return (
+		<Suspense fallback={<div />}>
+			<MuiAlert elevation={6} variant="filled" {...props} />
+		</Suspense>
+	);
 };
 
 interface Props {
@@ -17,9 +23,7 @@ const SnackAlert: React.FC<Props> = (props) => {
 	const {severity, openError, setOpenError, errorMsg} = props;
 
 	const handleClose = (
-		event:
-			| React.SyntheticEvent<any, Event>
-			| React.MouseEvent<HTMLDivElement, MouseEvent>,
+		event: React.SyntheticEvent<any, Event> | React.MouseEvent<HTMLDivElement, MouseEvent>,
 		reason?: string
 	) => {
 		if (reason === "clickaway") {

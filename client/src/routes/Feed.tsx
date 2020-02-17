@@ -1,5 +1,4 @@
 import {LinearProgress, makeStyles} from "@material-ui/core";
-import DoneAllIcon from "@material-ui/icons/DoneAll";
 import axios from "axios";
 import React, {lazy, Suspense, useCallback, useEffect, useRef, useState} from "react";
 import {useHistory, useLocation} from "react-router-dom";
@@ -9,6 +8,7 @@ const PostMedia = lazy(() => import("../components/PostMedia"));
 const PostModal = lazy(() => import("../components/modals/PostModal"));
 const PostSkeleton = lazy(() => import("../components/skeletons/PostSkeleton"));
 const SnackAlert = lazy(() => import("../components/SnackAlert"));
+const DoneAllIcon = lazy(() => import("@material-ui/icons/DoneAll"));
 
 const useStyles = makeStyles({
 	progress: {
@@ -202,7 +202,7 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 		<Suspense fallback={<div />}>
 			<div className="feed-container">
 				<div className="feed-post-block">
-					<Suspense fallback={<PostSkeleton />}>
+					<Suspense fallback={<div />}>
 						{newPosts}
 						{postMedia}
 					</Suspense>
@@ -215,6 +215,7 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 							}}
 						/>
 					) : null}
+					<div className="invisibleDiv" />
 					<SnackAlert severity={severity} openError={openError} setOpenError={setOpenError} errorMsg={errorMsg} />
 					<PostModal
 						isLogged={isLogged}
