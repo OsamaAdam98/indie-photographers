@@ -2,12 +2,13 @@ import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
+import {actions} from "../reducers/appReducer";
 
 interface Props {
-	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
+	dispatch: React.Dispatch<actions>;
 }
 
-const ProfileAvatar: React.FC<Props> = ({setIsLogged}) => {
+const ProfileAvatar: React.FC<Props> = ({dispatch}) => {
 	const history = useHistory();
 
 	const [anchorEl, setAnchorEl] = useState<Element | null>(null);
@@ -71,7 +72,7 @@ const ProfileAvatar: React.FC<Props> = ({setIsLogged}) => {
 				<MenuItem
 					onClick={() => {
 						handleClose();
-						setIsLogged(false);
+						dispatch({type: "clearUser"});
 						window.location.reload();
 					}}
 				>

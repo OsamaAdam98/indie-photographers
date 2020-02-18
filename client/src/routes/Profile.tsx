@@ -1,8 +1,9 @@
 import {Avatar, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography} from "@material-ui/core";
 import axios from "axios";
-import React, {lazy, Suspense, useEffect, useRef, useState} from "react";
+import React, {lazy, Suspense, useEffect, useRef, useState, useCallback} from "react";
 import {useParams} from "react-router-dom";
-import {PhotoPreview, PostSkeleton, SnackAlert} from "../components/index";
+import {PhotoPreview, PostSkeleton} from "../components/index";
+import {DispatchContext} from "../context/AppContext";
 import "../css/profile.css";
 
 const PostMedia = lazy(() => import("../components/PostMedia"));
@@ -19,16 +20,15 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
+const Profile: React.FC = () => {
 	const [user, setUser] = useState<User | null>(null);
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
 	const [hasMore, setHasMore] = useState<boolean>(true);
-	const [errorMsg, setErrorMsg] = useState<string>("");
-	const [openError, setOpenError] = useState<boolean>(false);
-	const [severity, setSeverity] = useState<Severity>(undefined);
 	const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
+
+	const appDispatch = useCallback(React.useContext(DispatchContext).dispatch, []);
 
 	const classes = useStyles();
 	const params: {id?: string} = useParams();
@@ -43,9 +43,7 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 				}
 			})
 			.then((res) => {
-				setErrorMsg(res.data as string);
-				setSeverity("success");
-				setOpenError(true);
+				appDispatch({type: "showSnackAlert", errorMsg: res.data, severity: "success"});
 			})
 			.catch((err) => console.log(err));
 	};
@@ -65,20 +63,19 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 						`${params.id}/page${page}`,
 						JSON.stringify(data.filter((post) => post.user._id === params.id))
 					);
-					setErrorMsg("");
-					setOpenError(false);
+					appDispatch({type: "hideSnackAlert"});
 					setIsLoading(false);
 				})
 				.catch((err) => {
 					if (err) {
 						if (err) {
-							setErrorMsg("User not found");
-							setSeverity("error");
-							setOpenError(true);
+							appDispatch({type: "showSnackAlert", errorMsg: "User not found", severity: "error"});
 						} else {
-							setErrorMsg("Can't connect to the internet!");
-							setSeverity("warning");
-							setOpenError(true);
+							appDispatch({
+								type: "showSnackAlert",
+								errorMsg: "Can't connect to the internet!",
+								severity: "warning"
+							});
 						}
 						setIsLoading(false);
 					}
@@ -91,7 +88,7 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 				setIsLoading(true);
 			}
 		} else setIsLoading(false);
-	}, [page, params.id, hasMore]);
+	}, [page, params.id, hasMore, appDispatch]);
 
 	useEffect(() => {
 		if (params.id) {
@@ -106,9 +103,7 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 				})
 				.catch((err) => {
 					if (err) {
-						setErrorMsg("Can't find user");
-						setSeverity("error");
-						setOpenError(true);
+						appDispatch({type: "showSnackAlert", errorMsg: "Can't find user", severity: "error"});
 					}
 				});
 		}
@@ -117,7 +112,7 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 			setPage(1);
 			setHasMore(true);
 		};
-	}, [params.id]);
+	}, [params.id, appDispatch]);
 
 	const observer = useRef(
 		new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
@@ -143,14 +138,14 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 				if (posts.length === i + 1) {
 					return (
 						<div ref={setLastElement} key={feedPost._id}>
-							<PostMedia feedPost={feedPost} currentUser={currentUser} handleDelete={handleDelete} />
+							<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
 							{hasMore ? <PostSkeleton /> : null}
 						</div>
 					);
 				} else {
 					return (
 						<div key={feedPost._id}>
-							<PostMedia feedPost={feedPost} currentUser={currentUser} handleDelete={handleDelete} />
+							<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
 						</div>
 					);
 				}
@@ -229,9 +224,8 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 				) : null}
 				<div className="invisibleDiv" />
 			</div>
-			<SnackAlert severity={severity} openError={openError} setOpenError={setOpenError} errorMsg={errorMsg} />
 		</div>
 	);
 };
 
-export default Profile;
+export default React.memo(Profile);

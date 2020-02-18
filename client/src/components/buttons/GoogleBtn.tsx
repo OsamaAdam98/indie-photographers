@@ -2,6 +2,7 @@ import {makeStyles} from "@material-ui/core";
 import axios from "axios";
 import React from "react";
 import {GoogleLogin} from "react-google-login";
+import {actions} from "../../reducers/appReducer";
 
 const useStyles = makeStyles(() => ({
 	gBtn: {
@@ -16,14 +17,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-	setUser: React.Dispatch<React.SetStateAction<User>>;
 	handleClose: () => void;
-	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
+	dispatch: React.Dispatch<actions>;
 }
 
-const GoogleBtn: React.FC<Props> = (props) => {
-	const {setUser, handleClose, setIsLogged} = props;
-
+const GoogleBtn: React.FC<Props> = ({handleClose, dispatch}) => {
 	const classes = useStyles();
 
 	const onResponse = (res: any) => {
@@ -33,18 +31,19 @@ const GoogleBtn: React.FC<Props> = (props) => {
 				const {token, user} = res.data;
 				if (token) {
 					localStorage.setItem("token", token);
-					setIsLogged(true);
 				}
 				if (user) {
-					setUser(user);
+					dispatch({type: "setUser", user});
 				}
 				handleClose();
-
 				setTimeout(() => {
 					window.location.reload();
 				}, 1000);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				dispatch({type: "showSnackAlert", errorMsg: "Login failed!", severity: "error"});
+				console.log(err);
+			});
 	};
 
 	return (

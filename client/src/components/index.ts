@@ -20,6 +20,8 @@ import PostSkeleton from "./skeletons/PostSkeleton";
 import ProfileSkeleton from "./skeletons/ProfileSkeleton";
 import SnackAlert from "./SnackAlert";
 import useWindowDimensions from "./utilities/WindowDimensions";
+import AppContext from "../context/AppContext";
+import appReducer from "../reducers/appReducer";
 
 export {
 	Home,
@@ -43,5 +45,7 @@ export {
 	Likes,
 	LightSwitch,
 	FAB,
-	NotFound
+	NotFound,
+	AppContext,
+	appReducer
 };

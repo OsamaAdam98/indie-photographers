@@ -181,21 +181,21 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 		if (posts.length === i + 1) {
 			return (
 				<div ref={setLastElement} key={feedPost._id}>
-					<PostMedia feedPost={feedPost} currentUser={user} handleDelete={handleDelete} />
+					<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
 					{hasMore && <PostSkeleton />}
 				</div>
 			);
 		} else {
 			return (
 				<div key={feedPost._id}>
-					<PostMedia feedPost={feedPost} currentUser={user} handleDelete={handleDelete} />
+					<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
 				</div>
 			);
 		}
 	});
 
 	const newPosts = newPost.map((incoming) => (
-		<PostMedia feedPost={incoming} currentUser={user} handleDelete={handleDelete} key={incoming._id} />
+		<PostMedia feedPost={incoming} handleDelete={handleDelete} key={incoming._id} />
 	));
 
 	return (
@@ -238,4 +238,4 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 	);
 };
 
-export default Feed;
+export default React.memo(Feed);

@@ -16,6 +16,7 @@ import moment from "moment";
 import React, {memo, useState, Suspense, lazy} from "react";
 import {Link} from "react-router-dom";
 import {Likes, PhotoPreview} from "./index";
+import UserContext from "../context/AppContext";
 
 const FavoriteIcon = lazy(() => import("@material-ui/icons/Favorite"));
 const MoreVertIcon = lazy(() => import("@material-ui/icons/MoreVert"));
@@ -32,14 +33,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-	currentUser: User;
 	feedPost: Post;
 	handleDelete: (id: string) => void;
 }
 
-const PostMedia: React.FC<Props> = ({currentUser, feedPost, handleDelete}) => {
+const PostMedia: React.FC<Props> = ({feedPost, handleDelete}) => {
 	const {user} = feedPost;
 	const classes = useStyles();
+	const currentUser = React.useContext(UserContext).user;
 
 	const [anchorEl, setAnchorEl] = useState<any>(null);
 	const [post, setPost] = useState<Post>(feedPost);

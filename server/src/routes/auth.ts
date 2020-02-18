@@ -24,10 +24,11 @@ router.post("/", (req, res) => {
 				res.json({
 					token,
 					user: {
-						id: user._id,
+						_id: user._id,
 						username: user.username,
 						email: user.email,
-						profilePicture: user.profilePicture
+						profilePicture: user.profilePicture,
+						admin: user.admin
 					}
 				});
 			});

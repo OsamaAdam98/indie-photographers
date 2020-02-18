@@ -1,9 +1,9 @@
 import {Button, makeStyles, Typography} from "@material-ui/core";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import axios from "axios";
-import React, {useState} from "react";
+import React from "react";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import {SnackAlert} from "../index";
+import {actions} from "../../reducers/appReducer";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -44,18 +44,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-	setUser: React.Dispatch<React.SetStateAction<User>>;
 	handleClose: () => void;
-	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
+	dispatch: React.Dispatch<actions>;
 }
 
-const FBButton: React.FC<Props> = (props) => {
-	const {setUser, handleClose, setIsLogged} = props;
+const FBButton: React.FC<Props> = ({dispatch, handleClose}) => {
 	const classes = useStyles();
-
-	const [errorMsg, setErrorMsg] = useState<string>("");
-	const [openError, setOpenError] = useState<boolean>(false);
-	const [severity, setSeverity] = useState<Severity>(undefined);
 
 	const componentClicked = () => console.log("Signing in using facebook.");
 
@@ -66,21 +60,16 @@ const FBButton: React.FC<Props> = (props) => {
 				const {token, user} = res.data;
 				if (token) {
 					localStorage.setItem("token", token);
-					setIsLogged(true);
-					handleClose();
-
+				}
+				if (user) {
+					dispatch({type: "setUser", user});
 					setTimeout(() => {
 						window.location.reload();
 					}, 1000);
 				}
-				if (user) {
-					setUser(user);
-				}
 			})
 			.catch((err) => {
-				setErrorMsg("Login failed!");
-				setSeverity("error");
-				setOpenError(true);
+				dispatch({type: "showSnackAlert", errorMsg: "Login failed!", severity: "error"});
 			});
 	};
 
@@ -94,29 +83,14 @@ const FBButton: React.FC<Props> = (props) => {
 				callback={responseFacebook}
 				disableMobileRedirect={true}
 				render={(renderProps: any) => (
-					<Button
-						onClick={renderProps.onClick}
-						variant="contained"
-						color="inherit"
-						className={classes.fbBtn}
-					>
+					<Button onClick={renderProps.onClick} variant="contained" color="inherit" className={classes.fbBtn}>
 						<div className={classes.btnDiv} />
-						<FacebookIcon
-							color="inherit"
-							fontSize="default"
-							className={classes.fbIcon}
-						/>
+						<FacebookIcon color="inherit" fontSize="default" className={classes.fbIcon} />
 						<Typography variant="button" className={classes.fbType}>
 							Facebook
 						</Typography>
 					</Button>
 				)}
-			/>
-			<SnackAlert
-				errorMsg={errorMsg}
-				openError={openError}
-				setOpenError={setOpenError}
-				severity={severity}
 			/>
 		</>
 	);

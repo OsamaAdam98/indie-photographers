@@ -12,20 +12,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-	isLight: boolean;
 	showBtn: boolean;
-	setIsLight: React.Dispatch<React.SetStateAction<boolean>>;
 	handleClick: () => void;
 }
 
-const Settings: React.FC<Props> = ({isLight, showBtn, setIsLight, handleClick}) => {
+const Settings: React.FC<Props> = ({showBtn, handleClick}) => {
 	const classes = useStyles();
 
 	return (
 		<Container maxWidth="lg">
 			<Typography>Light mode</Typography>
 			<Suspense fallback={<div />}>
-				<LightSwitch isLight={isLight} setIsLight={setIsLight} />
+				<LightSwitch />
 			</Suspense>
 			<Button
 				size="large"
@@ -43,4 +41,4 @@ const Settings: React.FC<Props> = ({isLight, showBtn, setIsLight, handleClick}) 
 	);
 };
 
-export default Settings;
+export default React.memo(Settings);

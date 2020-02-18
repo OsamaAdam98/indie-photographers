@@ -3,8 +3,8 @@ import HomeIcon from "@material-ui/icons/Home";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ViewDayIcon from "@material-ui/icons/ViewDay";
 import React, {useEffect, useState} from "react";
-import {useLocation, useHistory} from "react-router-dom";
-import {useWindowDimensions} from "./index";
+import {useHistory, useLocation} from "react-router-dom";
+import UserContext from "../context/AppContext";
 
 const useStyles = makeStyles((theme) => ({
 	tabs: {
@@ -14,12 +14,12 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const BottomBar: React.FC<{user: User}> = ({user}) => {
-	const [value, setValue] = useState<number | boolean>(0);
+const BottomBar: React.FC = () => {
+	const [value, setValue] = useState<number | boolean>(false);
 
 	const classes = useStyles();
 	const location = useLocation();
-	const {width} = useWindowDimensions();
+	const {user} = React.useContext(UserContext);
 
 	useEffect(() => {
 		switch (location.pathname) {
@@ -39,7 +39,7 @@ const BottomBar: React.FC<{user: User}> = ({user}) => {
 				setValue(false);
 				break;
 		}
-	}, [location.pathname, user._id]);
+	}, [location.pathname, user]);
 
 	const history = useHistory();
 
@@ -66,7 +66,6 @@ const BottomBar: React.FC<{user: User}> = ({user}) => {
 						left: 0,
 						behavior: "auto"
 					});
-				history.push(`/profile/${user._id}`);
 				break;
 			case 3:
 				history.push("/settings");
@@ -81,7 +80,6 @@ const BottomBar: React.FC<{user: User}> = ({user}) => {
 			<Tabs
 				value={value}
 				onChange={handleChange}
-				variant={width < 500 ? "fullWidth" : "standard"}
 				indicatorColor="primary"
 				textColor="primary"
 				aria-label="Site navigation"
@@ -103,6 +101,9 @@ const BottomBar: React.FC<{user: User}> = ({user}) => {
 						/>
 					}
 					aria-label="Profile"
+					onClick={() => {
+						history.push(`/profile/${user._id}`);
+					}}
 					style={{
 						display: user.username ? "" : "none"
 					}}
@@ -120,4 +121,4 @@ const BottomBar: React.FC<{user: User}> = ({user}) => {
 	);
 };
 
-export default BottomBar;
+export default React.memo(BottomBar);

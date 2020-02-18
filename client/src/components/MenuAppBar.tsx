@@ -51,17 +51,7 @@ const HideOnScroll: React.FC = ({children}) => {
 	);
 };
 
-interface Props {
-	isLogged: boolean;
-	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
-	user: User;
-	setUser: React.Dispatch<React.SetStateAction<User>>;
-	isLight: boolean;
-	setIsLight: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const MenuAppBar: React.FC<Props> = (props) => {
-	const {isLogged, setIsLogged, user, setUser, isLight, setIsLight} = props;
+const MenuAppBar: React.FC = (props) => {
 	const {width} = useWindowDimensions();
 	const classes = useStyles();
 
@@ -82,16 +72,16 @@ const MenuAppBar: React.FC<Props> = (props) => {
 						<Typography variant="h5" className={classes.title}>
 							Indie
 						</Typography>
-						{width > 500 && <LightSwitch isLight={isLight} setIsLight={setIsLight} />}
-						<Login isLogged={isLogged} setIsLogged={setIsLogged} setUser={setUser} />
+						{width > 500 && <LightSwitch />}
+						<Login />
 					</Toolbar>
 				</AppBar>
 			</HideOnScroll>
 			<div className={classes.bottomBar}>
-				<BottomBar user={user} />
+				<BottomBar />
 			</div>
 		</>
 	);
 };
 
-export default MenuAppBar;
+export default React.memo(MenuAppBar);

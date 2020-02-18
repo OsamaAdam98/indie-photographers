@@ -10,8 +10,9 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import React, {useEffect, useState} from "react";
-import {useLocation, useHistory} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 import {FBButton, GoogleBtn, ProfileAvatar} from "..";
+import UserContext, {DispatchContext} from "../../context/AppContext";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -24,16 +25,13 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-interface Props {
-	isLogged: boolean;
-	setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
-	setUser: React.Dispatch<React.SetStateAction<User>>;
-}
-
-const Login: React.FC<Props> = ({isLogged, setIsLogged, setUser}) => {
+const Login: React.FC = () => {
 	const classes = useStyles();
 	const history = useHistory();
 	const location = useLocation();
+
+	const context = React.useContext(DispatchContext);
+	const state = React.useContext(UserContext);
 
 	const [show, setShow] = useState<boolean>(false);
 	const [email, setEmail] = useState<string>("");
@@ -76,33 +74,30 @@ const Login: React.FC<Props> = ({isLogged, setIsLogged, setUser}) => {
 						localStorage.setItem("token", token);
 						setEmail("");
 						setPassword("");
-						setIsLogged(true);
 					}
 					if (user) {
-						setUser(user);
+						context.dispatch({type: "setUser", user});
+						setTimeout(() => {
+							window.location.reload();
+						}, 1000);
 					}
 					handleClose();
-
-					setTimeout(() => {
-						window.location.reload();
-					}, 1000);
 				})
 				.catch((err) => {
 					console.log(err);
-					localStorage.removeItem("token");
-					setIsLogged(false);
+					context.dispatch({type: "clearUser"});
 					setErrorMsg("Invalid credentials");
 				});
 		}
 		event.preventDefault();
 	};
 
-	const loginButton = !isLogged ? (
+	const loginButton = !state.isLogged ? (
 		<Button color="inherit" onClick={handleShow}>
 			Login
 		</Button>
 	) : (
-		<ProfileAvatar setIsLogged={setIsLogged} />
+		<ProfileAvatar dispatch={context.dispatch} />
 	);
 
 	return (
@@ -145,10 +140,10 @@ const Login: React.FC<Props> = ({isLogged, setIsLogged, setUser}) => {
 						/>
 						<Grid container direction="row" spacing={1}>
 							<Grid item xs>
-								<FBButton setUser={setUser} handleClose={handleClose} setIsLogged={setIsLogged} />
+								<FBButton handleClose={handleClose} dispatch={context.dispatch} />
 							</Grid>
 							<Grid item xs>
-								<GoogleBtn setUser={setUser} handleClose={handleClose} setIsLogged={setIsLogged} />
+								<GoogleBtn handleClose={handleClose} dispatch={context.dispatch} />
 							</Grid>
 						</Grid>
 					</DialogContent>
@@ -157,6 +152,9 @@ const Login: React.FC<Props> = ({isLogged, setIsLogged, setUser}) => {
 							Login
 						</Button>
 						<Button onClick={handleClose}>Cancel</Button>
+						<Button onClick={() => context.dispatch({type: "showSnackAlert", errorMsg: "Hello", severity: "success"})}>
+							Test
+						</Button>
 					</DialogActions>
 				</form>
 			</Dialog>
