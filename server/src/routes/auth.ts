@@ -31,7 +31,8 @@ router.post("/", (req, res) => {
 								email: user.email,
 								profilePicture: user.profilePicture,
 								registerDate: user.registerDate,
-								username: user.username
+								username: user.username,
+								admin: user.admin
 							}
 						});
 					});
@@ -58,10 +59,11 @@ router.post("/facebook-login", (req, res) => {
 							res.json({
 								token,
 								user: {
-									id: user._id,
-									username: user.username,
+									_id: user._id,
 									email: user.email,
 									profilePicture: user.profilePicture,
+									registerDate: user.registerDate,
+									username: user.username,
 									admin: user.admin
 								}
 							});
@@ -95,11 +97,12 @@ router.post("/facebook-login", (req, res) => {
 											res.json({
 												token,
 												user: {
-													id: user._id,
-													username: user.username,
+													_id: user._id,
 													email: user.email,
-													admin: user.admin,
-													profilePicture: user.profilePicture
+													profilePicture: user.profilePicture,
+													registerDate: user.registerDate,
+													username: user.username,
+													admin: user.admin
 												}
 											});
 										}
@@ -128,10 +131,11 @@ router.post("/google-login", (req, res) => {
 					res.json({
 						token,
 						user: {
-							id: user._id,
-							username: user.username,
+							_id: user._id,
 							email: user.email,
 							profilePicture: user.profilePicture,
+							registerDate: user.registerDate,
+							username: user.username,
 							admin: user.admin
 						}
 					});
@@ -158,11 +162,12 @@ router.post("/google-login", (req, res) => {
 								res.json({
 									token,
 									user: {
-										id: user._id,
-										username: user.username,
+										_id: user._id,
 										email: user.email,
-										admin: user.admin,
-										profilePicture: user.profilePicture
+										profilePicture: user.profilePicture,
+										registerDate: user.registerDate,
+										username: user.username,
+										admin: user.admin
 									}
 								});
 							});

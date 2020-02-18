@@ -36,9 +36,6 @@ const GoogleBtn: React.FC<Props> = ({handleClose, dispatch}) => {
 					dispatch({type: "setUser", user});
 				}
 				handleClose();
-				setTimeout(() => {
-					window.location.reload();
-				}, 1000);
 			})
 			.catch((err) => {
 				dispatch({type: "showSnackAlert", errorMsg: "Login failed!", severity: "error"});

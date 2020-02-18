@@ -39,8 +39,8 @@ interface Props {
 }
 
 const PostMedia: React.FC<Props> = ({feedPost, handleDelete}) => {
-	const {user} = feedPost;
 	const classes = useStyles();
+	const {user} = feedPost;
 	const currentUser = React.useContext(UserContext).user;
 
 	const [anchorEl, setAnchorEl] = useState<any>(null);
@@ -137,7 +137,7 @@ const PostMedia: React.FC<Props> = ({feedPost, handleDelete}) => {
 							</Link>
 						}
 						action={
-							currentUser._id === feedPost.user._id || currentUser.admin ? (
+							currentUser._id === user._id || currentUser.admin ? (
 								<>
 									<IconButton
 										aria-label="settings"

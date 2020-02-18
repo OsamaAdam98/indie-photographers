@@ -77,9 +77,6 @@ const Login: React.FC = () => {
 					}
 					if (user) {
 						context.dispatch({type: "setUser", user});
-						setTimeout(() => {
-							window.location.reload();
-						}, 1000);
 					}
 					handleClose();
 				})
