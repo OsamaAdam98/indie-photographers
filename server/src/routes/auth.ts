@@ -14,26 +14,31 @@ router.post("/", (req, res) => {
 	if (!email || !password) {
 		return res.status(400).json({msg: "Please enter all fields"});
 	}
-	Users.findOne({email}).then((user) => {
-		if (!user) return res.status(404).json({msg: "User doesn't exist."});
-		bcrypt.compare(password, user.password).then((isMatch) => {
-			if (!isMatch) return res.status(400).json({msg: "Invalid credentials"});
-
-			jwt.sign({id: user._id, admin: user.admin}, process.env.jwtSecret, (err: jwt.VerifyErrors, token: string) => {
-				if (err) throw err;
-				res.json({
-					token,
-					user: {
-						_id: user._id,
-						username: user.username,
-						email: user.email,
-						profilePicture: user.profilePicture,
-						admin: user.admin
-					}
-				});
-			});
-		});
-	});
+	Users.findOne({email})
+		.exec()
+		.then((user) => {
+			if (!user) return res.status(404).json({msg: "User doesn't exist."});
+			bcrypt
+				.compare(password, user.password)
+				.then((isMatch) => {
+					if (!isMatch) return res.status(400).json({msg: "Invalid credentials"});
+					jwt.sign({id: user._id, admin: user.admin}, process.env.jwtSecret, (err: jwt.VerifyErrors, token: string) => {
+						if (err) throw err;
+						res.json({
+							token,
+							user: {
+								_id: user._id,
+								email: user.email,
+								profilePicture: user.profilePicture,
+								registerDate: user.registerDate,
+								username: user.username
+							}
+						});
+					});
+				})
+				.catch((err) => console.log(err));
+		})
+		.catch((err) => console.log(err));
 });
 
 router.post("/facebook-login", (req, res) => {

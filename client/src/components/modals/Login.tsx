@@ -152,9 +152,6 @@ const Login: React.FC = () => {
 							Login
 						</Button>
 						<Button onClick={handleClose}>Cancel</Button>
-						<Button onClick={() => context.dispatch({type: "showSnackAlert", errorMsg: "Hello", severity: "success"})}>
-							Test
-						</Button>
 					</DialogActions>
 				</form>
 			</Dialog>
