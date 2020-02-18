@@ -9,6 +9,7 @@
 		"server:build": "cd server && tsc",
 		"server:prod": "node ./server/dist/server.js",
 		"client": "npm start --prefix client",
+		"build-client": "cd client && npm run build && serve -s build -l 3001",
 		"dev": "concurrently \"npm run server\" \"npm run client\"",
 		"heroku-postbuild": "npm install --prefix client && npm run build --prefix client"
 	},

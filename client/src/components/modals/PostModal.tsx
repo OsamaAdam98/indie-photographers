@@ -20,6 +20,8 @@ interface Props {
 	onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+const url = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PROXY : "";
+
 const PostModal: React.FC<Props> = (props) => {
 	const {
 		isLogged,
@@ -86,7 +88,7 @@ const PostModal: React.FC<Props> = (props) => {
 			formData.append("data", JSON.stringify(subData));
 
 			axios
-				.post("/api/feed/add", formData, {
+				.post(`${url}/api/feed/add`, formData, {
 					headers: {
 						"x-auth-token": `${token}`
 					}

@@ -21,12 +21,14 @@ interface Props {
 	dispatch: React.Dispatch<actions>;
 }
 
+const url = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PROXY : "";
+
 const GoogleBtn: React.FC<Props> = ({handleClose, dispatch}) => {
 	const classes = useStyles();
 
 	const onResponse = (res: any) => {
 		axios
-			.post("/api/auth/google-login", res)
+			.post(`${url}/api/auth/google-login`, res)
 			.then((res) => {
 				const {token, user} = res.data;
 				if (token) {

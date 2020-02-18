@@ -31,6 +31,7 @@ interface Props {
 	isLogged: boolean;
 	user: User;
 }
+const url = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PROXY : "";
 
 const Feed: React.FC<Props> = ({isLogged, user}) => {
 	const classes = useStyles();
@@ -91,7 +92,7 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 			const token: string | null = localStorage.getItem("token");
 
 			axios
-				.delete(`/api/feed/delete/${id}`, {
+				.delete(`${url}/api/feed/delete/${id}`, {
 					headers: {
 						"x-auth-token": `${token}`
 					}
@@ -117,7 +118,7 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 		if (hasMore) {
 			let cachedData: Post[] = JSON.parse(localStorage.getItem(`feedPage${page}`) as string);
 			axios
-				.get(`/api/feed/?page=${page}`)
+				.get(`${url}/api/feed/?page=${page}`)
 				.then((res) => {
 					const {data} = res;
 					let newData: Post[] = getNewPosts(data, cachedData);
