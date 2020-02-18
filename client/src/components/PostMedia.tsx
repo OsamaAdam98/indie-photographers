@@ -11,14 +11,15 @@ import {
 	MenuItem,
 	Typography
 } from "@material-ui/core";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import ShareIcon from "@material-ui/icons/Share";
 import axios from "axios";
 import moment from "moment";
-import React, {memo, useState} from "react";
+import React, {memo, useState, Suspense, lazy} from "react";
 import {Link} from "react-router-dom";
 import {Likes, PhotoPreview} from "./index";
+
+const FavoriteIcon = lazy(() => import("@material-ui/icons/Favorite"));
+const MoreVertIcon = lazy(() => import("@material-ui/icons/MoreVert"));
+const ShareIcon = lazy(() => import("@material-ui/icons/Share"));
 
 const useStyles = makeStyles((theme) => ({
 	card: {
@@ -125,106 +126,108 @@ const PostMedia: React.FC<Props> = ({currentUser, feedPost, handleDelete}) => {
 
 	if (user) {
 		return (
-			<Card className={classes.card}>
-				<CardHeader
-					avatar={
-						<Link to={`/profile/${user._id}`}>
-							<Avatar alt="user avatar" src={user.profilePicture ? user.profilePicture : ""} />
-						</Link>
-					}
-					action={
-						currentUser._id === feedPost.user._id || currentUser.admin ? (
-							<>
-								<IconButton
-									aria-label="settings"
-									aria-controls="menu-appbar"
-									aria-haspopup="true"
-									onClick={handleMenu}
-									color="inherit"
-								>
-									<MoreVertIcon />
-								</IconButton>
-								<Menu
-									id="simple-menu"
-									anchorEl={anchorEl}
-									anchorOrigin={{
-										vertical: "top",
-										horizontal: "right"
-									}}
-									keepMounted
-									transformOrigin={{
-										vertical: "top",
-										horizontal: "right"
-									}}
-									open={open}
-									onClose={handleClose}
-									transitionDuration={{
-										enter: 0,
-										exit: 0
-									}}
-								>
-									<MenuItem onClick={() => handleDelete(feedPost._id)}>Delete</MenuItem>
-								</Menu>
-							</>
-						) : null
-					}
-					title={
-						<Link to={`/profile/${user._id}`} className="text-link">
-							<Typography variant="subtitle1" color="inherit">
-								{user.username}
-							</Typography>
-						</Link>
-					}
-					subheader={
-						monthsOffset === 1 && daysOffset < 30
-							? `Posted ${daysOffset} days ago`
-							: monthsOffset === 1 && daysOffset > 30
-							? `Posted about a month ago`
-							: monthsOffset
-							? `Posted ${monthsOffset} months ago`
-							: daysOffset === 1
-							? `Posted yesterday`
-							: daysOffset
-							? `Posted ${daysOffset} days ago`
-							: hoursOffset === 1 && minutesOffset < 60
-							? `Posted ${minutesOffset} minutes ago`
-							: hoursOffset
-							? `Posted ${hoursOffset} hours ago`
-							: minutesOffset > 1
-							? `Posted ${minutesOffset} minutes ago`
-							: minutesOffset
-							? `Posted a minute ago`
-							: `Posted just now`
-					}
-				/>
-				<CardContent>
-					<Typography variant="body2" component="p" dir="auto">
-						{feedPost.msg}
-					</Typography>
-				</CardContent>
-				{feedPost.photo ? (
-					<CardMedia className={classes.media}>
-						<PhotoPreview
-							realPhoto={feedPost.photo}
-							// TODO: super hacky, remove before production!
-							photo={feedPost.photo as string}
-							alt={feedPost.user.username}
-							maxHeight={250}
-						/>
-					</CardMedia>
-				) : (
-					""
-				)}
-				<Likes liked={liked} users={post && post.likes.map((like) => like.user)} currentUser={currentUser} />
-				<CardActions disableSpacing>
-					<IconButton aria-label="love" onClick={() => handleLike(feedPost._id)}>
-						<FavoriteIcon color={liked ? "secondary" : "disabled"} />
-					</IconButton>
-					<IconButton aria-label="share">
-						<ShareIcon />
-					</IconButton>
-				</CardActions>
-			</Card>
+			<Suspense fallback={<div />}>
+				<Card className={classes.card}>
+					<CardHeader
+						avatar={
+							<Link to={`/profile/${user._id}`}>
+								<Avatar alt="user avatar" src={user.profilePicture ? user.profilePicture : ""} />
+							</Link>
+						}
+						action={
+							currentUser._id === feedPost.user._id || currentUser.admin ? (
+								<>
+									<IconButton
+										aria-label="settings"
+										aria-controls="menu-appbar"
+										aria-haspopup="true"
+										onClick={handleMenu}
+										color="inherit"
+									>
+										<MoreVertIcon />
+									</IconButton>
+									<Menu
+										id="simple-menu"
+										anchorEl={anchorEl}
+										anchorOrigin={{
+											vertical: "top",
+											horizontal: "right"
+										}}
+										keepMounted
+										transformOrigin={{
+											vertical: "top",
+											horizontal: "right"
+										}}
+										open={open}
+										onClose={handleClose}
+										transitionDuration={{
+											enter: 0,
+											exit: 0
+										}}
+									>
+										<MenuItem onClick={() => handleDelete(feedPost._id)}>Delete</MenuItem>
+									</Menu>
+								</>
+							) : null
+						}
+						title={
+							<Link to={`/profile/${user._id}`} className="text-link">
+								<Typography variant="subtitle1" color="inherit">
+									{user.username}
+								</Typography>
+							</Link>
+						}
+						subheader={
+							monthsOffset === 1 && daysOffset < 30
+								? `Posted ${daysOffset} days ago`
+								: monthsOffset === 1 && daysOffset > 30
+								? `Posted about a month ago`
+								: monthsOffset
+								? `Posted ${monthsOffset} months ago`
+								: daysOffset === 1
+								? `Posted yesterday`
+								: daysOffset
+								? `Posted ${daysOffset} days ago`
+								: hoursOffset === 1 && minutesOffset < 60
+								? `Posted ${minutesOffset} minutes ago`
+								: hoursOffset
+								? `Posted ${hoursOffset} hours ago`
+								: minutesOffset > 1
+								? `Posted ${minutesOffset} minutes ago`
+								: minutesOffset
+								? `Posted a minute ago`
+								: `Posted just now`
+						}
+					/>
+					<CardContent>
+						<Typography variant="body2" component="p" dir="auto">
+							{feedPost.msg}
+						</Typography>
+					</CardContent>
+					{feedPost.photo ? (
+						<CardMedia className={classes.media}>
+							<PhotoPreview
+								realPhoto={feedPost.photo}
+								// TODO: super hacky, remove before production!
+								photo={feedPost.photo as string}
+								alt={feedPost.user.username}
+								maxHeight={250}
+							/>
+						</CardMedia>
+					) : (
+						""
+					)}
+					<Likes liked={liked} users={post && post.likes.map((like) => like.user)} currentUser={currentUser} />
+					<CardActions disableSpacing>
+						<IconButton aria-label="love" onClick={() => handleLike(feedPost._id)}>
+							<FavoriteIcon color={liked ? "secondary" : "disabled"} />
+						</IconButton>
+						<IconButton aria-label="share">
+							<ShareIcon />
+						</IconButton>
+					</CardActions>
+				</Card>
+			</Suspense>
 		);
 	} else {
 		return null;

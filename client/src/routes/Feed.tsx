@@ -199,14 +199,14 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 	));
 
 	return (
-		<Suspense fallback={<div />}>
-			<div className="feed-container">
-				<div className="feed-post-block">
+		<div className="feed-container">
+			<div className="feed-post-block">
+				<Suspense fallback={<div />}>
+					{newPosts}
+					{postMedia}
+				</Suspense>
+				{!hasMore && !isLoading ? (
 					<Suspense fallback={<div />}>
-						{newPosts}
-						{postMedia}
-					</Suspense>
-					{!hasMore && !isLoading ? (
 						<DoneAllIcon
 							style={{
 								position: "relative",
@@ -214,27 +214,27 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 								textAlign: "center"
 							}}
 						/>
-					) : null}
-					<div className="invisibleDiv" />
-					<SnackAlert severity={severity} openError={openError} setOpenError={setOpenError} errorMsg={errorMsg} />
-					<PostModal
-						isLogged={isLogged}
-						user={user}
-						setNewPost={setNewPost}
-						photo={photo}
-						setPhoto={setPhoto}
-						isUploading={isUploading}
-						onUpload={onUpload}
-						offline={offline}
-						handleCancel={handleCancel}
-						realPhoto={realPhoto}
-						setIsUploading={setIsUploading}
-					/>
-				</div>
-
-				{isUploading && <LinearProgress color="primary" className={classes.progress} />}
+					</Suspense>
+				) : null}
+				<div className="invisibleDiv" />
+				<SnackAlert severity={severity} openError={openError} setOpenError={setOpenError} errorMsg={errorMsg} />
+				<PostModal
+					isLogged={isLogged}
+					user={user}
+					setNewPost={setNewPost}
+					photo={photo}
+					setPhoto={setPhoto}
+					isUploading={isUploading}
+					onUpload={onUpload}
+					offline={offline}
+					handleCancel={handleCancel}
+					realPhoto={realPhoto}
+					setIsUploading={setIsUploading}
+				/>
 			</div>
-		</Suspense>
+
+			{isUploading && <LinearProgress color="primary" className={classes.progress} />}
+		</div>
 	);
 };
 

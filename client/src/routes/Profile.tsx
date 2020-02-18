@@ -214,9 +214,10 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 			) : null}
 
 			<div className="post-block">
-				<Suspense fallback={<div />}>
-					{postMedia}
-					{!hasMore && !isLoading ? (
+				<Suspense fallback={<div />}>{postMedia}</Suspense>
+
+				{!hasMore && !isLoading ? (
+					<Suspense fallback={<div />}>
 						<DoneAllIcon
 							style={{
 								position: "relative",
@@ -224,8 +225,8 @@ const Profile: React.FC<{currentUser: User}> = ({currentUser}) => {
 								textAlign: "center"
 							}}
 						/>
-					) : null}
-				</Suspense>
+					</Suspense>
+				) : null}
 				<div className="invisibleDiv" />
 			</div>
 			<SnackAlert severity={severity} openError={openError} setOpenError={setOpenError} errorMsg={errorMsg} />
