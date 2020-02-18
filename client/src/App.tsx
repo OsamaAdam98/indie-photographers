@@ -5,7 +5,7 @@ import axios from "axios";
 import React, {lazy, Suspense, useEffect} from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {appReducer} from "./components";
-import SnackAlert from "./components/SnackAlert2";
+import SnackAlert from "./components/SnackAlert";
 import UserContext, {DispatchContext} from "./context/AppContext";
 import "./css/feed.css";
 import "./css/style.css";

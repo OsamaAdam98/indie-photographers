@@ -15,12 +15,13 @@ import axios from "axios";
 import moment from "moment";
 import React, {memo, useState, Suspense, lazy} from "react";
 import {Link} from "react-router-dom";
-import {Likes, PhotoPreview} from "./index";
 import UserContext from "../context/AppContext";
 
 const FavoriteIcon = lazy(() => import("@material-ui/icons/Favorite"));
 const MoreVertIcon = lazy(() => import("@material-ui/icons/MoreVert"));
 const ShareIcon = lazy(() => import("@material-ui/icons/Share"));
+const PhotoPreview = lazy(() => import("./modals/PhotoPreview"));
+const Likes = lazy(() => import("./modals/Likes"));
 
 const useStyles = makeStyles((theme) => ({
 	card: {

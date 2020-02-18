@@ -5,6 +5,7 @@ import ViewDayIcon from "@material-ui/icons/ViewDay";
 import React, {useEffect, useState} from "react";
 import {useHistory, useLocation} from "react-router-dom";
 import UserContext from "../context/AppContext";
+import {useWindowDimensions} from ".";
 
 const useStyles = makeStyles((theme) => ({
 	tabs: {
@@ -19,6 +20,7 @@ const BottomBar: React.FC = () => {
 
 	const classes = useStyles();
 	const location = useLocation();
+	const {width} = useWindowDimensions();
 	const {user} = React.useContext(UserContext);
 
 	useEffect(() => {
@@ -80,6 +82,7 @@ const BottomBar: React.FC = () => {
 			<Tabs
 				value={value}
 				onChange={handleChange}
+				variant={width < 600 ? "fullWidth" : "standard"}
 				indicatorColor="primary"
 				textColor="primary"
 				aria-label="Site navigation"

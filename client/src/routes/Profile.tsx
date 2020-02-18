@@ -1,6 +1,6 @@
 import {Avatar, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography} from "@material-ui/core";
 import axios from "axios";
-import React, {lazy, Suspense, useEffect, useRef, useState, useCallback} from "react";
+import React, {lazy, Suspense, useCallback, useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
 import {PhotoPreview, PostSkeleton} from "../components/index";
 import {DispatchContext} from "../context/AppContext";

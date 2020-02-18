@@ -2,12 +2,12 @@ import {LinearProgress, makeStyles} from "@material-ui/core";
 import axios from "axios";
 import React, {lazy, Suspense, useCallback, useEffect, useRef, useState} from "react";
 import {useHistory, useLocation} from "react-router-dom";
+import {DispatchContext} from "../context/AppContext";
 import "../css/feed.css";
 
 const PostMedia = lazy(() => import("../components/PostMedia"));
 const PostModal = lazy(() => import("../components/modals/PostModal"));
 const PostSkeleton = lazy(() => import("../components/skeletons/PostSkeleton"));
-const SnackAlert = lazy(() => import("../components/SnackAlert"));
 const DoneAllIcon = lazy(() => import("@material-ui/icons/DoneAll"));
 
 const useStyles = makeStyles({
@@ -37,14 +37,13 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 	const history = useHistory();
 	const location = useLocation();
 
+	const appDispatch = useCallback(React.useContext(DispatchContext).dispatch, []);
+
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [newPost, setNewPost] = useState<Post[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
 	const [hasMore, setHasMore] = useState<boolean>(true);
-	const [errorMsg, setErrorMsg] = useState<string>("");
-	const [openError, setOpenError] = useState<boolean>(false);
-	const [severity, setSeverity] = useState<Severity>(undefined);
 	const [photo, setPhoto] = useState<string>("");
 	const [realPhoto, setRealPhoto] = useState<Blob | undefined>();
 	const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -87,23 +86,24 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 		} while (true);
 	};
 
-	const handleDelete = useCallback((id: string) => {
-		const token: string | null = localStorage.getItem("token");
+	const handleDelete = useCallback(
+		(id: string) => {
+			const token: string | null = localStorage.getItem("token");
 
-		axios
-			.delete(`/api/feed/delete/${id}`, {
-				headers: {
-					"x-auth-token": `${token}`
-				}
-			})
-			.then((res) => {
-				cleanupDelete(id);
-				setErrorMsg(res.data as string);
-				setSeverity("success");
-				setOpenError(true);
-			})
-			.catch((err) => console.log(err.response.data));
-	}, []);
+			axios
+				.delete(`/api/feed/delete/${id}`, {
+					headers: {
+						"x-auth-token": `${token}`
+					}
+				})
+				.then((res) => {
+					cleanupDelete(id);
+					appDispatch({type: "showSnackAlert", errorMsg: res.data, severity: "success"});
+				})
+				.catch((err) => console.log(err.response.data));
+		},
+		[appDispatch]
+	);
 
 	const getNewPosts = (newPosts: Post[], cachedData: Post[]) => {
 		if (newPosts && cachedData) {
@@ -132,17 +132,14 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 
 					setHasMore(data.length === 10);
 					localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
-					setErrorMsg("");
-					setOpenError(false);
+					appDispatch({type: "hideSnackAlert"});
 					setOffline(false);
 					setIsLoading(false);
 				})
 				.catch((err) => {
 					if (err && page !== 1) {
-						setErrorMsg("Can't connect to the internet!");
-						setSeverity("warning");
+						appDispatch({type: "showSnackAlert", errorMsg: "Can't connect to the internet!", severity: "warning"});
 						setOffline(true);
-						setOpenError(true);
 					}
 					setIsLoading(false);
 				});
@@ -156,7 +153,7 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 		} else {
 			setIsLoading(false);
 		}
-	}, [page, hasMore]);
+	}, [page, hasMore, appDispatch]);
 
 	const observer = useRef(
 		new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
@@ -217,7 +214,6 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 					</Suspense>
 				) : null}
 				<div className="invisibleDiv" />
-				<SnackAlert severity={severity} openError={openError} setOpenError={setOpenError} errorMsg={errorMsg} />
 				<PostModal
 					isLogged={isLogged}
 					user={user}
