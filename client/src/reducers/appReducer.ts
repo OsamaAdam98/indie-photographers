@@ -18,14 +18,12 @@ const clearUser = (state: AppState) => {
 	const updatedState = state;
 	localStorage.removeItem("token");
 	localStorage.removeItem("userInfo");
-	window.location.reload();
 	return {...updatedState, user: {_id: "", email: "", admin: false, username: ""}, isLogged: false};
 };
 
 const setUser = (state: AppState, user: User) => {
 	const updatedState = state;
 	localStorage.setItem(`userInfo`, JSON.stringify(user));
-	window.location.reload();
 	return {
 		...updatedState,
 		user,

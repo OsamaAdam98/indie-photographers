@@ -73,6 +73,7 @@ const ProfileAvatar: React.FC<Props> = ({dispatch}) => {
 					onClick={() => {
 						handleClose();
 						dispatch({type: "clearUser"});
+						window.location.reload();
 					}}
 				>
 					Logout

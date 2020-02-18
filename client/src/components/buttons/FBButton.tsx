@@ -63,6 +63,9 @@ const FBButton: React.FC<Props> = ({dispatch, handleClose}) => {
 				}
 				if (user) {
 					dispatch({type: "setUser", user});
+					setTimeout(() => {
+						window.location.reload();
+					}, 1000);
 				}
 			})
 			.catch((err) => {
