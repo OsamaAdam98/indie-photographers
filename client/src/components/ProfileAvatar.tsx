@@ -13,9 +13,7 @@ const ProfileAvatar: React.FC<Props> = ({setIsLogged}) => {
 	const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 	const open = Boolean(anchorEl);
 
-	const handleMenu = (
-		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-	) => {
+	const handleMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		setAnchorEl(event.currentTarget);
 	};
 
@@ -55,12 +53,21 @@ const ProfileAvatar: React.FC<Props> = ({setIsLogged}) => {
 			>
 				<MenuItem
 					onClick={() => {
+						history.push("/about");
+						handleClose();
+					}}
+				>
+					About
+				</MenuItem>
+				<MenuItem
+					onClick={() => {
 						handleClose();
 						history.push("/settings");
 					}}
 				>
 					Settings
 				</MenuItem>
+
 				<MenuItem
 					onClick={() => {
 						handleClose();

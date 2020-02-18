@@ -4,6 +4,10 @@
 	padding: 0;
 }
 
+:root {
+	--highlight-color: #ffc107;
+}
+
 .home-container {
 	position: absolute;
 	top: 0;
@@ -38,7 +42,7 @@
 
 .highlight {
 	box-sizing: border-box;
-	background: #ffc107;
+	background: var(--highlight-color);
 	display: inline;
 	padding: 0.5rem 0.25rem 0;
 }

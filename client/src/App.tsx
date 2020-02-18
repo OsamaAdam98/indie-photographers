@@ -10,6 +10,7 @@ import "./css/style.css";
 const Feed = lazy(() => import("./routes/Feed"));
 const Profile = lazy(() => import("./routes/Profile"));
 const Home = lazy(() => import("./routes/Home"));
+const About = lazy(() => import("./routes/About"));
 const Settings = lazy(() => import("./routes/Settings"));
 const NotFound = lazy(() => import("./routes/NotFound"));
 const MenuAppBar = lazy(() => import("./components/MenuAppBar"));
@@ -150,6 +151,16 @@ const App: React.FC = () => {
 						render={() => (
 							<Suspense fallback={<div />}>
 								<Profile currentUser={user} />
+							</Suspense>
+						)}
+					/>
+
+					<Route
+						exact
+						path="/about"
+						render={() => (
+							<Suspense fallback={<div />}>
+								<About />
 							</Suspense>
 						)}
 					/>
