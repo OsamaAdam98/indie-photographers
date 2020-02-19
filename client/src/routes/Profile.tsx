@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const url = process.env.NODE_ENV === "production" ? (process.env.ISHEROKU ? "" : process.env.REACT_APP_PROXY) : "";
-
+const url =
+	process.env.NODE_ENV === "production" ? (process.env.ISHEROKU === "true" ? "" : process.env.REACT_APP_PROXY) : "";
 const Profile: React.FC = () => {
 	const [user, setUser] = useState<User | null>(null);
 	const [posts, setPosts] = useState<Post[]>([]);

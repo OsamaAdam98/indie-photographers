@@ -31,7 +31,8 @@ interface Props {
 	isLogged: boolean;
 	user: User;
 }
-const url = process.env.NODE_ENV === "production" ? (process.env.ISHEROKU ? "" : process.env.REACT_APP_PROXY) : "";
+const url =
+	process.env.NODE_ENV === "production" ? (process.env.ISHEROKU === "true" ? "" : process.env.REACT_APP_PROXY) : "";
 
 const Feed: React.FC<Props> = ({isLogged, user}) => {
 	const classes = useStyles();

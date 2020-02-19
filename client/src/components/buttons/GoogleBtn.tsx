@@ -21,8 +21,8 @@ interface Props {
 	dispatch: React.Dispatch<actions>;
 }
 
-const url = process.env.NODE_ENV === "production" ? (process.env.ISHEROKU ? "" : process.env.REACT_APP_PROXY) : "";
-
+const url =
+	process.env.NODE_ENV === "production" ? (process.env.ISHEROKU === "true" ? "" : process.env.REACT_APP_PROXY) : "";
 const GoogleBtn: React.FC<Props> = ({handleClose, dispatch}) => {
 	const classes = useStyles();
 

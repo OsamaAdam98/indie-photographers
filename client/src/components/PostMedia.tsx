@@ -38,8 +38,8 @@ interface Props {
 	handleDelete: (id: string) => void;
 }
 
-const url = process.env.NODE_ENV === "production" ? (process.env.ISHEROKU ? "" : process.env.REACT_APP_PROXY) : "";
-
+const url =
+	process.env.NODE_ENV === "production" ? (process.env.ISHEROKU === "true" ? "" : process.env.REACT_APP_PROXY) : "";
 const PostMedia: React.FC<Props> = ({feedPost, handleDelete}) => {
 	const classes = useStyles();
 	const {user} = feedPost;

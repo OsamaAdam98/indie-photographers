@@ -25,8 +25,8 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const url = process.env.NODE_ENV === "production" ? (process.env.ISHEROKU ? "" : process.env.REACT_APP_PROXY) : "";
-
+const url =
+	process.env.NODE_ENV === "production" ? (process.env.ISHEROKU === "true" ? "" : process.env.REACT_APP_PROXY) : "";
 const Login: React.FC = () => {
 	const classes = useStyles();
 	const history = useHistory();
