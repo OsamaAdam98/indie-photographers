@@ -20,8 +20,6 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const url =
-	process.env.NODE_ENV === "production" ? (process.env.ISHEROKU === "true" ? "" : process.env.REACT_APP_PROXY) : "";
 const Profile: React.FC = () => {
 	const [user, setUser] = useState<User | null>(null);
 	const [posts, setPosts] = useState<Post[]>([]);
@@ -39,7 +37,7 @@ const Profile: React.FC = () => {
 		const token: string | null = localStorage.getItem("token");
 
 		axios
-			.delete(`${url}/api/feed/delete/${id}`, {
+			.delete(`/api/feed/delete/${id}`, {
 				headers: {
 					"x-auth-token": `${token}`
 				}
@@ -54,7 +52,7 @@ const Profile: React.FC = () => {
 		if (hasMore) {
 			let cachedData: Post[] = JSON.parse(localStorage.getItem(`${params.id}/page${page}`) as string);
 			axios
-				.get(`${url}/api/feed/user/${params.id}/?page=${page}`)
+				.get(`/api/feed/user/${params.id}/?page=${page}`)
 				.then((res) => {
 					const data: Post[] = res.data;
 
@@ -97,7 +95,7 @@ const Profile: React.FC = () => {
 			let cachedData: User = JSON.parse(localStorage.getItem(`${params.id}`) as string);
 			if (cachedData) setUser(cachedData);
 			axios
-				.get(`${url}/api/users/${params.id}`)
+				.get(`/api/users/${params.id}`)
 				.then((res) => {
 					const data: User = res.data;
 					setUser(data);

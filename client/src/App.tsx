@@ -18,8 +18,6 @@ const Settings = lazy(() => import("./routes/Settings"));
 const NotFound = lazy(() => import("./routes/NotFound"));
 const MenuAppBar = lazy(() => import("./components/MenuAppBar"));
 
-const url =
-	process.env.NODE_ENV === "production" ? (process.env.ISHEROKU === "true" ? "" : process.env.REACT_APP_PROXY) : "";
 const App: React.FC = () => {
 	const [state, dispatch] = React.useReducer(appReducer, {
 		isLogged: localStorage.getItem("token") ? true : false,
@@ -92,7 +90,7 @@ const App: React.FC = () => {
 		}
 		if (state.isLogged) {
 			axios
-				.get(`${url}/api/auth/user`, {
+				.get(`/api/auth/user`, {
 					headers: {
 						"x-auth-token": `${token}`
 					}

@@ -38,8 +38,6 @@ interface Props {
 	handleDelete: (id: string) => void;
 }
 
-const url =
-	process.env.NODE_ENV === "production" ? (process.env.ISHEROKU === "true" ? "" : process.env.REACT_APP_PROXY) : "";
 const PostMedia: React.FC<Props> = ({feedPost, handleDelete}) => {
 	const classes = useStyles();
 	const {user} = feedPost;
@@ -101,7 +99,7 @@ const PostMedia: React.FC<Props> = ({feedPost, handleDelete}) => {
 		const token: string | null = localStorage.getItem("token");
 
 		axios
-			.post(`${url}/api/feed/like/${id}`, null, {
+			.post(`/api/feed/like/${id}`, null, {
 				headers: {
 					"x-auth-token": `${token}`
 				}

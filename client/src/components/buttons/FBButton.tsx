@@ -48,8 +48,6 @@ interface Props {
 	dispatch: React.Dispatch<actions>;
 }
 
-const url =
-	process.env.NODE_ENV === "production" ? (process.env.ISHEROKU === "true" ? "" : process.env.REACT_APP_PROXY) : "";
 const FBButton: React.FC<Props> = ({dispatch, handleClose}) => {
 	const classes = useStyles();
 
@@ -57,7 +55,7 @@ const FBButton: React.FC<Props> = ({dispatch, handleClose}) => {
 
 	const responseFacebook = (res: any) => {
 		axios
-			.post(`${url}/api/auth/facebook-login`, res)
+			.post(`/api/auth/facebook-login`, res)
 			.then((res) => {
 				const {token, user} = res.data;
 				if (token) {

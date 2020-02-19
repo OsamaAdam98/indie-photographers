@@ -25,8 +25,6 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const url =
-	process.env.NODE_ENV === "production" ? (process.env.ISHEROKU === "true" ? "" : process.env.REACT_APP_PROXY) : "";
 const Login: React.FC = () => {
 	const classes = useStyles();
 	const history = useHistory();
@@ -68,7 +66,7 @@ const Login: React.FC = () => {
 				password
 			};
 			axios
-				.post(`${url}/api/auth/`, user)
+				.post(`/api/auth/`, user)
 				.then((res) => {
 					const token: string = res.data.token;
 					const user: User = res.data.user;
