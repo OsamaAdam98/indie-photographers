@@ -37,7 +37,9 @@
 		"react-facebook-login": "^4.1.1",
 		"react-google-login": "^5.1.0",
 		"react-router-dom": "^5.1.2",
-		"react-scripts": "^3.3.1",
+		"react-scripts": "^3.3.1"
+	},
+	"devDependencies": {
 		"typescript": "^3.7.5",
 		"@types/react-facebook-login": "^4.1.1",
 		"@types/jest": "^25.1.2",
