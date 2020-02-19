@@ -18,7 +18,7 @@ const Settings = lazy(() => import("./routes/Settings"));
 const NotFound = lazy(() => import("./routes/NotFound"));
 const MenuAppBar = lazy(() => import("./components/MenuAppBar"));
 
-const url = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PROXY : "";
+const url = process.env.NODE_ENV === "production" ? (process.env.ISHEROKU ? "" : process.env.REACT_APP_PROXY) : "";
 
 const App: React.FC = () => {
 	const [state, dispatch] = React.useReducer(appReducer, {

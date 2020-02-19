@@ -20,7 +20,7 @@ interface Props {
 	onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const url = process.env.NODE_ENV === "production" ? process.env.REACT_APP_PROXY : "";
+const url = process.env.NODE_ENV === "production" ? (process.env.ISHEROKU ? "" : process.env.REACT_APP_PROXY) : "";
 
 const PostModal: React.FC<Props> = (props) => {
 	const {
