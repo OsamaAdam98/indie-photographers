@@ -11,7 +11,8 @@
 		"client": "cd client && yarn start",
 		"build-client": "cd client && yarn run build && serve -s build -l 3001",
 		"dev": "concurrently \"yarn run server\" \"yarn run client\"",
-		"heroku-postbuild": "cd client && yarn && yarn run build"
+		"heroku-postbuild": "cd client && yarn && yarn run build",
+		"init-all": "yarn && cd client && yarn"
 	},
 	"keywords": [],
 	"author": "",
