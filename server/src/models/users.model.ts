@@ -13,7 +13,8 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
 	profilePicture: {
 		type: String,
 		required: false,
-		default: "https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-7.png"
+		default:
+			"https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-7.png"
 	},
 	password: {
 		type: String,

@@ -1,7 +1,9 @@
 import { Button, Container, Typography, makeStyles } from "@material-ui/core";
 import React, { Suspense } from "react";
 
-const LightSwitch = React.lazy(() => import("../components/buttons/LightSwitch"));
+const LightSwitch = React.lazy(() =>
+	import("../components/buttons/LightSwitch")
+);
 
 const useStyles = makeStyles(() => ({
 	btnStyle: {

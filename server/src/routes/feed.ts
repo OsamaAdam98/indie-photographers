@@ -26,7 +26,10 @@ router.get("/", (req, res) => {
 		.limit(10)
 		.skip(page >= 1 ? 10 * (page - 1) : 0)
 		.select("-photoId")
-		.populate("user comments likes", "-password -registerDate -__v -posts -email")
+		.populate(
+			"user comments likes",
+			"-password -registerDate -__v -posts -email"
+		)
 		.populate({
 			path: "likes",
 			populate: {
@@ -76,7 +79,10 @@ router.post("/add", [upload.single("image"), auth], (req: any, res: any) => {
 									.save()
 									.then(() => {
 										Feed.findById(newPost._id)
-											.populate("user comments likes", "-password -registerDate -__v -posts")
+											.populate(
+												"user comments likes",
+												"-password -registerDate -__v -posts"
+											)
 											.exec()
 											.then((result) => res.status(201).json(result))
 											.catch((err) => res.status(404).json(err));
@@ -98,7 +104,10 @@ router.post("/add", [upload.single("image"), auth], (req: any, res: any) => {
 						.save()
 						.then(() => {
 							Feed.findById(newPost._id)
-								.populate("user comments likes", "-password -registerDate -__v -posts")
+								.populate(
+									"user comments likes",
+									"-password -registerDate -__v -posts"
+								)
 								.exec()
 								.then((result) => res.status(201).json(result))
 								.catch((err) => res.status(404).json(err));
@@ -109,7 +118,9 @@ router.post("/add", [upload.single("image"), auth], (req: any, res: any) => {
 						});
 				}
 			} else {
-				res.status(403).json("Can't post more than 2 posts in a 15 minutes span!");
+				res
+					.status(403)
+					.json("Can't post more than 2 posts in a 15 minutes span!");
 			}
 		})
 		.catch((err) => console.log(err));
@@ -147,9 +158,13 @@ router.post("/comment/:id", auth, (req, res) => {
 	newComment
 		.save()
 		.then(() => {
-			Feed.findByIdAndUpdate(post, { $push: { comments: newComment._id } }, (err) => {
-				if (err) throw err;
-			});
+			Feed.findByIdAndUpdate(
+				post,
+				{ $push: { comments: newComment._id } },
+				(err) => {
+					if (err) throw err;
+				}
+			);
 			res.status(200).json("Comment submitted");
 		})
 		.catch((err) => res.status(500).json(err));
@@ -176,10 +191,14 @@ router.post("/like/:id", auth, (req, res) => {
 						likeIterator === like._id;
 					});
 					if (postLike.length === 0) {
-						Feed.findByIdAndUpdate(post._id, { $push: { likes: like._id } }, (err) => {
-							if (err) throw err;
-							res.status(200).json({ like: true });
-						});
+						Feed.findByIdAndUpdate(
+							post._id,
+							{ $push: { likes: like._id } },
+							(err) => {
+								if (err) throw err;
+								res.status(200).json({ like: true });
+							}
+						);
 					}
 				})
 				.catch((err) => res.status(400).json(err));
@@ -192,13 +211,18 @@ router.post("/like/:id", auth, (req, res) => {
 						Feed.findById(like[0].post)
 							.exec()
 							.then((post) => {
-								Feed.findByIdAndUpdate(post._id, { $pull: { likes: like[0]._id } }, { upsert: true }, (err) => {
-									if (err) throw err;
-									Likes.findByIdAndDelete(like[0]._id)
-										.exec()
-										.then(() => res.status(200).json({ like: false }))
-										.catch(() => res.status(404).json("like not found"));
-								});
+								Feed.findByIdAndUpdate(
+									post._id,
+									{ $pull: { likes: like[0]._id } },
+									{ upsert: true },
+									(err) => {
+										if (err) throw err;
+										Likes.findByIdAndDelete(like[0]._id)
+											.exec()
+											.then(() => res.status(200).json({ like: false }))
+											.catch(() => res.status(404).json("like not found"));
+									}
+								);
 							});
 					})
 					.catch((err) => res.status(400).json(err));
@@ -237,7 +261,9 @@ router.delete("/delete/:id", auth, (req, res) => {
 								.then(() => {
 									res.status(200).json(`Post deleted!`);
 								})
-								.catch(() => res.status(404).json("Post not found with picture"));
+								.catch(() =>
+									res.status(404).json("Post not found with picture")
+								);
 						}
 					}
 				);
@@ -289,7 +315,10 @@ router.get("/user/:id/", (req, res) => {
 		.sort({ date: "desc" })
 		.limit(10)
 		.skip(page >= 1 ? 10 * (page - 1) : 0)
-		.populate("user comments likes", "-password -registerDate -__v -posts -email")
+		.populate(
+			"user comments likes",
+			"-password -registerDate -__v -posts -email"
+		)
 		.populate({
 			path: "likes",
 			populate: {

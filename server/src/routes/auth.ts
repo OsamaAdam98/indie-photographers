@@ -21,21 +21,26 @@ router.post("/", (req, res) => {
 			bcrypt
 				.compare(password, user.password)
 				.then((isMatch) => {
-					if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
-					jwt.sign({ id: user._id, admin: user.admin }, process.env.jwtSecret, (err: jwt.VerifyErrors, token: string) => {
-						if (err) throw err;
-						res.json({
-							token,
-							user: {
-								_id: user._id,
-								email: user.email,
-								profilePicture: user.profilePicture,
-								registerDate: user.registerDate,
-								username: user.username,
-								admin: user.admin
-							}
-						});
-					});
+					if (!isMatch)
+						return res.status(400).json({ msg: "Invalid credentials" });
+					jwt.sign(
+						{ id: user._id, admin: user.admin },
+						process.env.jwtSecret,
+						(err: jwt.VerifyErrors, token: string) => {
+							if (err) throw err;
+							res.json({
+								token,
+								user: {
+									_id: user._id,
+									email: user.email,
+									profilePicture: user.profilePicture,
+									registerDate: user.registerDate,
+									username: user.username,
+									admin: user.admin
+								}
+							});
+						}
+					);
 				})
 				.catch((err) => console.log(err));
 		})
@@ -69,9 +74,13 @@ router.post("/facebook-login", (req, res) => {
 							});
 						}
 					);
-					Users.updateOne({ email }, { $set: { profilePicture: url } }, (err) => {
-						if (err) throw err;
-					});
+					Users.updateOne(
+						{ email },
+						{ $set: { profilePicture: url } },
+						(err) => {
+							if (err) throw err;
+						}
+					);
 				} else {
 					const newUser = new Users({
 						username: name,
@@ -119,7 +128,11 @@ router.post("/facebook-login", (req, res) => {
 
 router.post("/google-login", (req, res) => {
 	const { email, name } = req.body.profileObj;
-	const imageUrl = req.body.profileObj.imageUrl.replace("s96-c", "s384-c", true);
+	const imageUrl = req.body.profileObj.imageUrl.replace(
+		"s96-c",
+		"s384-c",
+		true
+	);
 
 	Users.findOne({ email }).then((user) => {
 		if (user) {
@@ -157,20 +170,25 @@ router.post("/google-login", (req, res) => {
 					newUser
 						.save()
 						.then((user) => {
-							jwt.sign({ id: user._id, admin: user.admin }, process.env.jwtSecret, { expiresIn: 3600 }, (err, token) => {
-								if (err) throw err;
-								res.json({
-									token,
-									user: {
-										_id: user._id,
-										email: user.email,
-										profilePicture: user.profilePicture,
-										registerDate: user.registerDate,
-										username: user.username,
-										admin: user.admin
-									}
-								});
-							});
+							jwt.sign(
+								{ id: user._id, admin: user.admin },
+								process.env.jwtSecret,
+								{ expiresIn: 3600 },
+								(err, token) => {
+									if (err) throw err;
+									res.json({
+										token,
+										user: {
+											_id: user._id,
+											email: user.email,
+											profilePicture: user.profilePicture,
+											registerDate: user.registerDate,
+											username: user.username,
+											admin: user.admin
+										}
+									});
+								}
+							);
 						})
 						.catch((err) => res.status(400).json(err));
 				});

@@ -41,7 +41,11 @@ const GoogleBtn: React.FC<Props> = ({ handleClose, dispatch }) => {
 				}, 1000);
 			})
 			.catch((err) => {
-				dispatch({ type: "showSnackAlert", errorMsg: "Login failed!", severity: "error" });
+				dispatch({
+					type: "showSnackAlert",
+					errorMsg: "Login failed!",
+					severity: "error"
+				});
 				console.log(err);
 			});
 	};

@@ -1,4 +1,12 @@
-import { AppBar, Avatar, makeStyles, Slide, Toolbar, Typography, useScrollTrigger } from "@material-ui/core";
+import {
+	AppBar,
+	Avatar,
+	makeStyles,
+	Slide,
+	Toolbar,
+	Typography,
+	useScrollTrigger
+} from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
 import { BottomBar, LightSwitch, Login, useWindowDimensions } from ".";

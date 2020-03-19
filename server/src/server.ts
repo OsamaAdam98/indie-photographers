@@ -31,7 +31,9 @@ if (uri) {
 
 const connection = mongoose.connection;
 
-connection.once("open", () => console.log("Database connection established successfully."));
+connection.once("open", () =>
+	console.log("Database connection established successfully.")
+);
 
 app.use("/api/users", usersRoute);
 app.use("/api/auth", authRoute);

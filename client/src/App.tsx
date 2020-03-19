@@ -29,7 +29,9 @@ const App: React.FC = () => {
 		severity: undefined,
 		pwa: null,
 		showBtn: false,
-		isLight: (JSON.parse(localStorage.getItem("theme") as string) as boolean) ? true : false
+		isLight: (JSON.parse(localStorage.getItem("theme") as string) as boolean)
+			? true
+			: false
 	});
 
 	const lightTheme = createMuiTheme({
@@ -58,7 +60,11 @@ const App: React.FC = () => {
 
 		window.addEventListener("appinstalled", (e) => {
 			dispatch({ type: "clearPWA" });
-			dispatch({ type: "showSnackAlert", errorMsg: "App Installed!", severity: "success" });
+			dispatch({
+				type: "showSnackAlert",
+				errorMsg: "App Installed!",
+				severity: "success"
+			});
 		});
 	}, []);
 
@@ -72,12 +78,18 @@ const App: React.FC = () => {
 		} else {
 			if (state.pwa) {
 				state.pwa.prompt();
-				state.pwa.userChoice.then((choiceResult: { outcome: "accepted" | "refused" }) => {
-					if (choiceResult.outcome === "accepted") {
-						dispatch({ type: "showSnackAlert", errorMsg: "App downloading in the background..", severity: "info" });
+				state.pwa.userChoice.then(
+					(choiceResult: { outcome: "accepted" | "refused" }) => {
+						if (choiceResult.outcome === "accepted") {
+							dispatch({
+								type: "showSnackAlert",
+								errorMsg: "App downloading in the background..",
+								severity: "info"
+							});
+						}
+						dispatch({ type: "clearPWA" });
 					}
-					dispatch({ type: "clearPWA" });
-				});
+				);
 			}
 		}
 	};
@@ -179,7 +191,10 @@ const App: React.FC = () => {
 								path="/settings"
 								render={() => (
 									<Suspense fallback={<div />}>
-										<Settings handleClick={handleClick} showBtn={state.showBtn} />
+										<Settings
+											handleClick={handleClick}
+											showBtn={state.showBtn}
+										/>
 									</Suspense>
 								)}
 							/>

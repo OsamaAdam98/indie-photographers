@@ -1,4 +1,11 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@material-ui/core";
+import {
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
+	TextField
+} from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -46,7 +53,8 @@ const PostModal: React.FC<Props> = (props) => {
 		if (location.hash !== "#feed-post") setShow(false);
 	}, [location.hash]);
 
-	const msgChange = (event: React.ChangeEvent<HTMLInputElement>) => setMsg(event.target.value);
+	const msgChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+		setMsg(event.target.value);
 
 	const handleClose = () => {
 		setErrorMsg("");
@@ -62,7 +70,11 @@ const PostModal: React.FC<Props> = (props) => {
 		setErrorMsg("");
 	};
 
-	const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = (
+		event:
+			| React.MouseEvent<HTMLButtonElement, MouseEvent>
+			| React.FormEvent<HTMLFormElement>
+	) => {
 		const username: string | undefined = user.username;
 		const email: string | undefined = user.email;
 		const formData = new FormData();
@@ -106,7 +118,12 @@ const PostModal: React.FC<Props> = (props) => {
 	};
 
 	const subButton = isLogged ? (
-		<FAB handleClick={handleShow} offline={offline} currentLocation="/feed/" icon={<EditIcon />} />
+		<FAB
+			handleClick={handleShow}
+			offline={offline}
+			currentLocation="/feed/"
+			icon={<EditIcon />}
+		/>
 	) : null;
 
 	return (
@@ -174,7 +191,11 @@ const PostModal: React.FC<Props> = (props) => {
 							</label>
 						</div>
 
-						<Button onClick={handleSubmit} color="primary" disabled={isUploading}>
+						<Button
+							onClick={handleSubmit}
+							color="primary"
+							disabled={isUploading}
+						>
 							Post
 						</Button>
 						<Button onClick={handleCancel}>Cancel</Button>

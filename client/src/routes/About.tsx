@@ -10,7 +10,9 @@ const About: React.FC = () => {
 			</Typography>
 			<Typography>
 				You could checkout the git repository{" "}
-				<Link href="https://github.com/OsamaAdam98/indie-photographers">here</Link>
+				<Link href="https://github.com/OsamaAdam98/indie-photographers">
+					here
+				</Link>
 			</Typography>
 		</div>
 	);

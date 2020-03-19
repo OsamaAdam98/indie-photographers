@@ -1,10 +1,21 @@
 import { AppState } from "../context/AppContext";
 
 export interface actions extends Partial<AppState> {
-	type: "showSnackAlert" | "hideSnackAlert" | "clearPWA" | "setPWA" | "setUser" | "clearUser" | "toggleTheme";
+	type:
+		| "showSnackAlert"
+		| "hideSnackAlert"
+		| "clearPWA"
+		| "setPWA"
+		| "setUser"
+		| "clearUser"
+		| "toggleTheme";
 }
 
-const showSnackAlert = (state: AppState, errorMsg: string, severity: Severity) => {
+const showSnackAlert = (
+	state: AppState,
+	errorMsg: string,
+	severity: Severity
+) => {
 	const updatedState = state;
 	return {
 		...updatedState,
@@ -18,7 +29,11 @@ const clearUser = (state: AppState) => {
 	const updatedState = state;
 	localStorage.removeItem("token");
 	localStorage.removeItem("userInfo");
-	return { ...updatedState, user: { _id: "", email: "", admin: false, username: "" }, isLogged: false };
+	return {
+		...updatedState,
+		user: { _id: "", email: "", admin: false, username: "" },
+		isLogged: false
+	};
 };
 
 const setUser = (state: AppState, user: User) => {

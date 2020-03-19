@@ -1,6 +1,22 @@
-import { Avatar, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography } from "@material-ui/core";
+import {
+	Avatar,
+	List,
+	ListItem,
+	ListItemAvatar,
+	ListItemText,
+	makeStyles,
+	Paper,
+	Typography
+} from "@material-ui/core";
 import axios from "axios";
-import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+	lazy,
+	Suspense,
+	useCallback,
+	useEffect,
+	useRef,
+	useState
+} from "react";
 import { useParams } from "react-router-dom";
 import { PhotoPreview, PostSkeleton } from "../components/index";
 import { DispatchContext } from "../context/AppContext";
@@ -28,7 +44,10 @@ const Profile: React.FC = () => {
 	const [hasMore, setHasMore] = useState<boolean>(true);
 	const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
 
-	const appDispatch = useCallback(React.useContext(DispatchContext).dispatch, []);
+	const appDispatch = useCallback(
+		React.useContext(DispatchContext).dispatch,
+		[]
+	);
 
 	const classes = useStyles();
 	const params: { id?: string } = useParams();
@@ -43,14 +62,20 @@ const Profile: React.FC = () => {
 				}
 			})
 			.then((res) => {
-				appDispatch({ type: "showSnackAlert", errorMsg: res.data, severity: "success" });
+				appDispatch({
+					type: "showSnackAlert",
+					errorMsg: res.data,
+					severity: "success"
+				});
 			})
 			.catch((err) => console.log(err));
 	};
 
 	useEffect(() => {
 		if (hasMore) {
-			let cachedData: Post[] = JSON.parse(localStorage.getItem(`${params.id}/page${page}`) as string);
+			let cachedData: Post[] = JSON.parse(
+				localStorage.getItem(`${params.id}/page${page}`) as string
+			);
 			axios
 				.get(`/api/feed/user/${params.id}/?page=${page}`)
 				.then((res) => {
@@ -69,7 +94,11 @@ const Profile: React.FC = () => {
 				.catch((err) => {
 					if (err) {
 						if (err) {
-							appDispatch({ type: "showSnackAlert", errorMsg: "User not found", severity: "error" });
+							appDispatch({
+								type: "showSnackAlert",
+								errorMsg: "User not found",
+								severity: "error"
+							});
 						} else {
 							appDispatch({
 								type: "showSnackAlert",
@@ -81,7 +110,11 @@ const Profile: React.FC = () => {
 					}
 				});
 			if (cachedData) {
-				setPosts((prevPosts) => [...prevPosts, ...cachedData].filter((post) => post.user._id === params.id));
+				setPosts((prevPosts) =>
+					[...prevPosts, ...cachedData].filter(
+						(post) => post.user._id === params.id
+					)
+				);
 				setIsLoading(false);
 				setHasMore(cachedData.length === 10);
 			} else {
@@ -92,7 +125,9 @@ const Profile: React.FC = () => {
 
 	useEffect(() => {
 		if (params.id) {
-			let cachedData: User = JSON.parse(localStorage.getItem(`${params.id}`) as string);
+			let cachedData: User = JSON.parse(
+				localStorage.getItem(`${params.id}`) as string
+			);
 			if (cachedData) setUser(cachedData);
 			axios
 				.get(`/api/users/${params.id}`)
@@ -103,7 +138,11 @@ const Profile: React.FC = () => {
 				})
 				.catch((err) => {
 					if (err) {
-						appDispatch({ type: "showSnackAlert", errorMsg: "Can't find user", severity: "error" });
+						appDispatch({
+							type: "showSnackAlert",
+							errorMsg: "Can't find user",
+							severity: "error"
+						});
 					}
 				});
 		}
@@ -135,21 +174,21 @@ const Profile: React.FC = () => {
 
 	const postMedia = posts
 		? posts.map((feedPost, i) => {
-			if (posts.length === i + 1) {
-				return (
-					<div ref={setLastElement} key={feedPost._id}>
-						<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
-						{hasMore ? <PostSkeleton /> : null}
-					</div>
-				);
-			} else {
-				return (
-					<div key={feedPost._id}>
-						<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
-					</div>
-				);
-			}
-		})
+				if (posts.length === i + 1) {
+					return (
+						<div ref={setLastElement} key={feedPost._id}>
+							<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
+							{hasMore ? <PostSkeleton /> : null}
+						</div>
+					);
+				} else {
+					return (
+						<div key={feedPost._id}>
+							<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
+						</div>
+					);
+				}
+		  })
 		: null;
 
 	return (
@@ -158,7 +197,11 @@ const Profile: React.FC = () => {
 				<>
 					<Paper className="main-block">
 						<div className="cover-photo" />
-						<PhotoPreview photo={user.profilePicture} alt={user.username} round={true} />
+						<PhotoPreview
+							photo={user.profilePicture}
+							alt={user.username}
+							round={true}
+						/>
 						<div className="tagline">
 							<Typography variant="h5">{user.username}</Typography>
 							<Typography
@@ -171,9 +214,11 @@ const Profile: React.FC = () => {
 						</div>
 						<div className="main-info">
 							<Typography>
-								Irure culpa sint tempor Lorem Lorem eu eu consequat in elit. Laborum id magna mollit pariatur.
-								Incididunt velit mollit sit aliqua duis esse nisi velit esse ad occaecat voluptate aliqua esse.
-								Adipisicing pariatur sint consequat ea et pariatur sint nisi anim.
+								Irure culpa sint tempor Lorem Lorem eu eu consequat in elit.
+								Laborum id magna mollit pariatur. Incididunt velit mollit sit
+								aliqua duis esse nisi velit esse ad occaecat voluptate aliqua
+								esse. Adipisicing pariatur sint consequat ea et pariatur sint
+								nisi anim.
 							</Typography>
 						</div>
 					</Paper>

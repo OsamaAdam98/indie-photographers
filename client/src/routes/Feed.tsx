@@ -1,6 +1,13 @@
 import { LinearProgress, makeStyles } from "@material-ui/core";
 import axios from "axios";
-import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+	lazy,
+	Suspense,
+	useCallback,
+	useEffect,
+	useRef,
+	useState
+} from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { DispatchContext } from "../context/AppContext";
 import "../css/feed.css";
@@ -37,7 +44,10 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
 	const history = useHistory();
 	const location = useLocation();
 
-	const appDispatch = useCallback(React.useContext(DispatchContext).dispatch, []);
+	const appDispatch = useCallback(
+		React.useContext(DispatchContext).dispatch,
+		[]
+	);
 
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [newPost, setNewPost] = useState<Post[]>([]);
@@ -69,12 +79,18 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
 		let targetHit: boolean;
 		let cachedData: Post[];
 		do {
-			cachedData = JSON.parse(localStorage.getItem(`feedPage${index}`) as string);
+			cachedData = JSON.parse(
+				localStorage.getItem(`feedPage${index}`) as string
+			);
 			if (cachedData) {
-				targetHit = cachedData.filter((data) => data._id === id).length ? true : false;
+				targetHit = cachedData.filter((data) => data._id === id).length
+					? true
+					: false;
 				if (targetHit) {
 					setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
-					setNewPost((prevPosts) => prevPosts.filter((post) => post._id !== id));
+					setNewPost((prevPosts) =>
+						prevPosts.filter((post) => post._id !== id)
+					);
 					for (let i = 1; i <= index; i++) {
 						localStorage.removeItem(`feedPage${i}`);
 					}
@@ -98,7 +114,11 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
 				})
 				.then((res) => {
 					cleanupDelete(id);
-					appDispatch({ type: "showSnackAlert", errorMsg: res.data, severity: "success" });
+					appDispatch({
+						type: "showSnackAlert",
+						errorMsg: res.data,
+						severity: "success"
+					});
 				})
 				.catch((err) => console.log(err.response.data));
 		},
@@ -115,7 +135,9 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
 
 	useEffect(() => {
 		if (hasMore) {
-			let cachedData: Post[] = JSON.parse(localStorage.getItem(`feedPage${page}`) as string);
+			let cachedData: Post[] = JSON.parse(
+				localStorage.getItem(`feedPage${page}`) as string
+			);
 			axios
 				.get(`/api/feed/?page=${page}`)
 				.then((res) => {
@@ -138,7 +160,11 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
 				})
 				.catch((err) => {
 					if (err && page !== 1) {
-						appDispatch({ type: "showSnackAlert", errorMsg: "Can't connect to the internet!", severity: "warning" });
+						appDispatch({
+							type: "showSnackAlert",
+							errorMsg: "Can't connect to the internet!",
+							severity: "warning"
+						});
 						setOffline(true);
 					}
 					setIsLoading(false);
@@ -192,7 +218,11 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
 	});
 
 	const newPosts = newPost.map((incoming) => (
-		<PostMedia feedPost={incoming} handleDelete={handleDelete} key={incoming._id} />
+		<PostMedia
+			feedPost={incoming}
+			handleDelete={handleDelete}
+			key={incoming._id}
+		/>
 	));
 
 	return (
@@ -229,7 +259,9 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
 				/>
 			</div>
 
-			{isUploading && <LinearProgress color="primary" className={classes.progress} />}
+			{isUploading && (
+				<LinearProgress color="primary" className={classes.progress} />
+			)}
 		</div>
 	);
 };

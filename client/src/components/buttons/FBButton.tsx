@@ -69,7 +69,11 @@ const FBButton: React.FC<Props> = ({ dispatch, handleClose }) => {
 				}
 			})
 			.catch((err) => {
-				dispatch({ type: "showSnackAlert", errorMsg: "Login failed!", severity: "error" });
+				dispatch({
+					type: "showSnackAlert",
+					errorMsg: "Login failed!",
+					severity: "error"
+				});
 			});
 	};
 
@@ -83,9 +87,18 @@ const FBButton: React.FC<Props> = ({ dispatch, handleClose }) => {
 				callback={responseFacebook}
 				disableMobileRedirect={true}
 				render={(renderProps: any) => (
-					<Button onClick={renderProps.onClick} variant="contained" color="inherit" className={classes.fbBtn}>
+					<Button
+						onClick={renderProps.onClick}
+						variant="contained"
+						color="inherit"
+						className={classes.fbBtn}
+					>
 						<div className={classes.btnDiv} />
-						<FacebookIcon color="inherit" fontSize="default" className={classes.fbIcon} />
+						<FacebookIcon
+							color="inherit"
+							fontSize="default"
+							className={classes.fbIcon}
+						/>
 						<Typography variant="button" className={classes.fbType}>
 							Facebook
 						</Typography>

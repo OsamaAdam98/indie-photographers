@@ -25,9 +25,11 @@ export default createContext<UserState>({
 	user: JSON.parse(localStorage.getItem("userInfo") as string)
 		? JSON.parse(localStorage.getItem("userInfo") as string)
 		: { admin: false },
-	isLight: (JSON.parse(localStorage.getItem("theme") as string) as boolean) ? true : false
+	isLight: (JSON.parse(localStorage.getItem("theme") as string) as boolean)
+		? true
+		: false
 });
 
 export const DispatchContext = createContext({
-	dispatch: function () { } as Dispatch<actions>
+	dispatch: function() {} as Dispatch<actions>
 });

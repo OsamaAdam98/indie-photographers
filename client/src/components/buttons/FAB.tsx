@@ -59,7 +59,7 @@ const FAB: React.FC<Props> = ({
 				display: offline ? "none" : "",
 				transitionDelay: `${
 					location.pathname === currentLocation ? transitionDuration.exit : 0
-					}ms`
+				}ms`
 			}}
 			unmountOnExit
 		>

@@ -14,7 +14,9 @@ const ProfileAvatar: React.FC<Props> = ({ dispatch }) => {
 	const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 	const open = Boolean(anchorEl);
 
-	const handleMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+	const handleMenu = (
+		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) => {
 		setAnchorEl(event.currentTarget);
 	};
 

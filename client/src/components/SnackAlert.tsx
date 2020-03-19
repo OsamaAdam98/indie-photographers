@@ -20,9 +20,16 @@ interface Props {
 	dispatch: React.Dispatch<actions>;
 }
 
-const SnackAlert: React.FC<Props> = ({ severity, openError, errorMsg, dispatch }) => {
+const SnackAlert: React.FC<Props> = ({
+	severity,
+	openError,
+	errorMsg,
+	dispatch
+}) => {
 	const handleClose = (
-		event: React.SyntheticEvent<any, Event> | React.MouseEvent<HTMLDivElement, MouseEvent>,
+		event:
+			| React.SyntheticEvent<any, Event>
+			| React.MouseEvent<HTMLDivElement, MouseEvent>,
 		reason?: string
 	) => {
 		if (reason === "clickaway") {

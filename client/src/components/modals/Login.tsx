@@ -54,9 +54,15 @@ const Login: React.FC = () => {
 		setErrorMsg("");
 	};
 
-	const emailChange = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value);
-	const passwordChange = (event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value);
-	const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent<HTMLFormElement>) => {
+	const emailChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+		setEmail(event.target.value);
+	const passwordChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+		setPassword(event.target.value);
+	const handleSubmit = (
+		event:
+			| React.MouseEvent<HTMLButtonElement, MouseEvent>
+			| React.FormEvent<HTMLFormElement>
+	) => {
 		if (!email.trim() || !password.trim()) {
 			setErrorMsg("Please enter all fields");
 			event.preventDefault();
@@ -97,8 +103,8 @@ const Login: React.FC = () => {
 			Login
 		</Button>
 	) : (
-			<ProfileAvatar dispatch={context.dispatch} />
-		);
+		<ProfileAvatar dispatch={context.dispatch} />
+	);
 
 	return (
 		<>
@@ -140,10 +146,16 @@ const Login: React.FC = () => {
 						/>
 						<Grid container direction="row" spacing={1}>
 							<Grid item xs>
-								<FBButton handleClose={handleClose} dispatch={context.dispatch} />
+								<FBButton
+									handleClose={handleClose}
+									dispatch={context.dispatch}
+								/>
 							</Grid>
 							<Grid item xs>
-								<GoogleBtn handleClose={handleClose} dispatch={context.dispatch} />
+								<GoogleBtn
+									handleClose={handleClose}
+									dispatch={context.dispatch}
+								/>
 							</Grid>
 						</Grid>
 					</DialogContent>
