@@ -1,8 +1,8 @@
-import {LinearProgress, makeStyles} from "@material-ui/core";
+import { LinearProgress, makeStyles } from "@material-ui/core";
 import axios from "axios";
-import React, {lazy, Suspense, useCallback, useEffect, useRef, useState} from "react";
-import {useHistory, useLocation} from "react-router-dom";
-import {DispatchContext} from "../context/AppContext";
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import { DispatchContext } from "../context/AppContext";
 import "../css/feed.css";
 
 const PostMedia = lazy(() => import("../components/PostMedia"));
@@ -32,7 +32,7 @@ interface Props {
 	user: User;
 }
 
-const Feed: React.FC<Props> = ({isLogged, user}) => {
+const Feed: React.FC<Props> = ({ isLogged, user }) => {
 	const classes = useStyles();
 	const history = useHistory();
 	const location = useLocation();
@@ -98,7 +98,7 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 				})
 				.then((res) => {
 					cleanupDelete(id);
-					appDispatch({type: "showSnackAlert", errorMsg: res.data, severity: "success"});
+					appDispatch({ type: "showSnackAlert", errorMsg: res.data, severity: "success" });
 				})
 				.catch((err) => console.log(err.response.data));
 		},
@@ -119,7 +119,7 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 			axios
 				.get(`/api/feed/?page=${page}`)
 				.then((res) => {
-					const {data} = res;
+					const { data } = res;
 					let newData: Post[] = getNewPosts(data, cachedData);
 
 					if (newData.length) {
@@ -132,13 +132,13 @@ const Feed: React.FC<Props> = ({isLogged, user}) => {
 
 					setHasMore(data.length === 10);
 					localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
-					appDispatch({type: "hideSnackAlert"});
+					appDispatch({ type: "hideSnackAlert" });
 					setOffline(false);
 					setIsLoading(false);
 				})
 				.catch((err) => {
 					if (err && page !== 1) {
-						appDispatch({type: "showSnackAlert", errorMsg: "Can't connect to the internet!", severity: "warning"});
+						appDispatch({ type: "showSnackAlert", errorMsg: "Can't connect to the internet!", severity: "warning" });
 						setOffline(true);
 					}
 					setIsLoading(false);

@@ -1,5 +1,5 @@
-import {createContext, Dispatch} from "react";
-import {actions} from "../reducers/appReducer";
+import { createContext, Dispatch } from "react";
+import { actions } from "../reducers/appReducer";
 
 export interface AppState extends UserState {
 	openError: boolean;
@@ -24,10 +24,10 @@ export default createContext<UserState>({
 	isLogged: localStorage.getItem("token") ? true : false,
 	user: JSON.parse(localStorage.getItem("userInfo") as string)
 		? JSON.parse(localStorage.getItem("userInfo") as string)
-		: {admin: false},
+		: { admin: false },
 	isLight: (JSON.parse(localStorage.getItem("theme") as string) as boolean) ? true : false
 });
 
 export const DispatchContext = createContext({
-	dispatch: function() {} as Dispatch<actions>
+	dispatch: function () { } as Dispatch<actions>
 });

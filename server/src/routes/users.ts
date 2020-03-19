@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import {Router} from "express";
+import { Router } from "express";
 import auth from "../middleware/auth.middleware";
 import Users from "../models/users.model";
 
@@ -9,12 +9,12 @@ const router = Router();
 // User registeration
 
 router.post("/", (req, res) => {
-	const {username, email, password, admin, profilePicture} = req.body;
+	const { username, email, password, admin, profilePicture } = req.body;
 	if (!username || !email || !password) {
-		return res.status(400).json({msg: "Please enter all fields"});
+		return res.status(400).json({ msg: "Please enter all fields" });
 	}
-	Users.findOne({email}).then((user) => {
-		if (user) return res.status(400).json({msg: "User already exists."});
+	Users.findOne({ email }).then((user) => {
+		if (user) return res.status(400).json({ msg: "User already exists." });
 
 		const newUser = new Users({
 			username,
@@ -34,7 +34,7 @@ router.post("/", (req, res) => {
 				newUser
 					.save()
 					.then((user) => {
-						jwt.sign({id: user._id}, process.env.jwtSecret, {expiresIn: 3600}, (err, token) => {
+						jwt.sign({ id: user._id }, process.env.jwtSecret, { expiresIn: 3600 }, (err, token) => {
 							if (err) throw err;
 							res.json({
 								token,

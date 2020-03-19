@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../css/four-o-four.css";
 
 const NotFound: React.FC = () => {

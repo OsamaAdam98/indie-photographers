@@ -1,14 +1,14 @@
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
-import React, {useState} from "react";
-import {useHistory} from "react-router-dom";
-import {actions} from "../reducers/appReducer";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { actions } from "../reducers/appReducer";
 
 interface Props {
 	dispatch: React.Dispatch<actions>;
 }
 
-const ProfileAvatar: React.FC<Props> = ({dispatch}) => {
+const ProfileAvatar: React.FC<Props> = ({ dispatch }) => {
 	const history = useHistory();
 
 	const [anchorEl, setAnchorEl] = useState<Element | null>(null);
@@ -72,7 +72,7 @@ const ProfileAvatar: React.FC<Props> = ({dispatch}) => {
 				<MenuItem
 					onClick={() => {
 						handleClose();
-						dispatch({type: "clearUser"});
+						dispatch({ type: "clearUser" });
 						window.location.reload();
 					}}
 				>

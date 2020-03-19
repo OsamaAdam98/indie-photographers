@@ -1,8 +1,8 @@
-import {makeStyles} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import axios from "axios";
 import React from "react";
-import {GoogleLogin} from "react-google-login";
-import {actions} from "../../reducers/appReducer";
+import { GoogleLogin } from "react-google-login";
+import { actions } from "../../reducers/appReducer";
 
 const useStyles = makeStyles(() => ({
 	gBtn: {
@@ -21,19 +21,19 @@ interface Props {
 	dispatch: React.Dispatch<actions>;
 }
 
-const GoogleBtn: React.FC<Props> = ({handleClose, dispatch}) => {
+const GoogleBtn: React.FC<Props> = ({ handleClose, dispatch }) => {
 	const classes = useStyles();
 
 	const onResponse = (res: any) => {
 		axios
 			.post(`/api/auth/google-login`, res)
 			.then((res) => {
-				const {token, user} = res.data;
+				const { token, user } = res.data;
 				if (token) {
 					localStorage.setItem("token", token);
 				}
 				if (user) {
-					dispatch({type: "setUser", user});
+					dispatch({ type: "setUser", user });
 				}
 				handleClose();
 				setTimeout(() => {
@@ -41,7 +41,7 @@ const GoogleBtn: React.FC<Props> = ({handleClose, dispatch}) => {
 				}, 1000);
 			})
 			.catch((err) => {
-				dispatch({type: "showSnackAlert", errorMsg: "Login failed!", severity: "error"});
+				dispatch({ type: "showSnackAlert", errorMsg: "Login failed!", severity: "error" });
 				console.log(err);
 			});
 	};

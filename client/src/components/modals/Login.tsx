@@ -9,10 +9,10 @@ import {
 	TextField
 } from "@material-ui/core";
 import axios from "axios";
-import React, {useEffect, useState} from "react";
-import {useHistory, useLocation} from "react-router-dom";
-import {FBButton, GoogleBtn, ProfileAvatar} from "..";
-import UserContext, {DispatchContext} from "../../context/AppContext";
+import React, { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import { FBButton, GoogleBtn, ProfileAvatar } from "..";
+import UserContext, { DispatchContext } from "../../context/AppContext";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -76,7 +76,7 @@ const Login: React.FC = () => {
 						setPassword("");
 					}
 					if (user) {
-						context.dispatch({type: "setUser", user});
+						context.dispatch({ type: "setUser", user });
 						setTimeout(() => {
 							window.location.reload();
 						}, 1000);
@@ -85,7 +85,7 @@ const Login: React.FC = () => {
 				})
 				.catch((err) => {
 					console.log(err);
-					context.dispatch({type: "clearUser"});
+					context.dispatch({ type: "clearUser" });
 					setErrorMsg("Invalid credentials");
 				});
 		}
@@ -97,8 +97,8 @@ const Login: React.FC = () => {
 			Login
 		</Button>
 	) : (
-		<ProfileAvatar dispatch={context.dispatch} />
-	);
+			<ProfileAvatar dispatch={context.dispatch} />
+		);
 
 	return (
 		<>

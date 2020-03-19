@@ -1,4 +1,4 @@
-import {AppState} from "../context/AppContext";
+import { AppState } from "../context/AppContext";
 
 export interface actions extends Partial<AppState> {
 	type: "showSnackAlert" | "hideSnackAlert" | "clearPWA" | "setPWA" | "setUser" | "clearUser" | "toggleTheme";
@@ -18,7 +18,7 @@ const clearUser = (state: AppState) => {
 	const updatedState = state;
 	localStorage.removeItem("token");
 	localStorage.removeItem("userInfo");
-	return {...updatedState, user: {_id: "", email: "", admin: false, username: ""}, isLogged: false};
+	return { ...updatedState, user: { _id: "", email: "", admin: false, username: "" }, isLogged: false };
 };
 
 const setUser = (state: AppState, user: User) => {
@@ -34,7 +34,7 @@ const setUser = (state: AppState, user: User) => {
 const toggleTheme = (state: AppState) => {
 	const updatedState = state;
 	localStorage.setItem("theme", JSON.stringify(!state.isLight));
-	return {...updatedState, isLight: !state.isLight};
+	return { ...updatedState, isLight: !state.isLight };
 };
 
 const reducer = (state: AppState, action: actions): AppState => {
@@ -42,11 +42,11 @@ const reducer = (state: AppState, action: actions): AppState => {
 		case "showSnackAlert":
 			return showSnackAlert(state, action.errorMsg!, action.severity);
 		case "hideSnackAlert":
-			return {...state, openError: false};
+			return { ...state, openError: false };
 		case "clearPWA":
-			return {...state, pwa: null, showBtn: false};
+			return { ...state, pwa: null, showBtn: false };
 		case "setPWA":
-			return {...state, pwa: action.pwa, showBtn: true};
+			return { ...state, pwa: action.pwa, showBtn: true };
 		case "setUser":
 			return setUser(state, action.user as User);
 		case "clearUser":

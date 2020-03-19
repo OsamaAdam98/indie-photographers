@@ -13,8 +13,8 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import moment from "moment";
-import React, {memo, useState, Suspense, lazy} from "react";
-import {Link} from "react-router-dom";
+import React, { memo, useState, Suspense, lazy } from "react";
+import { Link } from "react-router-dom";
 import UserContext from "../context/AppContext";
 
 const FavoriteIcon = lazy(() => import("@material-ui/icons/Favorite"));
@@ -38,9 +38,9 @@ interface Props {
 	handleDelete: (id: string) => void;
 }
 
-const PostMedia: React.FC<Props> = ({feedPost, handleDelete}) => {
+const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
 	const classes = useStyles();
-	const {user} = feedPost;
+	const { user } = feedPost;
 	const currentUser = React.useContext(UserContext).user;
 
 	const [anchorEl, setAnchorEl] = useState<any>(null);
@@ -105,7 +105,7 @@ const PostMedia: React.FC<Props> = ({feedPost, handleDelete}) => {
 				}
 			})
 			.then((res) => {
-				const {like} = res.data;
+				const { like } = res.data;
 				setLiked(like);
 				likeCleanup(id, like);
 			})
@@ -183,22 +183,22 @@ const PostMedia: React.FC<Props> = ({feedPost, handleDelete}) => {
 							monthsOffset === 1 && daysOffset < 30
 								? `Posted ${daysOffset} days ago`
 								: monthsOffset === 1 && daysOffset > 30
-								? `Posted about a month ago`
-								: monthsOffset
-								? `Posted ${monthsOffset} months ago`
-								: daysOffset === 1
-								? `Posted yesterday`
-								: daysOffset
-								? `Posted ${daysOffset} days ago`
-								: hoursOffset === 1 && minutesOffset < 60
-								? `Posted ${minutesOffset} minutes ago`
-								: hoursOffset
-								? `Posted ${hoursOffset} hours ago`
-								: minutesOffset > 1
-								? `Posted ${minutesOffset} minutes ago`
-								: minutesOffset
-								? `Posted a minute ago`
-								: `Posted just now`
+									? `Posted about a month ago`
+									: monthsOffset
+										? `Posted ${monthsOffset} months ago`
+										: daysOffset === 1
+											? `Posted yesterday`
+											: daysOffset
+												? `Posted ${daysOffset} days ago`
+												: hoursOffset === 1 && minutesOffset < 60
+													? `Posted ${minutesOffset} minutes ago`
+													: hoursOffset
+														? `Posted ${hoursOffset} hours ago`
+														: minutesOffset > 1
+															? `Posted ${minutesOffset} minutes ago`
+															: minutesOffset
+																? `Posted a minute ago`
+																: `Posted just now`
 						}
 					/>
 					<CardContent>
@@ -217,8 +217,8 @@ const PostMedia: React.FC<Props> = ({feedPost, handleDelete}) => {
 							/>
 						</CardMedia>
 					) : (
-						""
-					)}
+							""
+						)}
 					<Likes liked={liked} users={post && post.likes.map((like) => like.user)} currentUser={currentUser} />
 					<CardActions disableSpacing>
 						<IconButton aria-label="love" onClick={() => handleLike(feedPost._id)}>

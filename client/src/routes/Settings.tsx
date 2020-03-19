@@ -1,5 +1,5 @@
-import {Button, Container, Typography, makeStyles} from "@material-ui/core";
-import React, {Suspense} from "react";
+import { Button, Container, Typography, makeStyles } from "@material-ui/core";
+import React, { Suspense } from "react";
 
 const LightSwitch = React.lazy(() => import("../components/buttons/LightSwitch"));
 
@@ -16,7 +16,7 @@ interface Props {
 	handleClick: () => void;
 }
 
-const Settings: React.FC<Props> = ({showBtn, handleClick}) => {
+const Settings: React.FC<Props> = ({ showBtn, handleClick }) => {
 	const classes = useStyles();
 
 	return (

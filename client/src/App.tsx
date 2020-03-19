@@ -1,12 +1,12 @@
-import {createMuiTheme, ThemeProvider} from "@material-ui/core";
-import {yellow} from "@material-ui/core/colors";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { yellow } from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import axios from "axios";
-import React, {lazy, Suspense, useEffect} from "react";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import {appReducer} from "./components";
+import React, { lazy, Suspense, useEffect } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { appReducer } from "./components";
 import SnackAlert from "./components/SnackAlert";
-import UserContext, {DispatchContext} from "./context/AppContext";
+import UserContext, { DispatchContext } from "./context/AppContext";
 import "./css/feed.css";
 import "./css/style.css";
 
@@ -23,7 +23,7 @@ const App: React.FC = () => {
 		isLogged: localStorage.getItem("token") ? true : false,
 		user: JSON.parse(localStorage.getItem("userInfo") as string)
 			? JSON.parse(localStorage.getItem("userInfo") as string)
-			: {admin: false},
+			: { admin: false },
 		openError: false,
 		errorMsg: "",
 		severity: undefined,
@@ -53,12 +53,12 @@ const App: React.FC = () => {
 	useEffect(() => {
 		window.addEventListener("beforeinstallprompt", (event) => {
 			event.preventDefault();
-			dispatch({type: "setPWA", pwa: event});
+			dispatch({ type: "setPWA", pwa: event });
 		});
 
 		window.addEventListener("appinstalled", (e) => {
-			dispatch({type: "clearPWA"});
-			dispatch({type: "showSnackAlert", errorMsg: "App Installed!", severity: "success"});
+			dispatch({ type: "clearPWA" });
+			dispatch({ type: "showSnackAlert", errorMsg: "App Installed!", severity: "success" });
 		});
 	}, []);
 
@@ -72,11 +72,11 @@ const App: React.FC = () => {
 		} else {
 			if (state.pwa) {
 				state.pwa.prompt();
-				state.pwa.userChoice.then((choiceResult: {outcome: "accepted" | "refused"}) => {
+				state.pwa.userChoice.then((choiceResult: { outcome: "accepted" | "refused" }) => {
 					if (choiceResult.outcome === "accepted") {
-						dispatch({type: "showSnackAlert", errorMsg: "App downloading in the background..", severity: "info"});
+						dispatch({ type: "showSnackAlert", errorMsg: "App downloading in the background..", severity: "info" });
 					}
-					dispatch({type: "clearPWA"});
+					dispatch({ type: "clearPWA" });
 				});
 			}
 		}
@@ -86,7 +86,7 @@ const App: React.FC = () => {
 		const token: string | null = localStorage.getItem("token");
 		let userInfo: User = JSON.parse(localStorage.getItem("userInfo") as string);
 		if (userInfo && token && !userInfo.admin) {
-			dispatch({type: "setUser", user: userInfo});
+			dispatch({ type: "setUser", user: userInfo });
 		}
 		if (state.isLogged) {
 			axios
@@ -97,12 +97,12 @@ const App: React.FC = () => {
 				})
 				.then((res) => {
 					if (!userInfo || !token) {
-						dispatch({type: "setUser", user: res.data});
+						dispatch({ type: "setUser", user: res.data });
 					}
 				})
 				.catch((err) => {
 					if (err) {
-						dispatch({type: "clearUser"});
+						dispatch({ type: "clearUser" });
 					}
 				});
 		}
@@ -118,7 +118,7 @@ const App: React.FC = () => {
 					isLight: state.isLight
 				}}
 			>
-				<DispatchContext.Provider value={{dispatch}}>
+				<DispatchContext.Provider value={{ dispatch }}>
 					<Router>
 						<Route
 							render={() => (

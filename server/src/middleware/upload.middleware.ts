@@ -9,7 +9,7 @@ const upload = multer({
 		if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
 			cb(null, true);
 		} else {
-			cb({name: "error", message: "file type not supported"});
+			cb({ name: "error", message: "file type not supported" });
 		}
 	}
 });

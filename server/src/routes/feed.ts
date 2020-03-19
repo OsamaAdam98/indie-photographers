@@ -2,7 +2,7 @@ import moment from "moment";
 import fs from "fs";
 import auth from "../middleware/auth.middleware";
 import upload from "../middleware/upload.middleware";
-import {Router} from "express";
+import { Router } from "express";
 
 import Feed from "../models/feed.model";
 import Comment from "../models/comments.model";
@@ -19,10 +19,10 @@ cloudinary.config({
 });
 
 router.get("/", (req, res) => {
-	const {page} = req.query;
+	const { page } = req.query;
 
 	Feed.find()
-		.sort({date: "desc"})
+		.sort({ date: "desc" })
 		.limit(10)
 		.skip(page >= 1 ? 10 * (page - 1) : 0)
 		.select("-photoId")
@@ -42,11 +42,11 @@ router.get("/", (req, res) => {
 router.post("/add", [upload.single("image"), auth], (req: any, res: any) => {
 	const user = req.body.user.id;
 	const admin = req.body.user.admin;
-	const {msg} = JSON.parse(req.body.data);
+	const { msg } = JSON.parse(req.body.data);
 	const filePath = req.file ? req.file.path : null;
 
-	Feed.findOne({user})
-		.sort({date: "desc"})
+	Feed.findOne({ user })
+		.sort({ date: "desc" })
 		.skip(1)
 		.exec()
 		.then((result) => {
@@ -58,7 +58,7 @@ router.post("/add", [upload.single("image"), auth], (req: any, res: any) => {
 					cloudinary.uploader.unsigned_upload(
 						filePath,
 						"hahlpxqe",
-						{cloud_name: process.env.CLOUD_NAME},
+						{ cloud_name: process.env.CLOUD_NAME },
 						(err: Error, result: any) => {
 							if (err) {
 								res.status(500).json("upload failed!");
@@ -119,7 +119,7 @@ router.post("/upload", upload.single("image"), (req, res) => {
 	cloudinary.uploader.unsigned_upload(
 		req.file.path,
 		"hahlpxqe",
-		{cloud_name: process.env.CLOUD_NAME},
+		{ cloud_name: process.env.CLOUD_NAME },
 		(err: Error, result: any) => {
 			if (err) {
 				res.status(500).json("upload failed!");
@@ -147,7 +147,7 @@ router.post("/comment/:id", auth, (req, res) => {
 	newComment
 		.save()
 		.then(() => {
-			Feed.findByIdAndUpdate(post, {$push: {comments: newComment._id}}, (err) => {
+			Feed.findByIdAndUpdate(post, { $push: { comments: newComment._id } }, (err) => {
 				if (err) throw err;
 			});
 			res.status(200).json("Comment submitted");
@@ -176,9 +176,9 @@ router.post("/like/:id", auth, (req, res) => {
 						likeIterator === like._id;
 					});
 					if (postLike.length === 0) {
-						Feed.findByIdAndUpdate(post._id, {$push: {likes: like._id}}, (err) => {
+						Feed.findByIdAndUpdate(post._id, { $push: { likes: like._id } }, (err) => {
 							if (err) throw err;
-							res.status(200).json({like: true});
+							res.status(200).json({ like: true });
 						});
 					}
 				})
@@ -186,17 +186,17 @@ router.post("/like/:id", auth, (req, res) => {
 		})
 		.catch((err) => {
 			if (err) {
-				Likes.find({customID})
+				Likes.find({ customID })
 					.exec()
 					.then((like) => {
 						Feed.findById(like[0].post)
 							.exec()
 							.then((post) => {
-								Feed.findByIdAndUpdate(post._id, {$pull: {likes: like[0]._id}}, {upsert: true}, (err) => {
+								Feed.findByIdAndUpdate(post._id, { $pull: { likes: like[0]._id } }, { upsert: true }, (err) => {
 									if (err) throw err;
 									Likes.findByIdAndDelete(like[0]._id)
 										.exec()
-										.then(() => res.status(200).json({like: false}))
+										.then(() => res.status(200).json({ like: false }))
 										.catch(() => res.status(404).json("like not found"));
 								});
 							});
@@ -208,9 +208,9 @@ router.post("/like/:id", auth, (req, res) => {
 
 router.get("/likes/:postID", (req, res) => {
 	const postID = req.params.postID;
-	Likes.find({post: postID})
+	Likes.find({ post: postID })
 		.populate("user", "-password")
-		.sort({date: "asc"})
+		.sort({ date: "asc" })
 		.exec()
 		.then((likes) => {
 			res.status(200).json(likes);
@@ -283,10 +283,10 @@ router.delete("/delete/:id", auth, (req, res) => {
 // });
 
 router.get("/user/:id/", (req, res) => {
-	const {page} = req.query;
+	const { page }: { page: number } = req.query;
 
-	Feed.find({user: req.params.id})
-		.sort({date: "desc"})
+	Feed.find({ user: req.params.id })
+		.sort({ date: "desc" })
 		.limit(10)
 		.skip(page >= 1 ? 10 * (page - 1) : 0)
 		.populate("user comments likes", "-password -registerDate -__v -posts -email")

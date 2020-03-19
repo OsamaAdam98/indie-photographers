@@ -1,9 +1,9 @@
-import {Avatar, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography} from "@material-ui/core";
+import { Avatar, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography } from "@material-ui/core";
 import axios from "axios";
-import React, {lazy, Suspense, useCallback, useEffect, useRef, useState} from "react";
-import {useParams} from "react-router-dom";
-import {PhotoPreview, PostSkeleton} from "../components/index";
-import {DispatchContext} from "../context/AppContext";
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { PhotoPreview, PostSkeleton } from "../components/index";
+import { DispatchContext } from "../context/AppContext";
 import "../css/profile.css";
 
 const PostMedia = lazy(() => import("../components/PostMedia"));
@@ -31,7 +31,7 @@ const Profile: React.FC = () => {
 	const appDispatch = useCallback(React.useContext(DispatchContext).dispatch, []);
 
 	const classes = useStyles();
-	const params: {id?: string} = useParams();
+	const params: { id?: string } = useParams();
 
 	const handleDelete = (id: string) => {
 		const token: string | null = localStorage.getItem("token");
@@ -43,7 +43,7 @@ const Profile: React.FC = () => {
 				}
 			})
 			.then((res) => {
-				appDispatch({type: "showSnackAlert", errorMsg: res.data, severity: "success"});
+				appDispatch({ type: "showSnackAlert", errorMsg: res.data, severity: "success" });
 			})
 			.catch((err) => console.log(err));
 	};
@@ -63,13 +63,13 @@ const Profile: React.FC = () => {
 						`${params.id}/page${page}`,
 						JSON.stringify(data.filter((post) => post.user._id === params.id))
 					);
-					appDispatch({type: "hideSnackAlert"});
+					appDispatch({ type: "hideSnackAlert" });
 					setIsLoading(false);
 				})
 				.catch((err) => {
 					if (err) {
 						if (err) {
-							appDispatch({type: "showSnackAlert", errorMsg: "User not found", severity: "error"});
+							appDispatch({ type: "showSnackAlert", errorMsg: "User not found", severity: "error" });
 						} else {
 							appDispatch({
 								type: "showSnackAlert",
@@ -103,7 +103,7 @@ const Profile: React.FC = () => {
 				})
 				.catch((err) => {
 					if (err) {
-						appDispatch({type: "showSnackAlert", errorMsg: "Can't find user", severity: "error"});
+						appDispatch({ type: "showSnackAlert", errorMsg: "Can't find user", severity: "error" });
 					}
 				});
 		}
@@ -135,21 +135,21 @@ const Profile: React.FC = () => {
 
 	const postMedia = posts
 		? posts.map((feedPost, i) => {
-				if (posts.length === i + 1) {
-					return (
-						<div ref={setLastElement} key={feedPost._id}>
-							<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
-							{hasMore ? <PostSkeleton /> : null}
-						</div>
-					);
-				} else {
-					return (
-						<div key={feedPost._id}>
-							<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
-						</div>
-					);
-				}
-		  })
+			if (posts.length === i + 1) {
+				return (
+					<div ref={setLastElement} key={feedPost._id}>
+						<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
+						{hasMore ? <PostSkeleton /> : null}
+					</div>
+				);
+			} else {
+				return (
+					<div key={feedPost._id}>
+						<PostMedia feedPost={feedPost} handleDelete={handleDelete} />
+					</div>
+				);
+			}
+		})
 		: null;
 
 	return (

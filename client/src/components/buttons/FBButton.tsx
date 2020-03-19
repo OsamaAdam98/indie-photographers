@@ -1,9 +1,9 @@
-import {Button, makeStyles, Typography} from "@material-ui/core";
+import { Button, makeStyles, Typography } from "@material-ui/core";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import axios from "axios";
 import React from "react";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import {actions} from "../../reducers/appReducer";
+import { actions } from "../../reducers/appReducer";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -48,7 +48,7 @@ interface Props {
 	dispatch: React.Dispatch<actions>;
 }
 
-const FBButton: React.FC<Props> = ({dispatch, handleClose}) => {
+const FBButton: React.FC<Props> = ({ dispatch, handleClose }) => {
 	const classes = useStyles();
 
 	const componentClicked = () => console.log("Signing in using facebook.");
@@ -57,19 +57,19 @@ const FBButton: React.FC<Props> = ({dispatch, handleClose}) => {
 		axios
 			.post(`/api/auth/facebook-login`, res)
 			.then((res) => {
-				const {token, user} = res.data;
+				const { token, user } = res.data;
 				if (token) {
 					localStorage.setItem("token", token);
 				}
 				if (user) {
-					dispatch({type: "setUser", user});
+					dispatch({ type: "setUser", user });
 					setTimeout(() => {
 						window.location.reload();
 					}, 1000);
 				}
 			})
 			.catch((err) => {
-				dispatch({type: "showSnackAlert", errorMsg: "Login failed!", severity: "error"});
+				dispatch({ type: "showSnackAlert", errorMsg: "Login failed!", severity: "error" });
 			});
 	};
 

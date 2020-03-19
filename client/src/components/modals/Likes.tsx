@@ -13,10 +13,10 @@ import {
 	makeStyles
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import {AvatarGroup} from "@material-ui/lab";
-import React, {useEffect, useState} from "react";
-import {Link, useHistory, useLocation} from "react-router-dom";
-import {useWindowDimensions} from "..";
+import { AvatarGroup } from "@material-ui/lab";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import { useWindowDimensions } from "..";
 
 const useStyles = makeStyles((theme) => ({
 	avGrp: {
@@ -45,9 +45,9 @@ interface Props {
 }
 
 const Likes: React.FC<Props> = (props) => {
-	const {users, liked, currentUser} = props;
+	const { users, liked, currentUser } = props;
 	const [show, setShow] = useState(false);
-	const {width} = useWindowDimensions();
+	const { width } = useWindowDimensions();
 
 	const history = useHistory();
 	const location = useLocation();

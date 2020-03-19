@@ -1,9 +1,9 @@
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import axios from "axios";
-import React, {useEffect, useState} from "react";
-import {useLocation, useHistory} from "react-router-dom";
-import {FAB} from "../index";
+import React, { useEffect, useState } from "react";
+import { useLocation, useHistory } from "react-router-dom";
+import { FAB } from "../index";
 import useWindowDimensions from "../utilities/WindowDimensions";
 
 interface Props {
@@ -37,7 +37,7 @@ const PostModal: React.FC<Props> = (props) => {
 
 	const history = useHistory();
 	const location = useLocation();
-	const {height} = useWindowDimensions();
+	const { height } = useWindowDimensions();
 	const [show, setShow] = useState<boolean>(false);
 	const [errorMsg, setErrorMsg] = useState<string>("");
 	const [msg, setMsg] = useState<string>("");
@@ -162,7 +162,7 @@ const PostModal: React.FC<Props> = (props) => {
 						>
 							<input
 								accept="image/*"
-								style={{display: "none"}}
+								style={{ display: "none" }}
 								id="outlined-button-file"
 								type="file"
 								onChange={onUpload}

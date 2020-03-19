@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
-import {Skeleton} from "@material-ui/lab";
+import { Skeleton } from "@material-ui/lab";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,11 +28,11 @@ const PostSkeleton: React.FC = () => {
 		<Card className={classes.card}>
 			<CardHeader
 				avatar={<Skeleton variant="circle" width={40} height={40} />}
-				title={<Skeleton height={10} width="80%" style={{marginBottom: 6}} />}
+				title={<Skeleton height={10} width="80%" style={{ marginBottom: 6 }} />}
 				subheader={<Skeleton height={10} width="40%" />}
 			/>
 			<CardContent>
-				<Skeleton height={10} style={{marginBottom: 6}} />
+				<Skeleton height={10} style={{ marginBottom: 6 }} />
 				<Skeleton height={10} width="80%" />
 			</CardContent>
 

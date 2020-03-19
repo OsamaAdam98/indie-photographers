@@ -1,6 +1,6 @@
-import {Fab, makeStyles, useTheme, Zoom} from "@material-ui/core";
+import { Fab, makeStyles, useTheme, Zoom } from "@material-ui/core";
 import React from "react";
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -59,7 +59,7 @@ const FAB: React.FC<Props> = ({
 				display: offline ? "none" : "",
 				transitionDelay: `${
 					location.pathname === currentLocation ? transitionDuration.exit : 0
-				}ms`
+					}ms`
 			}}
 			unmountOnExit
 		>

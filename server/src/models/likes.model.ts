@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import {User} from "./users.model";
-import {Post} from "./feed.model";
+import { User } from "./users.model";
+import { Post } from "./feed.model";
 
 const likeSchema = new mongoose.Schema({
 	user: {
@@ -24,8 +24,8 @@ const likeSchema = new mongoose.Schema({
 });
 
 export interface Like extends mongoose.Document {
-	user: User;
-	post: Post;
+	user: string;
+	post: string;
 	date: Date;
 	customID: string;
 }

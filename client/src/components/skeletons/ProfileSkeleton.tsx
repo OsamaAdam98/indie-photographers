@@ -1,4 +1,4 @@
-import {Paper, Typography} from "@material-ui/core";
+import { Paper, Typography } from "@material-ui/core";
 import React from "react";
 import "../../css/profile.css";
 

@@ -1,7 +1,7 @@
-import {AppBar, Avatar, makeStyles, Slide, Toolbar, Typography, useScrollTrigger} from "@material-ui/core";
+import { AppBar, Avatar, makeStyles, Slide, Toolbar, Typography, useScrollTrigger } from "@material-ui/core";
 import React from "react";
-import {Link} from "react-router-dom";
-import {BottomBar, LightSwitch, Login, useWindowDimensions} from ".";
+import { Link } from "react-router-dom";
+import { BottomBar, LightSwitch, Login, useWindowDimensions } from ".";
 import logo from "../assets/logo.png";
 
 const useStyles: any = makeStyles((theme: any) => ({
@@ -41,7 +41,7 @@ const useStyles: any = makeStyles((theme: any) => ({
 	}
 }));
 
-const HideOnScroll: React.FC = ({children}) => {
+const HideOnScroll: React.FC = ({ children }) => {
 	const trigger = useScrollTrigger();
 
 	return (
@@ -52,7 +52,7 @@ const HideOnScroll: React.FC = ({children}) => {
 };
 
 const MenuAppBar: React.FC = (props) => {
-	const {width} = useWindowDimensions();
+	const { width } = useWindowDimensions();
 	const classes = useStyles();
 
 	return (

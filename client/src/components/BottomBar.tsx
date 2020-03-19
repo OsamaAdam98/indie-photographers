@@ -1,11 +1,11 @@
-import {Avatar, makeStyles, Paper, Tab, Tabs} from "@material-ui/core";
+import { Avatar, makeStyles, Paper, Tab, Tabs } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ViewDayIcon from "@material-ui/icons/ViewDay";
-import React, {useEffect, useState} from "react";
-import {useHistory, useLocation} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import UserContext from "../context/AppContext";
-import {useWindowDimensions} from ".";
+import { useWindowDimensions } from ".";
 
 const useStyles = makeStyles((theme) => ({
 	tabs: {
@@ -20,8 +20,8 @@ const BottomBar: React.FC = () => {
 
 	const classes = useStyles();
 	const location = useLocation();
-	const {width} = useWindowDimensions();
-	const {user} = React.useContext(UserContext);
+	const { width } = useWindowDimensions();
+	const { user } = React.useContext(UserContext);
 
 	useEffect(() => {
 		switch (location.pathname) {

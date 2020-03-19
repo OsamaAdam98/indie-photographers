@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import {User} from "./users.model";
-import {Post} from "./feed.model";
-import {Like} from "./likes.model";
+import { User } from "./users.model";
+import { Post } from "./feed.model";
+import { Like } from "./likes.model";
 
 const commentSchema: mongoose.Schema = new mongoose.Schema({
 	user: {
@@ -35,11 +35,11 @@ const commentSchema: mongoose.Schema = new mongoose.Schema({
 });
 
 export interface Comment extends mongoose.Document {
-	user: User;
+	user: string;
 	msg: string;
 	photo: Photo | string;
-	likes: Like;
-	post: Post;
+	likes: string[];
+	post: string;
 	date: Date;
 }
 

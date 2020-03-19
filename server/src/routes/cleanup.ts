@@ -1,4 +1,4 @@
-import {Router} from "express";
+import { Router } from "express";
 import auth from "../middleware/auth.middleware";
 import Feed from "../models/feed.model";
 import Likes from "../models/likes.model";
@@ -13,15 +13,15 @@ router.get("/user/:id", auth, (req, res) => {
 		.exec()
 		.then((user) => {
 			if (user.admin) {
-				Feed.deleteMany({user: id})
+				Feed.deleteMany({ user: id })
 					.exec()
 					.then(() => {
 						console.log("Deleted posts");
-						Likes.deleteMany({user: id})
+						Likes.deleteMany({ user: id })
 							.exec()
 							.then(() => {
 								console.log("Deleted likes");
-								Comments.deleteMany({user: id})
+								Comments.deleteMany({ user: id })
 									.exec()
 									.then(() => {
 										console.log("Deleted comments");

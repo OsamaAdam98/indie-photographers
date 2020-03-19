@@ -1,6 +1,6 @@
-import {Dialog, makeStyles} from "@material-ui/core";
-import React, {useEffect, useState} from "react";
-import {useHistory, useLocation} from "react-router-dom";
+import { Dialog, makeStyles } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles({
 	fullPrev: {
@@ -26,7 +26,7 @@ interface Props {
 }
 
 const PhotoPreview: React.FC<Props> = (props) => {
-	const {photo, maxHeight, round, alt, realPhoto} = props;
+	const { photo, maxHeight, round, alt, realPhoto } = props;
 
 	const [show, setShow] = useState(false);
 

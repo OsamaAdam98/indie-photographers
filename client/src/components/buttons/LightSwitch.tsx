@@ -1,13 +1,13 @@
-import {Switch} from "@material-ui/core";
+import { Switch } from "@material-ui/core";
 import React from "react";
-import UserContext, {DispatchContext} from "../../context/AppContext";
+import UserContext, { DispatchContext } from "../../context/AppContext";
 
 const LightSwitch: React.FC = () => {
-	const {dispatch} = React.useContext(DispatchContext);
-	const {isLight} = React.useContext(UserContext);
+	const { dispatch } = React.useContext(DispatchContext);
+	const { isLight } = React.useContext(UserContext);
 
 	const onChange = (event: any) => {
-		dispatch({type: "toggleTheme"});
+		dispatch({ type: "toggleTheme" });
 	};
 
 	return (
