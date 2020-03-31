@@ -1,11 +1,10 @@
 {
-  "arrowParens": "always",
-  "endOfLine": "lf",
-  "jsxBracketSameLine": false,
-  "printWidth": 80,
-  "jsxSingleQuote": false,
-  "singleQuote": false,
-  "tabWidth": 2,
-  "trailingComma": "none",
-  "useTabs": true
+	"arrowParens": "always",
+	"endOfLine": "lf",
+	"jsxBracketSameLine": false,
+	"printWidth": 80,
+	"jsxSingleQuote": false,
+	"singleQuote": false,
+	"tabWidth": 2,
+	"trailingComma": "none"
 }

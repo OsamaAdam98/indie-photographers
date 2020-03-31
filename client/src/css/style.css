@@ -3,31 +3,31 @@ select:focus,
 textarea:focus,
 img:focus,
 button:focus {
-	outline: none;
+  outline: none;
 }
 
 body {
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	overflow-x: hidden;
-	font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  font-family: "Roboto", sans-serif;
 }
 
 .text-link {
-	color: inherit;
-	text-decoration: inherit;
+  color: inherit;
+  text-decoration: inherit;
 }
 
 .hover-img:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .invisibleDiv {
-	height: 3rem;
+  height: 3rem;
 }
 
 @media (min-width: 31.25rem) {
-	.invisibleDiv {
-		display: none;
-	}
+  .invisibleDiv {
+    display: none;
+  }
 }
