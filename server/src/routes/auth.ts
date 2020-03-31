@@ -85,13 +85,15 @@ router.post("/facebook-login", async (req, res) => {
               });
             }
           );
-          Users.updateOne(
-            { email },
-            { $set: { profilePicture: updatedPicture } },
-            (err) => {
-              if (err) throw err;
-            }
-          );
+          if (updatedPicture !== user.profilePicture) {
+            Users.updateOne(
+              { email },
+              { $set: { profilePicture: updatedPicture } },
+              (err) => {
+                if (err) throw err;
+              }
+            );
+          }
         } else {
           const newUser = new Users({
             username: name,
