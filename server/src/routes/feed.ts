@@ -8,13 +8,6 @@ import Feed from "../models/feed.model";
 import Likes from "../models/likes.model";
 
 const router = Router();
-const cloudinary = require("cloudinary").v2;
-
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUDINAY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
 
 router.get("/", (req, res) => {
   const { page } = req.query;
@@ -40,104 +33,75 @@ router.get("/", (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
-router.post("/add", [upload.single("image"), auth], (req: any, res: any) => {
+router.post("/add", auth, async (req: any, res: any) => {
   const user = req.body.user.id;
   const admin = req.body.user.admin;
-  const { msg } = JSON.parse(req.body.data);
-  const filePath = req.file ? req.file.path : null;
+  const { msg } = req.body.data;
+  const { photo } = req.body;
 
-  Feed.findOne({ user })
-    .sort({ date: "desc" })
-    .skip(1)
-    .exec()
-    .then((result) => {
-      let date: Date;
-      if (result) date = new Date(result.date);
+  try {
+    const result = await Feed.findOne({ user })
+      .sort({ date: "desc" })
+      .skip(1)
+      .exec();
+    let date: Date;
+    if (result) date = new Date(result.date);
 
-      if (date ? moment().diff(date, "minutes") > 15 : true || admin) {
-        if (filePath) {
-          cloudinary.uploader.unsigned_upload(
-            filePath,
-            "hahlpxqe",
-            { cloud_name: process.env.CLOUD_NAME },
-            (err: Error, result: any) => {
-              if (err) {
-                res.status(500).json("upload failed!");
-              } else {
-                const photo = result;
-                fs.unlinkSync(req.file.path);
+    if (date ? moment().diff(date, "minutes") > 15 : true || admin) {
+      if (photo) {
+        const newPost = new Feed({
+          msg,
+          photo,
+          user
+        });
 
-                const newPost = new Feed({
-                  msg,
-                  photo,
-                  user
-                });
-
-                newPost
-                  .save()
-                  .then(() => {
-                    Feed.findById(newPost._id)
-                      .populate(
-                        "user comments likes",
-                        "-password -registerDate -__v -posts"
-                      )
-                      .exec()
-                      .then((result) => res.status(201).json(result))
-                      .catch((err) => res.status(404).json(err));
-                  })
-                  .catch((err) => {
-                    res.status(400).json(err);
-                    console.log(err);
-                  });
-              }
-            }
-          );
-        } else {
-          const newPost = new Feed({
-            msg,
-            user
+        newPost
+          .save()
+          .then(() => {
+            Feed.findById(newPost._id)
+              .populate(
+                "user comments likes",
+                "-password -registerDate -__v -posts"
+              )
+              .exec()
+              .then((result) => res.status(201).json(result))
+              .catch((err) => res.status(404).json(err));
+          })
+          .catch((err) => {
+            res.status(400).json(err);
+            console.log(err);
           });
-
-          newPost
-            .save()
-            .then(() => {
-              Feed.findById(newPost._id)
-                .populate(
-                  "user comments likes",
-                  "-password -registerDate -__v -posts"
-                )
-                .exec()
-                .then((result) => res.status(201).json(result))
-                .catch((err) => res.status(404).json(err));
-            })
-            .catch((err) => {
-              res.status(400).json(err);
-              console.log(err);
-            });
-        }
       } else {
-        res
-          .status(403)
-          .json("Can't post more than 2 posts in a 15 minutes span!");
-      }
-    })
-    .catch((err) => console.log(err));
-});
+        const newPost = new Feed({
+          msg,
+          user
+        });
 
-router.post("/upload", upload.single("image"), (req, res) => {
-  cloudinary.uploader.unsigned_upload(
-    req.file.path,
-    "hahlpxqe",
-    { cloud_name: process.env.CLOUD_NAME },
-    (err: Error, result: any) => {
-      if (err) {
-        res.status(500).json("upload failed!");
-      } else {
-        res.status(200).json(result);
-        fs.unlinkSync(req.file.path);
+        newPost
+          .save()
+          .then(() => {
+            Feed.findById(newPost._id)
+              .populate(
+                "user comments likes",
+                "-password -registerDate -__v -posts"
+              )
+              .exec()
+              .then((result) => res.status(201).json(result))
+              .catch((err) => res.status(404).json(err));
+          })
+          .catch((err) => {
+            res.status(400).json(err);
+            console.log(err);
+          });
       }
+    } else {
+      res
+        .status(403)
+        .json("Can't post more than 2 posts in a 15 minutes span!");
     }
-  );
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 router.post("/comment/:id", auth, (req, res) => {
@@ -244,67 +208,14 @@ router.delete("/delete/:id", auth, (req, res) => {
   Feed.findById(req.params.id)
     .exec()
     .then((post) => {
-      if (post.photo) {
-        cloudinary.api.delete_resources(
-          [`${post.photo.public_id}`],
-          {
-            cloud_name: process.env.CLOUD_NAME,
-            api_key: process.env.CLOUDINAY_API_KEY,
-            api_secret: process.env.CLOUDINARY_API_SECRET
-          },
-          (err: Error, result: any) => {
-            if (err) throw err;
-            else {
-              Feed.findByIdAndDelete(req.params.id)
-                .then(() => {
-                  res.status(200).json(`Post deleted!`);
-                })
-                .catch(() =>
-                  res.status(404).json("Post not found with picture")
-                );
-            }
-          }
-        );
-      } else {
-        Feed.findByIdAndDelete(post._id)
-          .then(() => {
-            res.status(200).json(`Post deleted!`);
-          })
-          .catch(() => res.status(404).json("Post not found without picture"));
-      }
+      Feed.findByIdAndDelete(post._id)
+        .then(() => {
+          res.status(200).json(`Post deleted!`);
+        })
+        .catch(() => res.status(404).json("Post not found without picture"));
     })
     .catch(() => res.status(404).json("Post not found global"));
 });
-
-// router.delete("/delete-photo/:photoId", (req, res) => {
-// 	cloudinary.api.delete_resources(
-// 		[`${req.params.photoId}`],
-// 		{
-// 			cloud_name: process.env.CLOUD_NAME,
-// 			api_key: process.env.CLOUDINAY_API_KEY,
-// 			api_secret: process.env.CLOUDINARY_API_SECRET
-// 		},
-// 		(err, result) => {
-// 			if (err) console.log(err);
-// 			res.status(200).json("Photo deleted");
-// 		}
-// 	);
-// });
-
-// router.post("/update/:id", auth, (req, res) => {
-// 	Feed.findById(req.params.id)
-// 		.then((item) => {
-// 			item.email = req.body.email;
-// 			item.msg = req.body.msg;
-// 			item.photo = req.body.photo;
-
-// 			item
-// 				.save()
-// 				.then(() => res.json(`item updated.`))
-// 				.catch((err) => res.status(400).json(err));
-// 		})
-// 		.catch((err) => res.status(400).json(err));
-// });
 
 router.get("/user/:id/", (req, res) => {
   const { page }: { page: number } = req.query;

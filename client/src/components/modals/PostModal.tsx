@@ -12,13 +12,14 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { FAB } from "../index";
 import useWindowDimensions from "../utilities/WindowDimensions";
+import { resizeImage } from "../index";
 
 interface Props {
   isLogged: boolean;
   user: User;
   photo: string;
   setPhoto: React.Dispatch<React.SetStateAction<string>>;
-  realPhoto: Blob | undefined;
+  realPhoto?: FileList;
   isUploading: boolean;
   offline: boolean;
   setNewPost: React.Dispatch<React.SetStateAction<Post[]>>;
@@ -70,23 +71,20 @@ const PostModal: React.FC<Props> = (props) => {
     setErrorMsg("");
   };
 
-  const handleSubmit = (
-    event:
+  const handleSubmit = async (
+    event?:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.FormEvent<HTMLFormElement>
+      | React.FormEvent<HTMLFormElement>,
+    files = realPhoto,
+    quality = 0.92
   ) => {
     const username: string | undefined = user.username;
     const email: string | undefined = user.email;
-    const formData = new FormData();
+
     let subData: SubPost;
     if (!msg.trim() && !photo.trim()) {
       setErrorMsg("Surely you'd like to write something!");
     } else {
-      if (realPhoto) {
-        setIsUploading(true);
-        formData.append("image", realPhoto);
-      }
-
       const token = localStorage.getItem("token");
 
       subData = {
@@ -95,26 +93,67 @@ const PostModal: React.FC<Props> = (props) => {
         msg
       };
 
-      formData.append("data", JSON.stringify(subData));
+      if (files?.item(0)) {
+        setIsUploading(true);
+        const image = await resizeImage(files.item(0)!, 800, quality);
 
-      axios
-        .post(`/api/feed/add`, formData, {
-          headers: {
-            "x-auth-token": `${token}`
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+
+        reader.onload = async () => {
+          const base64 = reader.result as string;
+          const bufferLength = 100000;
+          if (base64.length > bufferLength && quality > 0.1) {
+            const newQuality = (bufferLength / base64.length) * quality;
+            handleSubmit(undefined, files, newQuality);
+            return;
           }
-        })
-        .then((res) => {
-          setNewPost((prevPost) => [...prevPost, res.data]);
+
+          try {
+            if (base64.length > bufferLength) throw new Error("too-large");
+            const result = await axios.post(
+              `/api/feed/add`,
+              { data: subData, photo: base64 },
+              {
+                headers: {
+                  "x-auth-token": `${token}`
+                }
+              }
+            );
+
+            setNewPost((prevPost) => [...prevPost, result.data]);
+            setPhoto("");
+            setMsg("");
+            setIsUploading(false);
+            handleClose();
+          } catch (err) {
+            if (err.message === "too-large") {
+              setErrorMsg("File too large");
+            }
+          }
+        };
+      } else {
+        try {
+          const result = await axios.post(
+            `/api/feed/add`,
+            { data: subData },
+            {
+              headers: {
+                "x-auth-token": `${token}`
+              }
+            }
+          );
+          setNewPost((prevPost) => [...prevPost, result.data]);
           setPhoto("");
           setMsg("");
           setIsUploading(false);
           handleClose();
-        })
-        .catch((err) => {
-          setErrorMsg(err.response.data);
-        });
+        } catch (err) {
+          setErrorMsg(err?.response?.data);
+        }
+      }
     }
-    event.preventDefault();
+    event?.preventDefault();
   };
 
   const subButton = isLogged ? (

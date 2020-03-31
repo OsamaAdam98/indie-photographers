@@ -22,6 +22,7 @@ import SnackAlert from "./SnackAlert";
 import useWindowDimensions from "./utilities/WindowDimensions";
 import AppContext from "../context/AppContext";
 import appReducer from "../reducers/appReducer";
+import resizeImage from "./utilities/resizeImage";
 
 export {
   Home,
@@ -47,5 +48,6 @@ export {
   FAB,
   NotFound,
   AppContext,
-  appReducer
+  appReducer,
+  resizeImage
 };

@@ -55,7 +55,7 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [photo, setPhoto] = useState<string>("");
-  const [realPhoto, setRealPhoto] = useState<Blob | undefined>();
+  const [realPhoto, setRealPhoto] = useState<FileList>();
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [offline, setOffline] = useState<boolean>(false);
   const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
@@ -66,7 +66,7 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
     formData.append("image", files[0]);
 
     setPhoto(URL.createObjectURL(files[0]));
-    setRealPhoto(files[0]);
+    setRealPhoto(files);
   };
 
   const handleCancel = () => {
