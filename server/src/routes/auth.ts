@@ -3,7 +3,18 @@ import { Router } from "express";
 import jwt from "jsonwebtoken";
 import auth from "../middleware/auth.middleware";
 import Users from "../models/users.model";
+import axios from "axios";
 const router = Router();
+
+const downloadImage = async (url: string) => {
+  const result = await axios.get(url, {
+    responseType: "arraybuffer"
+  });
+  const buffer = Buffer.from(result.data).toString("base64");
+  const imgString = `data:${result.headers["content-type"]};base64,${buffer}`;
+
+  return imgString;
+};
 
 // sign in and token generation
 
@@ -46,11 +57,12 @@ router.post("/", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-router.post("/facebook-login", (req, res) => {
-  if (req.body.status !== "unknown") {
-    console.log(req.body);
+router.post("/facebook-login", async (req, res) => {
+  if (req.body?.status !== "unknown") {
     const { email, name } = req.body;
     const { url } = req.body.picture.data;
+
+    const updatedPicture = await downloadImage(url as string);
 
     Users.findOne({ email })
       .then((user) => {
@@ -65,7 +77,7 @@ router.post("/facebook-login", (req, res) => {
                 user: {
                   _id: user._id,
                   email: user.email,
-                  profilePicture: user.profilePicture,
+                  profilePicture: updatedPicture,
                   registerDate: user.registerDate,
                   username: user.username,
                   admin: user.admin
@@ -75,7 +87,7 @@ router.post("/facebook-login", (req, res) => {
           );
           Users.updateOne(
             { email },
-            { $set: { profilePicture: url } },
+            { $set: { profilePicture: updatedPicture } },
             (err) => {
               if (err) throw err;
             }
@@ -85,7 +97,7 @@ router.post("/facebook-login", (req, res) => {
             username: name,
             email: email,
             password: req.body.accessToken,
-            profilePicture: url
+            profilePicture: updatedPicture
           });
 
           bcrypt.genSalt(10, (err, salt) => {
@@ -107,7 +119,7 @@ router.post("/facebook-login", (req, res) => {
                         user: {
                           _id: user._id,
                           email: user.email,
-                          profilePicture: user.profilePicture,
+                          profilePicture: updatedPicture,
                           registerDate: user.registerDate,
                           username: user.username,
                           admin: user.admin
@@ -125,13 +137,15 @@ router.post("/facebook-login", (req, res) => {
   }
 });
 
-router.post("/google-login", (req, res) => {
+router.post("/google-login", async (req, res) => {
   const { email, name } = req.body.profileObj;
-  const imageUrl = req.body.profileObj.imageUrl.replace(
+  const googleImgUrl = req.body.profileObj.imageUrl.replace(
     "s96-c",
     "s384-c",
     true
   );
+
+  const imageUrl = await downloadImage(googleImgUrl);
 
   Users.findOne({ email }).then((user) => {
     if (user) {
