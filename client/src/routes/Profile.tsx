@@ -44,6 +44,8 @@ const Profile: React.FC = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
 
+  const isMountedRef = useRef(false);
+
   const appDispatch = useCallback(
     React.useContext(DispatchContext).dispatch,
     []
@@ -72,28 +74,35 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
-    if (hasMore) {
-      let cachedData: Post[] = JSON.parse(
-        localStorage.getItem(`${params.id}/page${page}`) as string
-      );
-      axios
-        .get(`/api/feed/user/${params.id}/?page=${page}`)
-        .then((res) => {
-          const data: Post[] = res.data;
+    isMountedRef.current = true;
+    const source = axios.CancelToken.source();
 
-          if (!cachedData) setPosts((prevPosts) => [...prevPosts, ...data]);
+    if (isMountedRef.current) {
+      if (hasMore) {
+        let cachedData: Post[] = JSON.parse(
+          localStorage.getItem(`${params.id}/page${page}`) as string
+        );
+        axios
+          .get(`/api/feed/user/${params.id}/?page=${page}`, {
+            cancelToken: source.token
+          })
+          .then((res) => {
+            const data: Post[] = res.data;
 
-          setHasMore(data.length === 10);
-          localStorage.setItem(
-            `${params.id}/page${page}`,
-            JSON.stringify(data.filter((post) => post.user._id === params.id))
-          );
-          appDispatch({ type: "hideSnackAlert" });
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          if (err) {
-            if (err) {
+            if (!cachedData) setPosts((prevPosts) => [...prevPosts, ...data]);
+
+            setHasMore(data.length === 10);
+            localStorage.setItem(
+              `${params.id}/page${page}`,
+              JSON.stringify(data.filter((post) => post.user._id === params.id))
+            );
+            appDispatch({ type: "hideSnackAlert" });
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            if (axios.isCancel(err)) {
+              // Do nothing..
+            } else if (err) {
               appDispatch({
                 type: "showSnackAlert",
                 errorMsg: "User not found",
@@ -105,51 +114,64 @@ const Profile: React.FC = () => {
                 errorMsg: "Can't connect to the internet!",
                 severity: "warning"
               });
+
+              setIsLoading(false);
             }
-            setIsLoading(false);
-          }
-        });
-      if (cachedData) {
-        setPosts((prevPosts) =>
-          [...prevPosts, ...cachedData].filter(
-            (post) => post.user._id === params.id
-          )
-        );
-        setIsLoading(false);
-        setHasMore(cachedData.length === 10);
-      } else {
-        setIsLoading(true);
-      }
-    } else setIsLoading(false);
+          });
+        if (cachedData) {
+          setPosts((prevPosts) =>
+            [...prevPosts, ...cachedData].filter(
+              (post) => post.user._id === params.id
+            )
+          );
+          setIsLoading(false);
+          setHasMore(cachedData.length === 10);
+        } else {
+          setIsLoading(true);
+        }
+      } else setIsLoading(false);
+    }
+    return () => {
+      isMountedRef.current = false;
+      source.cancel();
+    };
   }, [page, params.id, hasMore, appDispatch]);
 
   useEffect(() => {
-    if (params.id) {
-      let cachedData: User = JSON.parse(
-        localStorage.getItem(`${params.id}`) as string
-      );
-      if (cachedData) setUser(cachedData);
-      axios
-        .get(`/api/users/${params.id}`)
-        .then((res) => {
-          const data: User = res.data;
-          setUser(data);
-          localStorage.setItem(`${params.id}`, JSON.stringify(data));
-        })
-        .catch((err) => {
-          if (err) {
-            appDispatch({
-              type: "showSnackAlert",
-              errorMsg: "Can't find user",
-              severity: "error"
-            });
-          }
-        });
+    isMountedRef.current = true;
+    const source = axios.CancelToken.source();
+
+    if (isMountedRef.current) {
+      if (params.id) {
+        let cachedData: User = JSON.parse(
+          localStorage.getItem(`${params.id}`) as string
+        );
+        if (cachedData) setUser(cachedData);
+        axios
+          .get(`/api/users/${params.id}`, {
+            cancelToken: source.token
+          })
+          .then((res) => {
+            const data: User = res.data;
+            setUser(data);
+            localStorage.setItem(`${params.id}`, JSON.stringify(data));
+          })
+          .catch((err) => {
+            if (axios.isCancel(err)) {
+              // Do nothing..
+            } else if (err) {
+              appDispatch({
+                type: "showSnackAlert",
+                errorMsg: "Can't find user",
+                severity: "error"
+              });
+            }
+          });
+      }
     }
     return () => {
-      setPosts([]);
-      setPage(1);
-      setHasMore(true);
+      isMountedRef.current = false;
+      source.cancel();
     };
   }, [params.id, appDispatch]);
 

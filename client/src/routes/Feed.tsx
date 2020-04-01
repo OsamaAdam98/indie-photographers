@@ -60,6 +60,8 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
   const [offline, setOffline] = useState<boolean>(false);
   const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
 
+  const isMountedRef = useRef(false);
+
   const onUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files as FileList;
     const formData = new FormData();
@@ -134,51 +136,66 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
   };
 
   useEffect(() => {
-    if (hasMore) {
-      let cachedData: Post[] = JSON.parse(
-        localStorage.getItem(`feedPage${page}`) as string
-      );
-      axios
-        .get(`/api/feed/?page=${page}`)
-        .then((res) => {
-          const { data } = res;
-          let newData: Post[] = getNewPosts(data, cachedData);
+    isMountedRef.current = true;
+    const source = axios.CancelToken.source();
+    if (isMountedRef) {
+      if (hasMore) {
+        let cachedData: Post[] = JSON.parse(
+          localStorage.getItem(`feedPage${page}`) as string
+        );
+        axios
+          .get(`/api/feed/?page=${page}`, {
+            cancelToken: source.token
+          })
+          .then((res) => {
+            const { data } = res;
+            let newData: Post[] = getNewPosts(data, cachedData);
 
-          if (newData.length) {
-            setNewPost((prevPosts) => [...prevPosts, ...newData]);
-          }
+            if (newData.length) {
+              setNewPost((prevPosts) => [
+                ...new Set([...prevPosts, ...newData])
+              ]);
+            }
 
-          if (!cachedData) {
-            setPosts((prevPosts) => [...prevPosts, ...data]);
-          }
+            if (!cachedData) {
+              setPosts((prevPosts) => [...new Set([...prevPosts, ...data])]);
+            }
 
-          setHasMore(data.length === 10);
-          localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
-          appDispatch({ type: "hideSnackAlert" });
-          setOffline(false);
+            setHasMore(data.length === 10);
+            localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
+            appDispatch({ type: "hideSnackAlert" });
+            setOffline(false);
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            if (axios.isCancel(err)) {
+              // Just do nothing..
+            } else if (err && page !== 1) {
+              appDispatch({
+                type: "showSnackAlert",
+                errorMsg: "Can't connect to the internet!",
+                severity: "warning"
+              });
+              setOffline(true);
+              setIsLoading(false);
+            }
+          });
+        if (cachedData) {
+          setPosts((prevPosts) => [...prevPosts, ...cachedData]);
           setIsLoading(false);
-        })
-        .catch((err) => {
-          if (err && page !== 1) {
-            appDispatch({
-              type: "showSnackAlert",
-              errorMsg: "Can't connect to the internet!",
-              severity: "warning"
-            });
-            setOffline(true);
-          }
-          setIsLoading(false);
-        });
-      if (cachedData) {
-        setPosts((prevPosts) => [...prevPosts, ...cachedData]);
-        setIsLoading(false);
-        setHasMore(cachedData.length === 10);
+          setHasMore(cachedData.length === 10);
+        } else {
+          setIsLoading(true);
+        }
       } else {
-        setIsLoading(true);
+        setIsLoading(false);
       }
-    } else {
-      setIsLoading(false);
     }
+
+    return () => {
+      isMountedRef.current = false;
+      source.cancel();
+    };
   }, [page, hasMore, appDispatch]);
 
   const observer = useRef(

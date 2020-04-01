@@ -1,8 +1,6 @@
 import { Router } from "express";
-import fs from "fs";
 import moment from "moment";
 import auth from "../middleware/auth.middleware";
-import upload from "../middleware/upload.middleware";
 import Comment from "../models/comments.model";
 import Feed from "../models/feed.model";
 import Likes from "../models/likes.model";
