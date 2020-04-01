@@ -15,7 +15,7 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-app.use(sslRedirect(["production"]));
+app.use(sslRedirect([process.env.IS_HEROKU ? "production" : "development"]));
 
 const uri = process.env.ATLAS_URI;
 
