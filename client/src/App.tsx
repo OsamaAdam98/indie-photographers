@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { appReducer } from "./components";
 import SnackAlert from "./components/SnackAlert";
 import UserContext, { DispatchContext } from "./context/AppContext";
+import * as serviceWorker from "./serviceWorker";
 import "./css/feed.css";
 import "./css/style.css";
 
@@ -53,6 +54,24 @@ const App: React.FC = () => {
   });
 
   useEffect(() => {
+    serviceWorker.register({
+      onSuccess: () => {
+        dispatch({
+          type: "showSnackAlert",
+          severity: "success",
+          errorMsg: "App installed, feel free to browse offline!"
+        });
+      },
+      onUpdate: (reg) => {
+        dispatch({
+          type: "showSnackAlert",
+          severity: "info",
+          errorMsg: "Updates are available, refresh to get the latest updates."
+        });
+        reg.waiting?.postMessage({ type: "SKIP_WAITING" });
+      }
+    });
+
     window.addEventListener("beforeinstallprompt", (event) => {
       event.preventDefault();
       dispatch({ type: "setPWA", pwa: event });
