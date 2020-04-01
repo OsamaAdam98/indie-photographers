@@ -4,6 +4,11 @@ import "../css/home.css";
 
 const Home = () => {
   const versionNumber: string = process.env.HEROKU_RELEASE_VERSION || "vX.x";
+
+  React.useEffect(() => {
+    console.log(process.env.HEROKU_RELEASE_VERSION);
+  }, []);
+
   return (
     <div className="home-container">
       <img className="main-img" alt="Home cover" src={homeCover} />
