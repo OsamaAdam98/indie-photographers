@@ -2,9 +2,8 @@ import React from "react";
 import * as homeCover from "../assets/home-cover.jpg";
 import "../css/home.css";
 
-const versionNumber: string = process.env.HEROKU_RELEASE_VERSION || "vX.x";
-
 const Home = () => {
+  const versionNumber: string = process.env.HEROKU_RELEASE_VERSION || "vX.x";
   return (
     <div className="home-container">
       <img className="main-img" alt="Home cover" src={homeCover} />
