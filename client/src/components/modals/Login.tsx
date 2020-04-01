@@ -42,6 +42,10 @@ const Login: React.FC = () => {
     if (location.hash !== "#login-window") setShow(false);
   }, [location.hash]);
 
+  const handleEnter = (target: any) => {
+    target.charCode === 13 && handleSubmit();
+  };
+
   const handleClose = () => {
     setShow(false);
     setErrorMsg("");
@@ -58,14 +62,14 @@ const Login: React.FC = () => {
     setEmail(event.target.value);
   const passwordChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setPassword(event.target.value);
+
   const handleSubmit = (
-    event:
+    event?:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | React.FormEvent<HTMLFormElement>
   ) => {
     if (!email.trim() || !password.trim()) {
       setErrorMsg("Please enter all fields");
-      event.preventDefault();
     } else {
       const user: SubUser = {
         email,
@@ -95,7 +99,7 @@ const Login: React.FC = () => {
           setErrorMsg("Invalid credentials");
         });
     }
-    event.preventDefault();
+    event?.preventDefault();
   };
 
   const loginButton = !state.isLogged ? (
@@ -131,6 +135,7 @@ const Login: React.FC = () => {
               fullWidth
               value={email}
               onChange={emailChange}
+              onKeyPress={handleEnter}
             />
             <TextField
               className={classes.textField}
@@ -141,8 +146,9 @@ const Login: React.FC = () => {
               fullWidth
               value={password}
               onChange={passwordChange}
-              error={errorMsg ? true : false}
+              error={!!errorMsg}
               helperText={errorMsg}
+              onKeyPress={handleEnter}
             />
             <Grid container direction="row" spacing={1}>
               <Grid item xs>
