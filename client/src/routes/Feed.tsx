@@ -171,11 +171,6 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
             if (axios.isCancel(err)) {
               // Just do nothing..
             } else if (err && page !== 1) {
-              appDispatch({
-                type: "showSnackAlert",
-                errorMsg: "Can't connect to the internet!",
-                severity: "warning"
-              });
               setOffline(true);
               setIsLoading(false);
             }

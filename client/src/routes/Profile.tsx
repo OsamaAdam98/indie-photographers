@@ -109,12 +109,6 @@ const Profile: React.FC = () => {
                 severity: "error"
               });
             } else {
-              appDispatch({
-                type: "showSnackAlert",
-                errorMsg: "Can't connect to the internet!",
-                severity: "warning"
-              });
-
               setIsLoading(false);
             }
           });

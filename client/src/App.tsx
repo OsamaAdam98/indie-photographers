@@ -63,12 +63,15 @@ const App: React.FC = () => {
         });
       },
       onUpdate: (reg) => {
+        reg.waiting?.postMessage({ type: "SKIP_WAITING" });
+        window.location.reload();
+      },
+      onOffline: () => {
         dispatch({
           type: "showSnackAlert",
           severity: "info",
-          errorMsg: "Updates are available, refresh to get the latest updates."
+          errorMsg: "You're now offline, new content cannot be loaded."
         });
-        reg.waiting?.postMessage({ type: "SKIP_WAITING" });
       }
     });
 
