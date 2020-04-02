@@ -58,7 +58,7 @@ router.post("/", (req, res) => {
 });
 
 router.post("/facebook-login", async (req, res) => {
-  if (req.body?.status !== "unknown") {
+  if (!!req.body?.email || !!req.body?.name) {
     const { email, name } = req.body;
     const { url } = req.body.picture.data;
 
