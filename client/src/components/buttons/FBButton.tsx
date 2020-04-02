@@ -82,11 +82,10 @@ const FBButton: React.FC<Props> = ({ dispatch, handleClose }) => {
       <FacebookLogin
         appId={`608523869954489`}
         autoLoad={false}
-        fields={`name,email,picture.width(500).height(500)`}
+        fields={`name,email,picture.width(800).height(800)`}
         onClick={componentClicked}
         callback={responseFacebook}
         disableMobileRedirect={true}
-        version="6.0"
         render={(renderProps: any) => (
           <Button
             onClick={renderProps.onClick}
