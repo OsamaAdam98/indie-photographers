@@ -140,7 +140,10 @@ const Profile: React.FC = () => {
         let cachedData: User = JSON.parse(
           localStorage.getItem(`${params.id}`) as string
         );
-        if (cachedData) setUser(cachedData);
+        if (cachedData) {
+          setUser(cachedData);
+          document.title = cachedData.username;
+        }
         axios
           .get(`/api/users/${params.id}`, {
             cancelToken: source.token
@@ -149,6 +152,7 @@ const Profile: React.FC = () => {
             const data: User = res.data;
             setUser(data);
             localStorage.setItem(`${params.id}`, JSON.stringify(data));
+            document.title = data.username;
           })
           .catch((err) => {
             if (axios.isCancel(err)) {
@@ -166,6 +170,7 @@ const Profile: React.FC = () => {
     return () => {
       isMountedRef.current = false;
       source.cancel();
+      document.title = "Indie";
     };
   }, [params.id, appDispatch]);
 

@@ -5,8 +5,10 @@
   "main": "./server/src/index.js",
   "scripts": {
     "start": "yarn run server:build && yarn run server:prod",
+    "start:dev": "yarn run server:build && yarn run server:dev",
     "server": "nodemon",
     "server:build": "cd server && tsc",
+    "server:dev": "node ./server/dist/server.js",
     "server:prod": "NODE_ENV=production node ./server/dist/server.js",
     "client": "cd client && yarn start",
     "build-client": "cd client && yarn run build",
