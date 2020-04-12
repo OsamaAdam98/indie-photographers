@@ -149,7 +149,6 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
           })
           .then((res) => {
             const { data } = res;
-            console.log(data);
             let newData: Post[] = getNewPosts(data, cachedData);
 
             if (newData.length) {
