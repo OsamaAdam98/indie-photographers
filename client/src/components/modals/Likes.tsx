@@ -156,10 +156,6 @@ const Likes: React.FC<Props> = (props) => {
         fullScreen={width < 500}
         onEntering={entering}
         scroll="paper"
-        transitionDuration={{
-          enter: 0,
-          exit: 0
-        }}
       >
         <DialogTitle
           id="form-dialog-title"

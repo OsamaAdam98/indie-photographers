@@ -174,10 +174,6 @@ const PostModal: React.FC<Props> = (props) => {
         aria-labelledby="form-dialog-title"
         fullWidth={true}
         maxWidth="xs"
-        transitionDuration={{
-          enter: 0,
-          exit: 0
-        }}
       >
         <form onSubmit={handleSubmit}>
           <DialogTitle id="form-dialog-title">Post</DialogTitle>

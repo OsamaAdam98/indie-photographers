@@ -8,7 +8,7 @@ import Likes from "../models/likes.model";
 const router = Router();
 
 router.get("/", (req, res) => {
-  const { page } = req.query;
+  const page = Number(req.query.page);
 
   Feed.find()
     .sort({ date: "desc" })
@@ -216,7 +216,7 @@ router.delete("/delete/:id", auth, (req, res) => {
 });
 
 router.get("/user/:id/", (req, res) => {
-  const { page }: { page: number } = req.query;
+  const page = Number(req.query.page);
 
   Feed.find({ user: req.params.id })
     .sort({ date: "desc" })

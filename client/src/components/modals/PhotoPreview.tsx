@@ -79,10 +79,6 @@ const PhotoPreview: React.FC<Props> = (props) => {
         fullScreen
         className={classes.dialog}
         onClick={handleClose}
-        transitionDuration={{
-          enter: 0,
-          exit: 0
-        }}
       >
         <FullImage />
       </Dialog>

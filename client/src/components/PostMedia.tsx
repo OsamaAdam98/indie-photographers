@@ -175,10 +175,6 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
                     }}
                     open={open}
                     onClose={handleClose}
-                    transitionDuration={{
-                      enter: 0,
-                      exit: 0
-                    }}
                   >
                     <MenuItem onClick={() => handleDelete(feedPost._id)}>
                       Delete
@@ -198,22 +194,22 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
               monthsOffset === 1 && daysOffset < 30
                 ? `Posted ${daysOffset} days ago`
                 : monthsOffset === 1 && daysOffset > 30
-                ? `Posted about a month ago`
-                : monthsOffset
-                ? `Posted ${monthsOffset} months ago`
-                : daysOffset === 1
-                ? `Posted yesterday`
-                : daysOffset
-                ? `Posted ${daysOffset} days ago`
-                : hoursOffset === 1 && minutesOffset < 60
-                ? `Posted ${minutesOffset} minutes ago`
-                : hoursOffset
-                ? `Posted ${hoursOffset} hours ago`
-                : minutesOffset > 1
-                ? `Posted ${minutesOffset} minutes ago`
-                : minutesOffset
-                ? `Posted a minute ago`
-                : `Posted just now`
+                  ? `Posted about a month ago`
+                  : monthsOffset
+                    ? `Posted ${monthsOffset} months ago`
+                    : daysOffset === 1
+                      ? `Posted yesterday`
+                      : daysOffset
+                        ? `Posted ${daysOffset} days ago`
+                        : hoursOffset === 1 && minutesOffset < 60
+                          ? `Posted ${minutesOffset} minutes ago`
+                          : hoursOffset
+                            ? `Posted ${hoursOffset} hours ago`
+                            : minutesOffset > 1
+                              ? `Posted ${minutesOffset} minutes ago`
+                              : minutesOffset
+                                ? `Posted a minute ago`
+                                : `Posted just now`
             }
           />
           <CardContent>
@@ -232,8 +228,8 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
               />
             </CardMedia>
           ) : (
-            ""
-          )}
+              ""
+            )}
           <Likes
             liked={liked}
             users={post?.likes.map((like) => like.user)}

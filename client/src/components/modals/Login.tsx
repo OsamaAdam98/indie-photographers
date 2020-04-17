@@ -107,8 +107,8 @@ const Login: React.FC = () => {
       Login
     </Button>
   ) : (
-    <ProfileAvatar dispatch={context.dispatch} />
-  );
+      <ProfileAvatar dispatch={context.dispatch} />
+    );
 
   return (
     <>
@@ -116,10 +116,6 @@ const Login: React.FC = () => {
       <Dialog
         open={show}
         onClose={handleClose}
-        transitionDuration={{
-          enter: 0,
-          exit: 0
-        }}
         aria-labelledby="form-dialog-title"
       >
         <form onSubmit={handleSubmit} className={classes.root}>

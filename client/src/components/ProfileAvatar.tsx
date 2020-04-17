@@ -43,10 +43,6 @@ const ProfileAvatar: React.FC<Props> = ({ dispatch }) => {
           horizontal: "right"
         }}
         keepMounted
-        transitionDuration={{
-          enter: 0,
-          exit: 0
-        }}
         transformOrigin={{
           vertical: "top",
           horizontal: "right"
