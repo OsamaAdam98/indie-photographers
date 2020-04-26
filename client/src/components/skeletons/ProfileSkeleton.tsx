@@ -1,6 +1,6 @@
 import { Paper, Typography } from "@material-ui/core";
 import React from "react";
-import "../../css/profile.css";
+import "../../scss/profile.scss";
 
 const ProfileSkeleton: React.FC = () => {
   return (

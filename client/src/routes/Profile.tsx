@@ -20,7 +20,7 @@ import React, {
 import { useParams } from "react-router-dom";
 import { PhotoPreview, PostSkeleton } from "../components/index";
 import { DispatchContext } from "../context/AppContext";
-import "../css/profile.css";
+import "../scss/profile.scss";
 
 const PostMedia = lazy(() => import("../components/PostMedia"));
 const DoneAllIcon = lazy(() => import("@material-ui/icons/DoneAll"));
@@ -213,7 +213,7 @@ const Profile: React.FC = () => {
     : null;
 
   return (
-    <div className="container">
+    <div className="profile__container">
       {user ? (
         <>
           <Paper className="main-block">

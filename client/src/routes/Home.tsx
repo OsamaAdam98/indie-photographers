@@ -1,6 +1,6 @@
 import React from "react";
 import * as homeCover from "../assets/home-cover.jpg";
-import "../css/home.css";
+import "../scss/home.scss";
 
 const Home = () => {
   return (

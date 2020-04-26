@@ -1,6 +1,6 @@
 import { Link, Typography } from "@material-ui/core";
 import React from "react";
-import "../css/about.css";
+import "../scss/about.scss";
 
 const About: React.FC = () => {
   return (

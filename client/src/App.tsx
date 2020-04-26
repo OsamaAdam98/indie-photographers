@@ -8,8 +8,7 @@ import { appReducer } from "./components";
 import SnackAlert from "./components/SnackAlert";
 import UserContext, { DispatchContext } from "./context/AppContext";
 import * as serviceWorker from "./serviceWorker";
-import "./css/feed.css";
-import "./css/style.css";
+import "./scss/style.scss";
 
 const Feed = lazy(() => import("./routes/Feed"));
 const Profile = lazy(() => import("./routes/Profile"));

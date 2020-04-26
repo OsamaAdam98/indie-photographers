@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { DispatchContext } from "../context/AppContext";
-import "../css/feed.css";
+import "../scss/feed.scss";
 
 const PostMedia = lazy(() => import("../components/PostMedia"));
 const PostModal = lazy(() => import("../components/modals/PostModal"));
@@ -196,7 +196,7 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
   const observer = useRef(
     new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
       if (entries[0].isIntersecting) {
-        setPage((page) => page + 1);
+        setPage((prevPage) => prevPage + 1);
       }
     })
   );

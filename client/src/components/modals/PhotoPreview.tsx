@@ -56,8 +56,10 @@ const PhotoPreview: React.FC<Props> = (props) => {
       style={{
         objectFit: "cover",
         objectPosition: "50% 50%",
-        width: "100%",
-        maxHeight: maxHeight ? maxHeight : ""
+        maxHeight: maxHeight ? maxHeight : "",
+        minWidth: round ? "200px" : "",
+        maxWidth: round ? "30vmin" : "",
+        width: "100%"
       }}
       className={`hover-img ${round ? "profile-photo" : ""}`}
     />

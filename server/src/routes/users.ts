@@ -8,7 +8,13 @@ const router = Router();
 // User registeration
 
 router.post("/", (req, res) => {
-  const { username, email, password, admin, profilePicture } = req.body;
+  const { username, email, password, admin, profilePicture }: {
+    username: string,
+    email: string,
+    password: string,
+    admin: boolean,
+    profilePicture: string
+  } = req.body;
   if (!username || !email || !password) {
     return res.status(400).json({ msg: "Please enter all fields" });
   }
@@ -78,10 +84,5 @@ router.get("/:id", (req, res) => {
     .then((data) => res.status(200).json(data))
     .catch((err) => res.status(404).json(err));
 });
-
-// router.put("/update", auth, (req, res) => {
-// 	//TODO: finish this one
-// 	Users.findByIdAndUpdate(req.user);
-// });
 
 export default router;

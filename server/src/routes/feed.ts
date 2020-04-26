@@ -32,10 +32,10 @@ router.get("/", (req, res) => {
 });
 
 router.post("/add", auth, async (req: any, res: any) => {
-  const user = req.body.user.id;
-  const admin = req.body.user.admin;
-  const { msg } = req.body.data;
-  const { photo } = req.body;
+  const user: string = req.body.user.id;
+  const admin: boolean = req.body.user.admin;
+  const { msg }: { msg: string } = req.body.data;
+  const { photo }: { photo: string } = req.body;
 
   try {
     const result = await Feed.findOne({ user })
@@ -103,10 +103,10 @@ router.post("/add", auth, async (req: any, res: any) => {
 });
 
 router.post("/comment/:id", auth, (req, res) => {
-  const msg = req.body.msg;
-  const photo = req.body.photo;
-  const user = req.body.user.id;
-  const post = req.params.id;
+  const msg: string = req.body.msg;
+  const photo: string = req.body.photo;
+  const user: string = req.body.user.id;
+  const post: string = req.params.id;
 
   const newComment = new Comment({
     msg,
@@ -131,9 +131,9 @@ router.post("/comment/:id", auth, (req, res) => {
 });
 
 router.post("/like/:id", auth, (req, res) => {
-  const id = req.params.id;
-  const user = req.body.user.id;
-  const customID = `${user}${id}`;
+  const id: string = req.params.id;
+  const user: string = req.body.user.id;
+  const customID: string = `${user}${id}`;
 
   const like = new Likes({
     user,
@@ -191,7 +191,7 @@ router.post("/like/:id", auth, (req, res) => {
 });
 
 router.get("/likes/:postID", (req, res) => {
-  const postID = req.params.postID;
+  const postID: string = req.params.postID;
   Likes.find({ post: postID })
     .populate("user", "-password")
     .sort({ date: "asc" })
