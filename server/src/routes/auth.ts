@@ -59,7 +59,7 @@ router.post("/", (req, res) => {
 
 router.post("/facebook-login", async (req, res) => {
   if (req.body?.status !== "unknown") {
-    const { email, name }: { email: string, name: string } = req.body;
+    const { email, name }: { email: string; name: string } = req.body;
     const { url }: { url: string } = req.body.picture.data;
 
     const updatedPicture = await downloadImage(url as string);
@@ -140,7 +140,7 @@ router.post("/facebook-login", async (req, res) => {
 });
 
 router.post("/google-login", async (req, res) => {
-  const { email, name }: { email: string, name: string } = req.body.profileObj;
+  const { email, name }: { email: string; name: string } = req.body.profileObj;
   const googleImgUrl: string = req.body.profileObj.imageUrl.replace(
     "s96-c",
     "s384-c",

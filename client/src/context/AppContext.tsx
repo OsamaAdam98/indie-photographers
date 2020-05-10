@@ -31,5 +31,5 @@ export default createContext<UserState>({
 });
 
 export const DispatchContext = createContext({
-  dispatch: function() {} as Dispatch<actions>
+  dispatch: function () {} as Dispatch<actions>
 });

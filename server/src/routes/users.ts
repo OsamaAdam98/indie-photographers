@@ -8,12 +8,18 @@ const router = Router();
 // User registeration
 
 router.post("/", (req, res) => {
-  const { username, email, password, admin, profilePicture }: {
-    username: string,
-    email: string,
-    password: string,
-    admin: boolean,
-    profilePicture: string
+  const {
+    username,
+    email,
+    password,
+    admin,
+    profilePicture
+  }: {
+    username: string;
+    email: string;
+    password: string;
+    admin: boolean;
+    profilePicture: string;
   } = req.body;
   if (!username || !email || !password) {
     return res.status(400).json({ msg: "Please enter all fields" });

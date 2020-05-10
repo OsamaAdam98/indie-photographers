@@ -107,8 +107,8 @@ const Login: React.FC = () => {
       Login
     </Button>
   ) : (
-      <ProfileAvatar dispatch={context.dispatch} />
-    );
+    <ProfileAvatar dispatch={context.dispatch} />
+  );
 
   return (
     <>
