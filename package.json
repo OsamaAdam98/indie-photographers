@@ -17,7 +17,7 @@
     "client": "cd client && yarn start",
     "build-client": "cd client && yarn run build",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
-    "heroku-postbuild": "cd client && yarn && yarn build && yarn run delete:client",
+    "heroku-postbuild": "cd client && yarn && yarn build && cd .. && yarn run delete:client",
     "init-all": "yarn && cd client && yarn",
     "prod": "yarn run build-client && NODE_ENV=production yarn start"
   },
