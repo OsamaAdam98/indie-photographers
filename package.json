@@ -46,5 +46,9 @@
   "devDependencies": {
     "concurrently": "^5.1.0",
     "nodemon": "^2.0.3"
+  },
+  "engines": {
+    "node": "12.x",
+    "yarn": "1.x"
   }
 }
