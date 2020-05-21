@@ -3,4 +3,5 @@
 /client/build
 /uploads
 /server/dist
+build/
 .env
