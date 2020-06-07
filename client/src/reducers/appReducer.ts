@@ -49,6 +49,10 @@ const setUser = (state: AppState, user: User) => {
 const toggleTheme = (state: AppState) => {
   const updatedState = state;
   localStorage.setItem("theme", JSON.stringify(!state.isLight));
+  document.documentElement.setAttribute(
+    "data-theme",
+    !state.isLight ? "light" : "dark"
+  );
   return { ...updatedState, isLight: !state.isLight };
 };
 

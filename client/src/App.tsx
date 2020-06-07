@@ -38,7 +38,10 @@ const App: React.FC = () => {
     palette: {
       type: "light",
       primary: {
-        main: yellow[700]
+        main: "#098203"
+      },
+      background: {
+        default: "#f6f6f6"
       }
     }
   });
@@ -51,6 +54,20 @@ const App: React.FC = () => {
       }
     }
   });
+
+  const appInstalledListener = (event: any) => {
+    dispatch({ type: "clearPWA" });
+    dispatch({
+      type: "showSnackAlert",
+      errorMsg: "App Installed!",
+      severity: "success"
+    });
+  };
+
+  const beforeInstallListener = (event: any) => {
+    event.preventDefault();
+    dispatch({ type: "setPWA", pwa: event });
+  };
 
   useEffect(() => {
     serviceWorker.register({
@@ -74,19 +91,20 @@ const App: React.FC = () => {
       }
     });
 
-    window.addEventListener("beforeinstallprompt", (event) => {
-      event.preventDefault();
-      dispatch({ type: "setPWA", pwa: event });
-    });
+    document.documentElement.setAttribute(
+      "data-theme",
+      (JSON.parse(localStorage.getItem("theme") as string) as boolean)
+        ? "light"
+        : "dark"
+    );
 
-    window.addEventListener("appinstalled", (e) => {
-      dispatch({ type: "clearPWA" });
-      dispatch({
-        type: "showSnackAlert",
-        errorMsg: "App Installed!",
-        severity: "success"
-      });
-    });
+    window.addEventListener("beforeinstallprompt", beforeInstallListener);
+    window.addEventListener("appinstalled", appInstalledListener);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", beforeInstallListener);
+      window.removeEventListener("appinstalled", appInstalledListener);
+    };
   }, []);
 
   const handleClick = () => {

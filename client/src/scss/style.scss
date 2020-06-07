@@ -13,6 +13,14 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+html[data-theme="dark"] {
+  --highlight-color: #ffc107;
+}
+
+html[data-theme="light"] {
+  --highlight-color: #098203;
+}
+
 .text-link {
   color: inherit;
   text-decoration: inherit;
