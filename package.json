@@ -4,22 +4,15 @@
   "description": "",
   "main": "./server/src/index.js",
   "scripts": {
-    "start": "yarn run server:build && yarn run server:prod",
-    "start:dev": "yarn run server:build && yarn run server:dev",
-    "start:heroku": "yarn run server:build && yarn run delete:server && yarn run server:prod-heroku",
-    "server": "nodemon",
-    "server:build": "cd server && rm -rf dist && tsc",
-    "server:dev": "node ./server/dist/server.js",
-    "server:prod": "NODE_ENV=production node ./server/dist/server.js",
-    "server:prod-heroku": "node dist/server.js",
-    "delete:server": "mv server/dist/ . && rm -rf server/",
-    "delete:client": "mv client/build/ . && rm -rf client/",
-    "client": "cd client && yarn start",
-    "build-client": "rm -rf build/ && cd client && yarn run build && mv build/ ../",
+    "server:build": "cd server && rm -rf dist && tsc && cd ..",
+    "client:build": "cd client && yarn build && cd ..",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
-    "heroku-postbuild": "cd client && yarn && yarn build && cd .. && yarn run delete:client",
-    "init-all": "yarn && cd client && yarn",
-    "prod": "yarn run build-client && NODE_ENV=production yarn start"
+    "server": "nodemon",
+    "client": "cd client && yarn start",
+    "start:dev": "yarn run server:build && yarn run server:dev",
+    "server:dev": "node server/dist/server.js",
+    "server:prod": "NODE_ENV=production node dist/server.js",
+    "init-all": "yarn && cd client && yarn"
   },
   "keywords": [],
   "author": "",
@@ -48,7 +41,6 @@
     "nodemon": "^2.0.4"
   },
   "engines": {
-    "node": "12.x",
     "yarn": "1.x"
   }
 }
