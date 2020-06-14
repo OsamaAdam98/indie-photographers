@@ -1,4 +1,4 @@
-FROM node
+FROM node:slim as builder
 
 WORKDIR /app
 
@@ -11,12 +11,18 @@ RUN yarn run init-all
 
 COPY . .
 
-RUN yarn run client:build
-RUN mv client/build/ .
-RUN rm -rf client/
-RUN yarn run server:build
-RUN mv server/dist/ .
-RUN rm -rf server/
+RUN yarn run client:build && \
+  mv client/build/ . && \
+  rm -rf client/ && \
+  yarn run server:build && \
+  mv server/dist/ . && \
+  rm -rf server/
+
+FROM node:slim
+
+WORKDIR /app
+
+COPY --from=builder /app .
 
 EXPOSE 5000
 
