@@ -1,4 +1,4 @@
-FROM node:slim as builder
+FROM node:lts-alpine as builder
 
 WORKDIR /app
 
@@ -18,7 +18,7 @@ RUN yarn run client:build && \
   mv server/dist/ . && \
   rm -rf server/
 
-FROM node:slim
+FROM node:lts-alpine
 
 WORKDIR /app
 
