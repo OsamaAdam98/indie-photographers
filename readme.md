@@ -7,7 +7,7 @@ But for now if you'd like to test drive it on your machine you'll have to fill i
 First you'd have to clone the app
 
 ```console
-~$ git clone https://github.com/OsamaAdam98/indie-photographers.git
+~$ git clone https://github.com/osamaadam/indie-photographers.git
 ~$ cd indie-photographers
 ```
 
