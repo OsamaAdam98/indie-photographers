@@ -6,9 +6,9 @@ But for now if you'd like to test drive it on your machine you'll have to fill i
 
 First you'd have to clone the app
 
-```console
-~$ git clone https://github.com/osamaadam/indie-photographers.git
-~$ cd indie-photographers
+```sh
+-$ git clone https://github.com/osamaadam/indie-photographers.git
+-$ cd indie-photographers
 ```
 
 Now create a .env file at the root directory with your own details.
@@ -18,16 +18,15 @@ ATLAS_URI=Your mongodb atlas URI
 jwtSecret=Your JWT secret
 ```
 
-Then simply run the following commands to install dependencies
+It is recommended that you use docker-compose to run the container without any extra setup.
 
-```console
-~$ yarn
+```sh
+-$ docker-compose up
 ```
 
-Then just go ahead and run
+However, you may run it locally by running the following.
 
-```console
-~$ yarn run dev
+```sh
+-$ yarn
+-$ yarn run dev
 ```
-
-Et voila!

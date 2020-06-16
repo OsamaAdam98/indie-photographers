@@ -6,7 +6,7 @@ import React, {
   useCallback,
   useEffect,
   useRef,
-  useState
+  useState,
 } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { DispatchContext } from "../context/AppContext";
@@ -23,15 +23,15 @@ const useStyles = makeStyles({
     left: 0,
     bottom: 0,
     width: "100vw",
-    height: 4
+    height: 4,
   },
   "@media (max-width: 31.25rem)": {
     progress: {
       position: "fixed",
       bottom: 48,
-      height: 4
-    }
-  }
+      height: 4,
+    },
+  },
 });
 
 interface Props {
@@ -77,31 +77,8 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
   };
 
   const cleanupDelete = (id: string) => {
-    let index: number = 1;
-    let targetHit: boolean;
-    let cachedData: Post[];
-    do {
-      cachedData = JSON.parse(
-        localStorage.getItem(`feedPage${index}`) as string
-      );
-      if (cachedData) {
-        targetHit = cachedData.filter((data) => data._id === id).length
-          ? true
-          : false;
-        if (targetHit) {
-          setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
-          setNewPost((prevPosts) =>
-            prevPosts.filter((post) => post._id !== id)
-          );
-          for (let i = 1; i <= index; i++) {
-            localStorage.removeItem(`feedPage${i}`);
-          }
-          // localStorage.setItem(`feedPage${index}`, JSON.stringify(cachedData.filter((data) => data._id !== id)));
-          break;
-        }
-        index++;
-      } else break;
-    } while (true);
+    setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
+    setNewPost((prevPosts) => prevPosts.filter((post) => post._id !== id));
   };
 
   const handleDelete = useCallback(
@@ -111,15 +88,15 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
       axios
         .delete(`/api/feed/delete/${id}`, {
           headers: {
-            "x-auth-token": `${token}`
-          }
+            "x-auth-token": `${token}`,
+          },
         })
         .then((res) => {
           cleanupDelete(id);
           appDispatch({
             type: "showSnackAlert",
             errorMsg: res.data,
-            severity: "success"
+            severity: "success",
           });
         })
         .catch((err) => console.log(err.response.data));
@@ -127,42 +104,21 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
     [appDispatch]
   );
 
-  const getNewPosts = (newPosts: Post[], cachedData: Post[]) => {
-    if (newPosts && cachedData) {
-      return newPosts.filter((newPost) => newPost.date > cachedData[0].date);
-    } else {
-      return [];
-    }
-  };
-
   useEffect(() => {
     isMountedRef.current = true;
     const source = axios.CancelToken.source();
     if (isMountedRef) {
       if (hasMore) {
-        let cachedData: Post[] = JSON.parse(
-          localStorage.getItem(`feedPage${page}`) as string
-        );
         axios
           .get(`/api/feed/?page=${page}`, {
-            cancelToken: source.token
+            cancelToken: source.token,
           })
           .then((res) => {
             const { data } = res;
-            let newData: Post[] = getNewPosts(data, cachedData);
 
-            if (newData.length) {
-              setNewPost((prevPosts) => [
-                ...new Set([...prevPosts, ...newData])
-              ]);
-            }
-
-            if (!cachedData) {
-              setPosts((prevPosts) => [...new Set([...prevPosts, ...data])]);
-            }
+            setPosts((prevPosts) => [...new Set([...prevPosts, ...data])]);
 
             setHasMore(data.length === 10);
-            localStorage.setItem(`feedPage${page}`, JSON.stringify(data));
             appDispatch({ type: "hideSnackAlert" });
             setOffline(false);
             setIsLoading(false);
@@ -175,13 +131,6 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
               setIsLoading(false);
             }
           });
-        if (cachedData) {
-          setPosts((prevPosts) => [...prevPosts, ...cachedData]);
-          setIsLoading(false);
-          setHasMore(cachedData.length === 10);
-        } else {
-          setIsLoading(true);
-        }
       } else {
         setIsLoading(false);
       }
@@ -193,12 +142,17 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
     };
   }, [page, hasMore, appDispatch]);
 
-  const observer = useRef(
-    new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
-      if (entries[0].isIntersecting) {
-        setPage((prevPage) => prevPage + 1);
+  const observer = React.useRef(
+    new IntersectionObserver(
+      (entries: IntersectionObserverEntry[]) => {
+        if (entries[0].isIntersecting) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      {
+        threshold: 0.1,
       }
-    })
+    )
   );
 
   useEffect(() => {
@@ -208,9 +162,9 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
     if (currentElement) currentObserver.observe(currentElement);
 
     return () => {
-      if (currentElement) currentObserver.unobserve(currentElement);
+      currentObserver.disconnect();
     };
-  }, [lastElement]);
+  }, [lastElement, observer]);
 
   const postMedia = posts.map((feedPost, i) => {
     if (posts.length === i + 1) {
@@ -250,7 +204,7 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
               style={{
                 position: "relative",
                 width: "100%",
-                textAlign: "center"
+                textAlign: "center",
               }}
             />
           </Suspense>

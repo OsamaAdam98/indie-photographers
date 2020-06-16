@@ -6,7 +6,7 @@ import {
   ListItemText,
   makeStyles,
   Paper,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import axios from "axios";
 import React, {
@@ -15,7 +15,7 @@ import React, {
   useCallback,
   useEffect,
   useRef,
-  useState
+  useState,
 } from "react";
 import { useParams } from "react-router-dom";
 import { PhotoPreview, PostSkeleton } from "../components/index";
@@ -32,8 +32,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     maxWidth: 360,
-    padding: theme.spacing(2)
-  }
+    padding: theme.spacing(2),
+  },
 }));
 
 const Profile: React.FC = () => {
@@ -60,14 +60,14 @@ const Profile: React.FC = () => {
     axios
       .delete(`/api/feed/delete/${id}`, {
         headers: {
-          "x-auth-token": `${token}`
-        }
+          "x-auth-token": `${token}`,
+        },
       })
       .then((res) => {
         appDispatch({
           type: "showSnackAlert",
           errorMsg: res.data,
-          severity: "success"
+          severity: "success",
         });
       })
       .catch((err) => console.log(err));
@@ -79,23 +79,16 @@ const Profile: React.FC = () => {
 
     if (isMountedRef.current) {
       if (hasMore) {
-        let cachedData: Post[] = JSON.parse(
-          localStorage.getItem(`${params.id}/page${page}`) as string
-        );
         axios
           .get(`/api/feed/user/${params.id}/?page=${page}`, {
-            cancelToken: source.token
+            cancelToken: source.token,
           })
           .then((res) => {
             const data: Post[] = res.data;
 
-            if (!cachedData) setPosts((prevPosts) => [...prevPosts, ...data]);
+            setPosts((prevPosts) => [...prevPosts, ...data]);
 
             setHasMore(data.length === 10);
-            localStorage.setItem(
-              `${params.id}/page${page}`,
-              JSON.stringify(data.filter((post) => post.user._id === params.id))
-            );
             appDispatch({ type: "hideSnackAlert" });
             setIsLoading(false);
           })
@@ -106,23 +99,12 @@ const Profile: React.FC = () => {
               appDispatch({
                 type: "showSnackAlert",
                 errorMsg: "User not found",
-                severity: "error"
+                severity: "error",
               });
             } else {
               setIsLoading(false);
             }
           });
-        if (cachedData) {
-          setPosts((prevPosts) =>
-            [...prevPosts, ...cachedData].filter(
-              (post) => post.user._id === params.id
-            )
-          );
-          setIsLoading(false);
-          setHasMore(cachedData.length === 10);
-        } else {
-          setIsLoading(true);
-        }
       } else setIsLoading(false);
     }
     return () => {
@@ -146,7 +128,7 @@ const Profile: React.FC = () => {
         }
         axios
           .get(`/api/users/${params.id}`, {
-            cancelToken: source.token
+            cancelToken: source.token,
           })
           .then((res) => {
             const data: User = res.data;
@@ -161,7 +143,7 @@ const Profile: React.FC = () => {
               appDispatch({
                 type: "showSnackAlert",
                 errorMsg: "Can't find user",
-                severity: "error"
+                severity: "error",
               });
             }
           });
@@ -227,7 +209,7 @@ const Profile: React.FC = () => {
               <Typography variant="h5">{user.username}</Typography>
               <Typography
                 style={{
-                  fontStyle: "italic"
+                  fontStyle: "italic",
                 }}
               >
                 <span className="highlight">title</span>
@@ -283,7 +265,7 @@ const Profile: React.FC = () => {
               style={{
                 position: "relative",
                 width: "100%",
-                textAlign: "center"
+                textAlign: "center",
               }}
             />
           </Suspense>

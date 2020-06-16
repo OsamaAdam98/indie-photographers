@@ -4,7 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import axios from "axios";
@@ -40,7 +40,7 @@ const PostModal: React.FC<Props> = (props) => {
     offline,
     handleCancel,
     realPhoto,
-    setIsUploading
+    setIsUploading,
   } = props;
 
   const history = useHistory();
@@ -90,7 +90,7 @@ const PostModal: React.FC<Props> = (props) => {
       subData = {
         username,
         email,
-        msg
+        msg,
       };
 
       if (files?.item(0)) {
@@ -116,8 +116,8 @@ const PostModal: React.FC<Props> = (props) => {
               { data: subData, photo: base64 },
               {
                 headers: {
-                  "x-auth-token": `${token}`
-                }
+                  "x-auth-token": `${token}`,
+                },
               }
             );
 
@@ -139,8 +139,8 @@ const PostModal: React.FC<Props> = (props) => {
             { data: subData },
             {
               headers: {
-                "x-auth-token": `${token}`
-              }
+                "x-auth-token": `${token}`,
+              },
             }
           );
           setNewPost((prevPost) => [...prevPost, result.data]);
@@ -153,7 +153,6 @@ const PostModal: React.FC<Props> = (props) => {
         }
       }
     }
-    event?.preventDefault();
   };
 
   const subButton = isLogged ? (
@@ -201,7 +200,7 @@ const PostModal: React.FC<Props> = (props) => {
                 width: "100%",
                 alignItems: "center",
                 marginTop: "1rem",
-                maxHeight: `${height / 2}px`
+                maxHeight: `${height / 2}px`,
               }}
             />
           </DialogContent>
@@ -209,7 +208,7 @@ const PostModal: React.FC<Props> = (props) => {
             <div
               style={{
                 position: "absolute",
-                left: "1rem"
+                left: "1rem",
               }}
             >
               <input

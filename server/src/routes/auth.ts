@@ -8,7 +8,7 @@ const router = Router();
 
 const downloadImage = async (url: string) => {
   const result = await axios.get(url, {
-    responseType: "arraybuffer"
+    responseType: "arraybuffer",
   });
   const buffer = Buffer.from(result.data).toString("base64");
   const imgString = `data:${result.headers["content-type"]};base64,${buffer}`;
@@ -46,8 +46,8 @@ router.post("/", (req, res) => {
                   profilePicture: user.profilePicture,
                   registerDate: user.registerDate,
                   username: user.username,
-                  admin: user.admin
-                }
+                  admin: user.admin,
+                },
               });
             }
           );
@@ -80,8 +80,8 @@ router.post("/facebook-login", async (req, res) => {
                   profilePicture: updatedPicture,
                   registerDate: user.registerDate,
                   username: user.username,
-                  admin: user.admin
-                }
+                  admin: user.admin,
+                },
               });
             }
           );
@@ -99,7 +99,7 @@ router.post("/facebook-login", async (req, res) => {
             username: name,
             email: email,
             password: req.body.accessToken,
-            profilePicture: updatedPicture
+            profilePicture: updatedPicture,
           });
 
           bcrypt.genSalt(10, (err, salt) => {
@@ -124,8 +124,8 @@ router.post("/facebook-login", async (req, res) => {
                           profilePicture: updatedPicture,
                           registerDate: user.registerDate,
                           username: user.username,
-                          admin: user.admin
-                        }
+                          admin: user.admin,
+                        },
                       });
                     }
                   );
@@ -164,8 +164,8 @@ router.post("/google-login", async (req, res) => {
               profilePicture: user.profilePicture,
               registerDate: user.registerDate,
               username: user.username,
-              admin: user.admin
-            }
+              admin: user.admin,
+            },
           });
         }
       );
@@ -174,7 +174,7 @@ router.post("/google-login", async (req, res) => {
         username: name,
         email: email,
         password: req.body.tokenObj.access_token,
-        profilePicture: imageUrl
+        profilePicture: imageUrl,
       });
 
       bcrypt.genSalt(10, (err, salt) => {
@@ -199,8 +199,8 @@ router.post("/google-login", async (req, res) => {
                       profilePicture: user.profilePicture,
                       registerDate: user.registerDate,
                       username: user.username,
-                      admin: user.admin
-                    }
+                      admin: user.admin,
+                    },
                   });
                 }
               );

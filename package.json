@@ -5,7 +5,7 @@
   "repository": "https://github.com/osamaadam/indie-photographers.git",
   "author": "Osama Adam <osamaadam98@gmail.com>",
   "license": "MIT",
-  "private": "true",
+  "private": true,
   "workspaces": [
     "client",
     "server"
