@@ -5,18 +5,18 @@ WORKDIR /app
 COPY package.json .
 COPY yarn.lock .
 COPY client/package.json ./client/
-COPY client/yarn.lock ./client/
+COPY server/package.json ./server/
 
-RUN yarn run init-all
+RUN yarn
 
 COPY . .
 
 RUN yarn run client:build && \
+  yarn run server:build && \
   mv client/build/ . && \
   rm -rf client/ && \
-  yarn run server:build && \
-  mv server/dist/ . && \
-  rm -rf server/
+  rm -rf server/src && \
+  yarn
 
 FROM node:lts-alpine
 

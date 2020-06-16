@@ -13,15 +13,15 @@ First you'd have to clone the app
 
 Now create a .env file at the root directory with your own details.
 
-```
-ATLAS_URI = Your mongodb atlas URI
-jwtSecret = Your JWT secret
+```env
+ATLAS_URI=Your mongodb atlas URI
+jwtSecret=Your JWT secret
 ```
 
 Then simply run the following commands to install dependencies
 
 ```console
-~$ yarn run init-all
+~$ yarn
 ```
 
 Then just go ahead and run

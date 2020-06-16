@@ -1,8 +1,15 @@
 {
-  "name": "server",
+  "name": "indie-photographers",
   "version": "1.0.0",
-  "description": "",
-  "main": "./server/src/index.js",
+  "main": "dist/index.js",
+  "repository": "https://github.com/osamaadam/indie-photographers.git",
+  "author": "Osama Adam <osamaadam98@gmail.com>",
+  "license": "MIT",
+  "private": "true",
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "server:build": "cd server && rm -rf dist && tsc && cd ..",
     "client:build": "cd client && yarn build && cd ..",
@@ -11,36 +18,7 @@
     "client": "cd client && yarn start",
     "start:dev": "yarn run server:build && yarn run server:dev",
     "server:dev": "node server/dist/server.js",
-    "server:prod": "NODE_ENV=production node dist/server.js",
+    "server:prod": "NODE_ENV=production node server/dist/server.js",
     "init-all": "yarn && cd client && yarn"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@types/bcryptjs": "^2.4.2",
-    "@types/cors": "^2.8.6",
-    "@types/express": "^4.17.6",
-    "@types/jsonwebtoken": "^8.5.0",
-    "@types/moment": "^2.13.0",
-    "@types/mongodb": "^3.5.20",
-    "@types/mongoose": "^5.7.22",
-    "@types/node": "^14.0.11",
-    "axios": "^0.19.2",
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
-    "moment": "^2.26.0",
-    "mongoose": "^5.9.18",
-    "typescript": "^3.9.5"
-  },
-  "devDependencies": {
-    "concurrently": "^5.2.0",
-    "nodemon": "^2.0.4"
-  },
-  "engines": {
-    "yarn": "1.x"
   }
 }
