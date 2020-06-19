@@ -79,6 +79,7 @@ const Profile: React.FC = () => {
           _id
           msg
           photo
+          date
           likes {
             _id
             customID
