@@ -1,13 +1,8 @@
+import { useQuery } from "@apollo/react-hooks";
 import { LinearProgress, makeStyles } from "@material-ui/core";
+import { gql } from "apollo-boost";
 import axios from "axios";
-import React, {
-  lazy,
-  Suspense,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { DispatchContext } from "../context/AppContext";
 import "../scss/feed.scss";
@@ -51,7 +46,6 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState<Post[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [photo, setPhoto] = useState<string>("");
@@ -60,7 +54,35 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
   const [offline, setOffline] = useState<boolean>(false);
   const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
 
-  const isMountedRef = useRef(false);
+  const { data, loading, error } = useQuery(
+    gql`
+      query User($page: Int!) {
+        posts: feedByPage(page: $page) {
+          _id
+          msg
+          photo
+          user {
+            username
+            profilePicture
+            admin
+          }
+        }
+      }
+    `,
+    { variables: { page } }
+  );
+
+  React.useEffect(() => {
+    if (!loading) {
+      setPosts((prevPosts) => [...prevPosts, ...data.posts]);
+      setHasMore(data.posts.length === 10);
+      setOffline(false);
+      appDispatch({ type: "hideSnackAlert" });
+    }
+    if (error) {
+      setOffline(true);
+    }
+  }, [data, loading, error, appDispatch]);
 
   const onUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files as FileList;
@@ -78,7 +100,6 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
 
   const cleanupDelete = (id: string) => {
     setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
-    setNewPost((prevPosts) => prevPosts.filter((post) => post._id !== id));
   };
 
   const handleDelete = useCallback(
@@ -104,43 +125,43 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
     [appDispatch]
   );
 
-  useEffect(() => {
-    isMountedRef.current = true;
-    const source = axios.CancelToken.source();
-    if (isMountedRef) {
-      if (hasMore) {
-        axios
-          .get(`/api/feed/?page=${page}`, {
-            cancelToken: source.token,
-          })
-          .then((res) => {
-            const { data } = res;
+  // useEffect(() => {
+  //   isMountedRef.current = true;
+  //   const source = axios.CancelToken.source();
+  //   if (isMountedRef) {
+  //     if (hasMore) {
+  //       axios
+  //         .get(`/api/feed/?page=${page}`, {
+  //           cancelToken: source.token,
+  //         })
+  //         .then((res) => {
+  //           const { data } = res;
 
-            setPosts((prevPosts) => [...new Set([...prevPosts, ...data])]);
+  //           setPosts((prevPosts) => [...new Set([...prevPosts, ...data])]);
 
-            setHasMore(data.length === 10);
-            appDispatch({ type: "hideSnackAlert" });
-            setOffline(false);
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            if (axios.isCancel(err)) {
-              // Just do nothing..
-            } else if (err && page !== 1) {
-              setOffline(true);
-              setIsLoading(false);
-            }
-          });
-      } else {
-        setIsLoading(false);
-      }
-    }
+  //           setHasMore(data.length === 10);
+  //           appDispatch({ type: "hideSnackAlert" });
+  //           setOffline(false);
+  //           setIsLoading(false);
+  //         })
+  //         .catch((err) => {
+  //           if (axios.isCancel(err)) {
+  //             // Just do nothing..
+  //           } else if (err && page !== 1) {
+  //             setOffline(true);
+  //             setIsLoading(false);
+  //           }
+  //         });
+  //     } else {
+  //       setIsLoading(false);
+  //     }
+  //   }
 
-    return () => {
-      isMountedRef.current = false;
-      source.cancel();
-    };
-  }, [page, hasMore, appDispatch]);
+  //   return () => {
+  //     isMountedRef.current = false;
+  //     source.cancel();
+  //   };
+  // }, [page, hasMore, appDispatch]);
 
   const observer = React.useRef(
     new IntersectionObserver(
@@ -198,7 +219,7 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
           {newPosts}
           {postMedia}
         </Suspense>
-        {!hasMore && !isLoading ? (
+        {!hasMore && !loading ? (
           <Suspense fallback={<div />}>
             <DoneAllIcon
               style={{

@@ -4,36 +4,38 @@ const feedSchema = new mongoose.Schema({
   user: {
     type: mongoose.Types.ObjectId,
     ref: "users",
-    required: true
+    required: true,
   },
   msg: {
     type: String,
-    required: false
+    required: false,
   },
-  photo: {},
+  photo: {
+    type: String,
+    required: false,
+  },
   likes: [
     {
       type: mongoose.Types.ObjectId,
-      ref: "likes"
-    }
+      ref: "likes",
+    },
   ],
   comments: [
     {
       type: mongoose.Types.ObjectId,
-      ref: "comments"
-    }
+      ref: "comments",
+    },
   ],
   date: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 export interface Post extends mongoose.Document {
   user: string;
   msg: string;
-  photo: Photo;
-  photoId?: string;
+  photo: string;
   likes: string[];
   comments: string[];
   date: Date;

@@ -7,8 +7,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { appReducer } from "./components";
 import SnackAlert from "./components/SnackAlert";
 import UserContext, { DispatchContext } from "./context/AppContext";
-import * as serviceWorker from "./serviceWorker";
 import "./scss/style.scss";
+import * as serviceWorker from "./serviceWorker";
 
 const Feed = lazy(() => import("./routes/Feed"));
 const Profile = lazy(() => import("./routes/Profile"));
@@ -31,28 +31,28 @@ const App: React.FC = () => {
     showBtn: false,
     isLight: (JSON.parse(localStorage.getItem("theme") as string) as boolean)
       ? true
-      : false
+      : false,
   });
 
   const lightTheme = createMuiTheme({
     palette: {
       type: "light",
       primary: {
-        main: "#098203"
+        main: "#098203",
       },
       background: {
-        default: "#f6f6f6"
-      }
-    }
+        default: "#f6f6f6",
+      },
+    },
   });
 
   const darkTheme = createMuiTheme({
     palette: {
       type: "dark",
       primary: {
-        main: yellow[600]
-      }
-    }
+        main: yellow[600],
+      },
+    },
   });
 
   const appInstalledListener = (event: any) => {
@@ -60,7 +60,7 @@ const App: React.FC = () => {
     dispatch({
       type: "showSnackAlert",
       errorMsg: "App Installed!",
-      severity: "success"
+      severity: "success",
     });
   };
 
@@ -75,7 +75,7 @@ const App: React.FC = () => {
         dispatch({
           type: "showSnackAlert",
           severity: "success",
-          errorMsg: "App installed, feel free to browse offline!"
+          errorMsg: "App installed, feel free to browse offline!",
         });
       },
       onUpdate: (reg) => {
@@ -86,9 +86,9 @@ const App: React.FC = () => {
         dispatch({
           type: "showSnackAlert",
           severity: "info",
-          errorMsg: "You're now offline, new content cannot be loaded."
+          errorMsg: "You're now offline, new content cannot be loaded.",
         });
-      }
+      },
     });
 
     document.documentElement.setAttribute(
@@ -112,7 +112,7 @@ const App: React.FC = () => {
       dispatch({
         type: "showSnackAlert",
         errorMsg: `Please, open the share menu and select "Add to Home Screen"`,
-        severity: "info"
+        severity: "info",
       });
     } else {
       if (state.pwa) {
@@ -123,7 +123,7 @@ const App: React.FC = () => {
               dispatch({
                 type: "showSnackAlert",
                 errorMsg: "App downloading in the background..",
-                severity: "info"
+                severity: "info",
               });
             }
             dispatch({ type: "clearPWA" });
@@ -143,8 +143,8 @@ const App: React.FC = () => {
       axios
         .get(`/api/auth/user`, {
           headers: {
-            "x-auth-token": `${token}`
-          }
+            "x-auth-token": `${token}`,
+          },
         })
         .then((res) => {
           if (!userInfo || !token) {
@@ -166,7 +166,7 @@ const App: React.FC = () => {
         value={{
           isLogged: state.isLogged,
           user: state.user,
-          isLight: state.isLight
+          isLight: state.isLight,
         }}
       >
         <DispatchContext.Provider value={{ dispatch }}>

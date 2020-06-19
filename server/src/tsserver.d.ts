@@ -25,15 +25,3 @@ interface Photo {
   signature?: string;
   original_filename?: string;
 }
-
-interface MulterSample {
-  fieldName: string;
-  originalName: string;
-  encoding: string;
-  mimetype: string;
-  size: number;
-  destination: string;
-  filename: string;
-  path: string;
-  buffer: number;
-}

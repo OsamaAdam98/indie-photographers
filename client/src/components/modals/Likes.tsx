@@ -10,7 +10,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  makeStyles
+  makeStyles,
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { AvatarGroup } from "@material-ui/lab";
@@ -24,18 +24,18 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     maxWidth: theme.spacing(9),
     "&:hover": {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   avatar: {
     height: theme.spacing(3),
-    width: theme.spacing(3)
+    width: theme.spacing(3),
   },
   badge: {
     "&:hover": {
-      cursor: "pointer"
-    }
-  }
+      cursor: "pointer",
+    },
+  },
 }));
 
 interface Props {
@@ -71,7 +71,7 @@ const Likes: React.FC<Props> = (props) => {
     window.location.hash = "likes";
   };
 
-  const likedUsers = users.map((user) => {
+  const likedUsers = users?.map((user) => {
     if (user) {
       return (
         <Link to={`/profile/${user._id}`} key={user._id} className="text-link">
@@ -130,7 +130,7 @@ const Likes: React.FC<Props> = (props) => {
     <Badge
       anchorOrigin={{
         vertical: "bottom",
-        horizontal: "right"
+        horizontal: "right",
       }}
       badgeContent={users.length + (liked ? 1 : 0) > 3 ? users.length - 3 : 0}
       color="primary"
@@ -160,13 +160,13 @@ const Likes: React.FC<Props> = (props) => {
         <DialogTitle
           id="form-dialog-title"
           style={{
-            height: width > 500 ? "1rem" : "3.5rem"
+            height: width > 500 ? "1rem" : "3.5rem",
           }}
         >
           <IconButton
             style={{
               marginRight: "1rem",
-              display: width < 500 ? `` : `none`
+              display: width < 500 ? `` : `none`,
             }}
             onClick={handleClose}
           >

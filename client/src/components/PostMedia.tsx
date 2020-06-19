@@ -9,7 +9,7 @@ import {
   makeStyles,
   Menu,
   MenuItem,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import axios from "axios";
 import moment from "moment";
@@ -26,11 +26,11 @@ const Likes = lazy(() => import("./modals/Likes"));
 const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: "31.25rem",
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   media: {
-    maxHeight: "15.625rem"
-  }
+    maxHeight: "15.625rem",
+  },
 }));
 
 interface Props {
@@ -46,7 +46,7 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
   const [anchorEl, setAnchorEl] = useState<any>(null);
   const [post, setPost] = useState<Post>(feedPost);
   const [liked, setLiked] = useState<boolean>(
-    feedPost.likes.filter((like) => like.user._id === currentUser._id).length
+    feedPost?.likes?.filter((like) => like.user._id === currentUser._id).length
       ? true
       : false
   );
@@ -83,8 +83,8 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
                 post.likes = [
                   ...post.likes,
                   {
-                    user: currentUser
-                  }
+                    user: currentUser,
+                  },
                 ];
                 setPost(post);
               }
@@ -109,8 +109,8 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
     axios
       .post(`/api/feed/like/${id}`, null, {
         headers: {
-          "x-auth-token": `${token}`
-        }
+          "x-auth-token": `${token}`,
+        },
       })
       .then((res) => {
         const { like } = res.data;
@@ -166,12 +166,12 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
                     anchorEl={anchorEl}
                     anchorOrigin={{
                       vertical: "top",
-                      horizontal: "right"
+                      horizontal: "right",
                     }}
                     keepMounted
                     transformOrigin={{
                       vertical: "top",
-                      horizontal: "right"
+                      horizontal: "right",
                     }}
                     open={open}
                     onClose={handleClose}
@@ -232,7 +232,7 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
           )}
           <Likes
             liked={liked}
-            users={post?.likes.map((like) => like.user)}
+            users={post?.likes?.map((like) => like.user)}
             currentUser={currentUser}
           />
           <CardActions disableSpacing>
