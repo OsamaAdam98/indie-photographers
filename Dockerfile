@@ -2,8 +2,7 @@ FROM node:lts-alpine as builder
 
 WORKDIR /app
 
-COPY package.json .
-COPY yarn.lock .
+COPY package.json yarn.lock ./
 COPY client/package.json ./client/
 COPY server/package.json ./server/
 
