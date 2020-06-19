@@ -1,12 +1,14 @@
 import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
+  scalar Date
+
   type User {
     _id: ID!
     username: String!
     email: String!
     profilePicture: String
-    registerDate: String!
+    registerDate: Date!
     admin: Boolean!
   }
 
@@ -17,7 +19,7 @@ const typeDefs = gql`
     photo: String
     likes: [Like]
     comments: [Comment]
-    date: String!
+    date: Date!
   }
 
   type Comment {
@@ -27,21 +29,22 @@ const typeDefs = gql`
     photo: String
     likes: [Like]
     post: Feed
-    date: String!
+    date: Date!
   }
 
   type Like {
     _id: ID!
     user: User!
     post: Feed!
-    date: String!
+    date: Date!
     customID: String!
   }
 
   type Query {
     user(id: ID, email: String): User
     feedById(id: ID!): Feed
-    feedByEmail(email: String!): [Feed]
+    feedByUserId(id: ID!, page: Int!): [Feed]
+    feedByEmail(email: String!, page: Int!): [Feed]
     feedByPage(page: Int!): [Feed]
   }
 `;

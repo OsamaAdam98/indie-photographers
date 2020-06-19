@@ -34,6 +34,10 @@ interface Props {
   user: User;
 }
 
+interface Data {
+  posts: Post[];
+}
+
 const Feed: React.FC<Props> = ({ isLogged, user }) => {
   const classes = useStyles();
   const history = useHistory();
@@ -54,14 +58,26 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
   const [offline, setOffline] = useState<boolean>(false);
   const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
 
-  const { data, loading, error } = useQuery(
+  const { data, loading, error } = useQuery<Data>(
     gql`
       query User($page: Int!) {
         posts: feedByPage(page: $page) {
           _id
           msg
           photo
+          date
+          likes {
+            _id
+            customID
+            user {
+              _id
+              username
+              profilePicture
+              admin
+            }
+          }
           user {
+            _id
             username
             profilePicture
             admin
@@ -73,8 +89,8 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
   );
 
   React.useEffect(() => {
-    if (!loading) {
-      setPosts((prevPosts) => [...prevPosts, ...data.posts]);
+    if (data?.posts && !loading) {
+      setPosts((prevPosts) => [...new Set([...prevPosts, ...data.posts])]);
       setHasMore(data.posts.length === 10);
       setOffline(false);
       appDispatch({ type: "hideSnackAlert" });
@@ -124,44 +140,6 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
     },
     [appDispatch]
   );
-
-  // useEffect(() => {
-  //   isMountedRef.current = true;
-  //   const source = axios.CancelToken.source();
-  //   if (isMountedRef) {
-  //     if (hasMore) {
-  //       axios
-  //         .get(`/api/feed/?page=${page}`, {
-  //           cancelToken: source.token,
-  //         })
-  //         .then((res) => {
-  //           const { data } = res;
-
-  //           setPosts((prevPosts) => [...new Set([...prevPosts, ...data])]);
-
-  //           setHasMore(data.length === 10);
-  //           appDispatch({ type: "hideSnackAlert" });
-  //           setOffline(false);
-  //           setIsLoading(false);
-  //         })
-  //         .catch((err) => {
-  //           if (axios.isCancel(err)) {
-  //             // Just do nothing..
-  //           } else if (err && page !== 1) {
-  //             setOffline(true);
-  //             setIsLoading(false);
-  //           }
-  //         });
-  //     } else {
-  //       setIsLoading(false);
-  //     }
-  //   }
-
-  //   return () => {
-  //     isMountedRef.current = false;
-  //     source.cancel();
-  //   };
-  // }, [page, hasMore, appDispatch]);
 
   const observer = React.useRef(
     new IntersectionObserver(

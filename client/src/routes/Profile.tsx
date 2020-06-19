@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/react-hooks";
 import {
   Avatar,
   List,
@@ -8,6 +9,7 @@ import {
   Paper,
   Typography,
 } from "@material-ui/core";
+import { gql } from "apollo-boost";
 import axios from "axios";
 import React, {
   lazy,
@@ -39,12 +41,9 @@ const useStyles = makeStyles((theme) => ({
 const Profile: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [lastElement, setLastElement] = useState<HTMLDivElement | null>(null);
-
-  const isMountedRef = useRef(false);
 
   const appDispatch = useCallback(
     React.useContext(DispatchContext).dispatch,
@@ -73,88 +72,50 @@ const Profile: React.FC = () => {
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    isMountedRef.current = true;
-    const source = axios.CancelToken.source();
-
-    if (isMountedRef.current) {
-      if (hasMore) {
-        axios
-          .get(`/api/feed/user/${params.id}/?page=${page}`, {
-            cancelToken: source.token,
-          })
-          .then((res) => {
-            const data: Post[] = res.data;
-
-            setPosts((prevPosts) => [...prevPosts, ...data]);
-
-            setHasMore(data.length === 10);
-            appDispatch({ type: "hideSnackAlert" });
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            if (axios.isCancel(err)) {
-              // Do nothing..
-            } else if (err) {
-              appDispatch({
-                type: "showSnackAlert",
-                errorMsg: "User not found",
-                severity: "error",
-              });
-            } else {
-              setIsLoading(false);
+  const { data, loading, error } = useQuery(
+    gql`
+      query UserFeed($id: ID!, $page: Int!) {
+        posts: feedByUserId(id: $id, page: $page) {
+          _id
+          msg
+          photo
+          likes {
+            _id
+            customID
+            user {
+              _id
+              username
+              profilePicture
+              admin
             }
-          });
-      } else setIsLoading(false);
-    }
-    return () => {
-      isMountedRef.current = false;
-      source.cancel();
-    };
-  }, [page, params.id, hasMore, appDispatch]);
-
-  useEffect(() => {
-    isMountedRef.current = true;
-    const source = axios.CancelToken.source();
-
-    if (isMountedRef.current) {
-      if (params.id) {
-        let cachedData: User = JSON.parse(
-          localStorage.getItem(`${params.id}`) as string
-        );
-        if (cachedData) {
-          setUser(cachedData);
-          document.title = cachedData.username;
+          }
         }
-        axios
-          .get(`/api/users/${params.id}`, {
-            cancelToken: source.token,
-          })
-          .then((res) => {
-            const data: User = res.data;
-            setUser(data);
-            localStorage.setItem(`${params.id}`, JSON.stringify(data));
-            document.title = data.username;
-          })
-          .catch((err) => {
-            if (axios.isCancel(err)) {
-              // Do nothing..
-            } else if (err) {
-              appDispatch({
-                type: "showSnackAlert",
-                errorMsg: "Can't find user",
-                severity: "error",
-              });
-            }
-          });
+        user: user(id: $id) {
+          _id
+          username
+          admin
+          profilePicture
+        }
       }
+    `,
+    { variables: { id: params.id, page } }
+  );
+
+  React.useEffect(() => {
+    if (!loading) {
+      setPosts((prevPosts) => [...new Set([...prevPosts, ...data.posts])]);
+      setUser(data.user);
+      setHasMore(data.posts.length === 10);
+      appDispatch({ type: "hideSnackAlert" });
     }
-    return () => {
-      isMountedRef.current = false;
-      source.cancel();
-      document.title = "Indie";
-    };
-  }, [params.id, appDispatch]);
+    if (error) {
+      appDispatch({
+        type: "showSnackAlert",
+        errorMsg: "User not found",
+        severity: "error",
+      });
+    }
+  }, [data, loading, error, params.id, appDispatch]);
 
   const observer = useRef(
     new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
@@ -180,14 +141,20 @@ const Profile: React.FC = () => {
         if (posts.length === i + 1) {
           return (
             <div ref={setLastElement} key={feedPost._id}>
-              <PostMedia feedPost={feedPost} handleDelete={handleDelete} />
+              <PostMedia
+                feedPost={{ ...feedPost, user: user! }}
+                handleDelete={handleDelete}
+              />
               {hasMore ? <PostSkeleton /> : null}
             </div>
           );
         } else {
           return (
             <div key={feedPost._id}>
-              <PostMedia feedPost={feedPost} handleDelete={handleDelete} />
+              <PostMedia
+                feedPost={{ ...feedPost, user: user! }}
+                handleDelete={handleDelete}
+              />
             </div>
           );
         }
@@ -259,7 +226,7 @@ const Profile: React.FC = () => {
       <div className="post-block">
         <Suspense fallback={<div />}>{postMedia}</Suspense>
 
-        {!hasMore && !isLoading ? (
+        {!hasMore && !loading ? (
           <Suspense fallback={<div />}>
             <DoneAllIcon
               style={{

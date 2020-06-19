@@ -29,6 +29,30 @@ export const feedById = async (parent: any, args: { id: string }) => {
     .exec();
 };
 
+export const feedByUserId = async (
+  parent: any,
+  args: { id: string; page: number }
+) => {
+  const page = args.page;
+  return await Feed.find({ user: args.id })
+    .sort({ date: "desc" })
+    .limit(10)
+    .skip(page >= 1 ? 10 * (page - 1) : 0)
+    .select("-photoId")
+    .populate(
+      "user comments likes",
+      "-password -registerDate -__v -posts -email"
+    )
+    .populate({
+      path: "likes",
+      populate: {
+        path: "user",
+        model: "users",
+      },
+    })
+    .exec();
+};
+
 export const feedByEmail = async (parent: any, args: { email: string }) => {
   const user = await User.findOne({ email: args.email }).exec();
   if (user) {
