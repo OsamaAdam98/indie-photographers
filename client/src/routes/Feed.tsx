@@ -1,7 +1,6 @@
-import { useQuery } from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import { LinearProgress, makeStyles } from "@material-ui/core";
 import { gql } from "apollo-boost";
-import axios from "axios";
 import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { DispatchContext } from "../context/AppContext";
@@ -36,6 +35,13 @@ interface Props {
 
 interface Data {
   posts: Post[];
+}
+
+interface DeletedPost {
+  postInfo: {
+    post: Post;
+    postStatus: string;
+  };
 }
 
 const Feed: React.FC<Props> = ({ isLogged, user }) => {
@@ -88,6 +94,20 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
     { variables: { page } }
   );
 
+  const [deletePost, deletedPost] = useMutation<DeletedPost>(gql`
+    mutation DeletePost($id: ID!) {
+      postInfo: deletePost(id: $id) {
+        post {
+          _id
+          msg
+          photo
+          date
+        }
+        postStatus
+      }
+    }
+  `);
+
   React.useEffect(() => {
     if (data?.posts && !loading) {
       const { posts } = data;
@@ -117,30 +137,30 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
 
   const cleanupDelete = (id: string) => {
     setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
+    setNewPost((prevPosts) => prevPosts.filter((post) => post._id !== id));
   };
 
   const handleDelete = useCallback(
     (id: string) => {
-      const token: string | null = localStorage.getItem("token");
-
-      axios
-        .delete(`/api/feed/delete/${id}`, {
-          headers: {
-            "x-auth-token": `${token}`,
-          },
-        })
-        .then((res) => {
-          cleanupDelete(id);
-          appDispatch({
-            type: "showSnackAlert",
-            errorMsg: res.data,
-            severity: "success",
-          });
-        })
-        .catch((err) => console.log(err.response.data));
+      deletePost({ variables: { id } });
     },
-    [appDispatch]
+    [deletePost]
   );
+
+  React.useEffect(() => {
+    if (deletedPost?.data && !deletedPost.loading) {
+      const { post, postStatus } = deletedPost.data.postInfo;
+      cleanupDelete(post._id);
+      appDispatch({
+        type: "showSnackAlert",
+        errorMsg: postStatus,
+        severity: "success",
+      });
+    }
+    if (deletedPost.error) {
+      console.error(deletedPost.error);
+    }
+  }, [deletedPost, appDispatch]);
 
   const observer = React.useRef(
     new IntersectionObserver(

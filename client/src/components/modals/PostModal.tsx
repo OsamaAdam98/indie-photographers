@@ -51,7 +51,7 @@ const PostModal: React.FC<Props> = (props) => {
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [msg, setMsg] = useState<string>("");
 
-  const [sendPost, mutationData] = useMutation<PostMutation>(
+  const [addPost, mutationData] = useMutation<PostMutation>(
     gql`
       mutation Post($msg: String, $photo: String) {
         post(msg: $msg, photo: $photo) {
@@ -120,7 +120,7 @@ const PostModal: React.FC<Props> = (props) => {
 
           try {
             if (base64.length > bufferLength) throw new Error("too-large");
-            sendPost();
+            addPost();
           } catch (err) {
             if (err.message === "too-large") {
               setErrorMsg("File too large");
@@ -128,7 +128,7 @@ const PostModal: React.FC<Props> = (props) => {
           }
         };
       } else {
-        sendPost();
+        addPost();
       }
     }
   };

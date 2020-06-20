@@ -15,7 +15,11 @@ const typeDefs = gql`
   type UserWithToken {
     user: User!
     token: String!
-    msg: String
+  }
+
+  type FeedWithStatus {
+    post: Feed!
+    postStatus: String!
   }
 
   type Feed {
@@ -57,6 +61,7 @@ const typeDefs = gql`
 
   type Mutation {
     post(msg: String, photo: String): Feed
+    deletePost(id: ID!): FeedWithStatus!
   }
 `;
 

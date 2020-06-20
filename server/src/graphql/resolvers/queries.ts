@@ -13,11 +13,10 @@ export const login = async (
     const user = await User.findOne({ email }).exec();
 
     if (!user) throw new ApolloError("User not found", "404");
-
     const isMatch = await bcrypt.compare(args.password, user.password);
     if (!isMatch) throw new AuthenticationError("Invalid credentials!");
     const token = jwt.sign(
-      { id: user._id, admin: user.admin },
+      { _id: user._id, admin: user.admin },
       process.env.jwtSecret
     );
     return {
@@ -42,9 +41,9 @@ export const user = async (
   context: any
 ) => {
   if (args.id) {
-    return await User.findById(args.id).exec();
+    return await User.findById(args.id).select("-password").exec();
   } else if (args.email) {
-    return await User.findOne({ email: args.email }).exec();
+    return await User.findOne({ email: args.email }).select("-password").exec();
   }
 };
 
@@ -88,10 +87,18 @@ export const feedByUserId = async (
     .exec();
 };
 
-export const feedByEmail = async (parent: any, args: { email: string }) => {
-  const user = await User.findOne({ email: args.email }).exec();
+export const feedByEmail = async (
+  parent: any,
+  args: { email: string; page: number }
+) => {
+  const { page, email } = args;
+  const user = await User.findOne({ email }).exec();
   if (user) {
     return await Feed.find({ user: user._id })
+      .sort({ date: "desc" })
+      .limit(10)
+      .skip(page >= 1 ? 10 * (page - 1) : 0)
+      .select("-photoId")
       .populate(
         "user comments likes",
         "-password -registerDate -__v -posts -email"

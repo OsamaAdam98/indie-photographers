@@ -212,13 +212,4 @@ router.post("/google-login", async (req, res) => {
   });
 });
 
-// user data
-
-router.get("/user", auth, (req, res) => {
-  Users.findById(req.body.user.id)
-    .select("-password")
-    .then((user) => res.json(user))
-    .catch((err) => res.status(400).json(`Error: ${err}`));
-});
-
 export default router;

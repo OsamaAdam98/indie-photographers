@@ -50,7 +50,6 @@ const Login: React.FC = () => {
       query User($email: String!, $password: String!) {
         login(email: $email, password: $password) {
           token
-          msg
           user {
             _id
             username

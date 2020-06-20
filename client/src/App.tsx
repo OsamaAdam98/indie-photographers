@@ -1,7 +1,6 @@
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import { yellow } from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import axios from "axios";
 import React, { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { appReducer } from "./components";
@@ -132,32 +131,6 @@ const App: React.FC = () => {
       }
     }
   };
-
-  useEffect(() => {
-    const token: string | null = localStorage.getItem("token");
-    let userInfo: User = JSON.parse(localStorage.getItem("userInfo") as string);
-    if (userInfo && token && !userInfo.admin) {
-      dispatch({ type: "setUser", user: userInfo });
-    }
-    if (state.isLogged) {
-      axios
-        .get(`/api/auth/user`, {
-          headers: {
-            "x-auth-token": `${token}`,
-          },
-        })
-        .then((res) => {
-          if (!userInfo || !token) {
-            dispatch({ type: "setUser", user: res.data });
-          }
-        })
-        .catch((err) => {
-          if (err) {
-            dispatch({ type: "clearUser" });
-          }
-        });
-    }
-  }, [state.isLogged]);
 
   return (
     <ThemeProvider theme={state.isLight ? lightTheme : darkTheme}>
