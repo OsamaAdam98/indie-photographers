@@ -34,7 +34,7 @@ const GraphqlServer = new ApolloServer({
         };
       } catch (e) {
         return {
-          auth: "UNAUTHORIZED",
+          auth: "UNAUTHENTICATED",
         };
       }
     }

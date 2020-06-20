@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/react-hooks";
 import {
   Button,
   Dialog,
@@ -7,16 +8,14 @@ import {
   TextField,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import axios from "axios";
+import { gql } from "apollo-boost";
 import React, { useEffect, useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
-import { FAB } from "../index";
+import { useLocation } from "react-router-dom";
+import { FAB, resizeImage } from "../index";
 import useWindowDimensions from "../utilities/WindowDimensions";
-import { resizeImage } from "../index";
 
 interface Props {
   isLogged: boolean;
-  user: User;
   photo: string;
   setPhoto: React.Dispatch<React.SetStateAction<string>>;
   realPhoto?: FileList;
@@ -28,10 +27,13 @@ interface Props {
   onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+interface PostMutation {
+  post: Post;
+}
+
 const PostModal: React.FC<Props> = (props) => {
   const {
     isLogged,
-    user,
     setNewPost,
     photo,
     setPhoto,
@@ -43,12 +45,31 @@ const PostModal: React.FC<Props> = (props) => {
     setIsUploading,
   } = props;
 
-  const history = useHistory();
   const location = useLocation();
   const { height } = useWindowDimensions();
   const [show, setShow] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [msg, setMsg] = useState<string>("");
+
+  const [sendPost, mutationData] = useMutation<PostMutation>(
+    gql`
+      mutation Post($msg: String, $photo: String) {
+        post(msg: $msg, photo: $photo) {
+          _id
+          msg
+          photo
+          date
+          user {
+            _id
+            username
+            admin
+            profilePicture
+          }
+        }
+      }
+    `,
+    { variables: { msg, photo } }
+  );
 
   useEffect(() => {
     if (location.hash !== "#feed-post") setShow(false);
@@ -57,13 +78,13 @@ const PostModal: React.FC<Props> = (props) => {
   const msgChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setMsg(event.target.value);
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     setErrorMsg("");
     setMsg("");
     setPhoto("");
     setShow(false);
-    if (location.hash === "#feed-post") history.goBack();
-  };
+    window.location.hash = "";
+  }, [setPhoto]);
 
   const handleShow = () => {
     window.location.hash = "feed-post";
@@ -78,21 +99,9 @@ const PostModal: React.FC<Props> = (props) => {
     files = realPhoto,
     quality = 0.92
   ) => {
-    const username: string | undefined = user.username;
-    const email: string | undefined = user.email;
-
-    let subData: SubPost;
     if (!msg.trim() && !photo.trim()) {
       setErrorMsg("Surely you'd like to write something!");
     } else {
-      const token = localStorage.getItem("token");
-
-      subData = {
-        username,
-        email,
-        msg,
-      };
-
       if (files?.item(0)) {
         setIsUploading(true);
         const image = await resizeImage(files.item(0)!, 800, quality);
@@ -111,21 +120,7 @@ const PostModal: React.FC<Props> = (props) => {
 
           try {
             if (base64.length > bufferLength) throw new Error("too-large");
-            const result = await axios.post(
-              `/api/feed/add`,
-              { data: subData, photo: base64 },
-              {
-                headers: {
-                  "x-auth-token": `${token}`,
-                },
-              }
-            );
-
-            setNewPost((prevPost) => [...prevPost, result.data]);
-            setPhoto("");
-            setMsg("");
-            setIsUploading(false);
-            handleClose();
+            sendPost();
           } catch (err) {
             if (err.message === "too-large") {
               setErrorMsg("File too large");
@@ -133,27 +128,22 @@ const PostModal: React.FC<Props> = (props) => {
           }
         };
       } else {
-        try {
-          const result = await axios.post(
-            `/api/feed/add`,
-            { data: subData },
-            {
-              headers: {
-                "x-auth-token": `${token}`,
-              },
-            }
-          );
-          setNewPost((prevPost) => [...prevPost, result.data]);
-          setPhoto("");
-          setMsg("");
-          setIsUploading(false);
-          handleClose();
-        } catch (err) {
-          setErrorMsg(err?.response?.data);
-        }
+        sendPost();
       }
     }
   };
+
+  React.useEffect(() => {
+    if (mutationData?.data && !mutationData.loading) {
+      const { data } = mutationData;
+      setNewPost((prevPosts) => [data.post, ...prevPosts]);
+      setPhoto("");
+      setMsg("");
+      setIsUploading(false);
+      handleClose();
+    }
+    if (mutationData.error) console.error(mutationData.error);
+  }, [mutationData, setNewPost, setPhoto, setIsUploading, handleClose]);
 
   const subButton = isLogged ? (
     <FAB

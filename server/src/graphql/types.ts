@@ -54,6 +54,10 @@ const typeDefs = gql`
     feedByPage(page: Int!): [Feed]
     login(email: String!, password: String!): UserWithToken
   }
+
+  type Mutation {
+    post(msg: String, photo: String): Feed
+  }
 `;
 
 export default typeDefs;

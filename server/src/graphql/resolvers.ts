@@ -8,6 +8,7 @@ import {
   user,
   login,
 } from "./resolvers/queries";
+import { post } from "./resolvers/mutations";
 
 const resolvers = {
   Query: {
@@ -17,6 +18,10 @@ const resolvers = {
     feedByPage,
     feedByUserId,
     login,
+  },
+
+  Mutation: {
+    post,
   },
 
   Date: new GraphQLScalarType({

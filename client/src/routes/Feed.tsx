@@ -212,7 +212,6 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
         <div className="invisibleDiv" />
         <PostModal
           isLogged={isLogged}
-          user={user}
           setNewPost={setNewPost}
           photo={photo}
           setPhoto={setPhoto}
