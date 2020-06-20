@@ -32,7 +32,7 @@ const feedSchema = new mongoose.Schema({
   },
 });
 
-export interface Post extends mongoose.Document {
+export interface PostType extends mongoose.Document {
   user: string;
   msg: string;
   photo: string;
@@ -41,4 +41,4 @@ export interface Post extends mongoose.Document {
   date: Date;
 }
 
-export default mongoose.model<Post>("feed", feedSchema);
+export default mongoose.model<PostType>("feed", feedSchema);

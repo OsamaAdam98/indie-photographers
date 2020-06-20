@@ -30,7 +30,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
   },
 });
 
-export interface User extends mongoose.Document {
+export interface UserType extends mongoose.Document {
   _id: string;
   username: string;
   email: string;
@@ -40,4 +40,4 @@ export interface User extends mongoose.Document {
   admin: boolean;
 }
 
-export default mongoose.model<User>("users", userSchema);
+export default mongoose.model<UserType>("users", userSchema);

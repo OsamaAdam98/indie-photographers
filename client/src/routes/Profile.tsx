@@ -122,7 +122,7 @@ const Profile: React.FC = () => {
     if (feedQuery.data && !feedQuery?.loading) {
       const { posts } = feedQuery.data;
       setPosts((prevPosts) => [...new Set([...prevPosts, ...posts])]);
-      setHasMore(feedQuery.data.posts.length === 10);
+      setHasMore(posts.length === 10);
       appDispatch({ type: "hideSnackAlert" });
     }
     if (userQuery.data && !userQuery.loading) {

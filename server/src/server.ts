@@ -21,19 +21,23 @@ const GraphqlServer = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
-    const token = req.header("x-auth-token");
+    const token = req.header("authentication");
 
-    let auth: string | object;
-
-    if (!token) auth = "UNAUTHENTICATED";
+    if (!token)
+      return {
+        auth: "UNAUTHENTICATED",
+      };
     else {
       try {
-        auth = jwt.verify(token, process.env.jwtSecret);
+        return {
+          auth: jwt.verify(token, process.env.jwtSecret),
+        };
       } catch (e) {
-        auth = "UNAUTHORIZED";
+        return {
+          auth: "UNAUTHORIZED",
+        };
       }
     }
-    return { auth };
   },
 });
 
@@ -43,23 +47,6 @@ app.use(
   sslRedirect([process.env.ISHEROKU === "true" ? "production" : "development"])
 );
 GraphqlServer.applyMiddleware({ app });
-
-const uri = process.env.MONGO_URI;
-
-if (uri) {
-  mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  });
-}
-
-const connection = mongoose.connection;
-
-connection.once("open", () =>
-  console.log("Database connection established successfully.")
-);
 
 app.use("/api/users", usersRoute);
 app.use("/api/auth", authRoute);
@@ -78,17 +65,28 @@ if (process.env.NODE_ENV === "production") {
     });
   }
 
-  const connection = mongoose.connection;
-
-  connection.once("open", () =>
-    console.log("Database connection established successfully.")
-  );
-
   app.use(express.static("build"));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "..", "..", "build", "index.html"));
   });
+} else {
+  const uri = process.env.MONGO_URI;
+
+  if (uri) {
+    mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    });
+  }
 }
+
+const connection = mongoose.connection;
+
+connection.once("open", () =>
+  console.log("Database connection established successfully.")
+);
 
 app.listen(port, () => {
   console.log(`Server started on port: ${port}`);

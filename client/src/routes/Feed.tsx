@@ -90,8 +90,9 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
 
   React.useEffect(() => {
     if (data?.posts && !loading) {
-      setPosts((prevPosts) => [...new Set([...prevPosts, ...data.posts])]);
-      setHasMore(data.posts.length === 10);
+      const { posts } = data;
+      setPosts((prevPosts) => [...new Set([...prevPosts, ...posts])]);
+      setHasMore(posts.length === 10);
       setOffline(false);
       appDispatch({ type: "hideSnackAlert" });
     }

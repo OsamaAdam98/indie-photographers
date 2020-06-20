@@ -4,7 +4,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 
-const Client = new ApolloClient();
+const Client = new ApolloClient({
+  request: (operation) => {
+    const token = localStorage.getItem("token");
+    operation.setContext({
+      headers: {
+        authentication: token ? token : "",
+      },
+    });
+  },
+});
 
 ReactDOM.render(
   <ApolloProvider client={Client}>

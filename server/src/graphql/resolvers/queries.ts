@@ -1,4 +1,4 @@
-import User from "../../models/users.model";
+import User, { UserType } from "../../models/users.model";
 import Feed from "../../models/feed.model";
 
 export const user = async (

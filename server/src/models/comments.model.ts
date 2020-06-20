@@ -4,34 +4,34 @@ const commentSchema: mongoose.Schema = new mongoose.Schema({
   user: {
     type: mongoose.Types.ObjectId,
     ref: "users",
-    required: true
+    required: true,
   },
   msg: {
     type: String,
-    required: true
+    required: true,
   },
   photo: {
     type: String,
-    required: false
+    required: false,
   },
   likes: [
     {
       type: mongoose.Types.ObjectId,
-      ref: "likes"
-    }
+      ref: "likes",
+    },
   ],
   post: {
     type: mongoose.Types.ObjectId,
     ref: "feed",
-    required: true
+    required: true,
   },
   date: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-export interface Comment extends mongoose.Document {
+export interface CommentType extends mongoose.Document {
   user: string;
   msg: string;
   photo: Photo | string;
@@ -40,4 +40,4 @@ export interface Comment extends mongoose.Document {
   date: Date;
 }
 
-export default mongoose.model<Comment>("comments", commentSchema);
+export default mongoose.model<CommentType>("comments", commentSchema);
