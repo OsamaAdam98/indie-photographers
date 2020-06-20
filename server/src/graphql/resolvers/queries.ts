@@ -1,5 +1,40 @@
-import User, { UserType } from "../../models/users.model";
+import User from "../../models/users.model";
 import Feed from "../../models/feed.model";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { AuthenticationError, ApolloError } from "apollo-server-express";
+
+export const login = async (
+  parent: any,
+  args: { email: string; password: string }
+) => {
+  const email = args.email.toLowerCase();
+  try {
+    const user = await User.findOne({ email }).exec();
+
+    if (!user) throw new ApolloError("User not found", "404");
+
+    const isMatch = await bcrypt.compare(args.password, user.password);
+    if (!isMatch) throw new AuthenticationError("Invalid credentials!");
+    const token = jwt.sign(
+      { id: user._id, admin: user.admin },
+      process.env.jwtSecret
+    );
+    return {
+      token,
+      user: {
+        _id: user._id,
+        email: user.email,
+        profilePicture: user.profilePicture,
+        registerDate: user.registerDate,
+        username: user.username,
+        admin: user.admin,
+      },
+    };
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const user = async (
   parent: any,

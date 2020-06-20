@@ -12,6 +12,12 @@ const typeDefs = gql`
     admin: Boolean!
   }
 
+  type UserWithToken {
+    user: User!
+    token: String!
+    msg: String
+  }
+
   type Feed {
     _id: ID!
     user: User!
@@ -46,6 +52,7 @@ const typeDefs = gql`
     feedByUserId(id: ID!, page: Int!): [Feed]
     feedByEmail(email: String!, page: Int!): [Feed]
     feedByPage(page: Int!): [Feed]
+    login(email: String!, password: String!): UserWithToken
   }
 `;
 

@@ -1,9 +1,9 @@
+import axios from "axios";
 import bcrypt from "bcryptjs";
 import { Router } from "express";
 import jwt from "jsonwebtoken";
 import auth from "../middleware/auth.middleware";
 import Users from "../models/users.model";
-import axios from "axios";
 const router = Router();
 
 const downloadImage = async (url: string) => {

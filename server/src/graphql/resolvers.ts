@@ -6,6 +6,7 @@ import {
   feedByPage,
   feedByUserId,
   user,
+  login,
 } from "./resolvers/queries";
 
 const resolvers = {
@@ -15,6 +16,7 @@ const resolvers = {
     feedByEmail,
     feedByPage,
     feedByUserId,
+    login,
   },
 
   Date: new GraphQLScalarType({

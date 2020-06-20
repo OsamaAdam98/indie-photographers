@@ -1,3 +1,4 @@
+import { useLazyQuery } from "@apollo/react-hooks";
 import {
   Button,
   Dialog,
@@ -6,37 +7,63 @@ import {
   DialogTitle,
   Grid,
   makeStyles,
-  TextField
+  TextField,
 } from "@material-ui/core";
-import axios from "axios";
+import { gql } from "apollo-boost";
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { FBButton, GoogleBtn, ProfileAvatar } from "..";
 import UserContext, { DispatchContext } from "../../context/AppContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   },
   textField: {
-    marginBottom: theme.spacing(1)
-  }
+    marginBottom: theme.spacing(1),
+  },
 }));
+
+interface UserQuery {
+  login: {
+    token: string;
+    user: User;
+  };
+}
 
 const Login: React.FC = () => {
   const classes = useStyles();
-  const history = useHistory();
   const location = useLocation();
 
-  const context = React.useContext(DispatchContext);
+  const { dispatch } = React.useContext(DispatchContext);
   const state = React.useContext(UserContext);
 
   const [show, setShow] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
+
+  const [signUser, userQuery] = useLazyQuery<UserQuery>(
+    gql`
+      query User($email: String!, $password: String!) {
+        login(email: $email, password: $password) {
+          token
+          msg
+          user {
+            _id
+            username
+            email
+            registerDate
+            admin
+            profilePicture
+          }
+        }
+      }
+    `,
+    { variables: { email, password } }
+  );
 
   useEffect(() => {
     if (location.hash !== "#login-window") setShow(false);
@@ -46,11 +73,11 @@ const Login: React.FC = () => {
     target.charCode === 13 && handleSubmit();
   };
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     setShow(false);
     setErrorMsg("");
-    if (location.hash === "#login-window") history.goBack();
-  };
+    window.location.hash = "";
+  }, []);
 
   const handleShow = () => {
     setShow(true);
@@ -71,53 +98,40 @@ const Login: React.FC = () => {
     if (!email.trim() || !password.trim()) {
       setErrorMsg("Please enter all fields");
     } else {
-      const user: SubUser = {
-        email,
-        password
-      };
-      axios
-        .post(`/api/auth/`, user)
-        .then((res) => {
-          const token: string = res.data.token;
-          const user: User = res.data.user;
-          if (token) {
-            localStorage.setItem("token", token);
-            setEmail("");
-            setPassword("");
-          }
-          if (user) {
-            context.dispatch({ type: "setUser", user });
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          }
-          handleClose();
-        })
-        .catch((err) => {
-          console.log(err);
-          context.dispatch({ type: "clearUser" });
-          setErrorMsg("Invalid credentials");
-        });
+      try {
+        signUser();
+      } catch (error) {
+        dispatch({ type: "clearUser" });
+        setErrorMsg("Invalid credentials");
+      }
     }
     event?.preventDefault();
   };
+
+  React.useEffect(() => {
+    if (userQuery.data && !userQuery.loading) {
+      const { token, user } = userQuery.data.login;
+      localStorage.setItem("token", token);
+      dispatch({ type: "setUser", user });
+      handleClose();
+      setTimeout(() => {
+        window.location.reload();
+      }, 0);
+    }
+  }, [userQuery, handleClose, dispatch]);
 
   const loginButton = !state.isLogged ? (
     <Button color="inherit" onClick={handleShow}>
       Login
     </Button>
   ) : (
-    <ProfileAvatar dispatch={context.dispatch} />
+    <ProfileAvatar dispatch={dispatch} />
   );
 
   return (
     <>
       {loginButton}
-      <Dialog
-        open={show}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
+      <Dialog open={show} aria-labelledby="form-dialog-title">
         <form onSubmit={handleSubmit} className={classes.root}>
           <DialogTitle id="form-dialog-title">Login</DialogTitle>
 
@@ -148,16 +162,10 @@ const Login: React.FC = () => {
             />
             <Grid container direction="row" spacing={1}>
               <Grid item xs>
-                <FBButton
-                  handleClose={handleClose}
-                  dispatch={context.dispatch}
-                />
+                <FBButton handleClose={handleClose} dispatch={dispatch} />
               </Grid>
               <Grid item xs>
-                <GoogleBtn
-                  handleClose={handleClose}
-                  dispatch={context.dispatch}
-                />
+                <GoogleBtn handleClose={handleClose} dispatch={dispatch} />
               </Grid>
             </Grid>
           </DialogContent>
