@@ -38,6 +38,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+interface FeedData {
+  posts: Post[];
+}
+
+interface UserData {
+  user: User;
+}
+
 const Profile: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -72,7 +80,7 @@ const Profile: React.FC = () => {
       .catch((err) => console.log(err));
   };
 
-  const { data, loading, error } = useQuery(
+  const feedQuery = useQuery<FeedData>(
     gql`
       query UserFeed($id: ID!, $page: Int!) {
         posts: feedByUserId(id: $id, page: $page) {
@@ -91,32 +99,46 @@ const Profile: React.FC = () => {
             }
           }
         }
-        user: user(id: $id) {
-          _id
-          username
-          admin
-          profilePicture
-        }
       }
     `,
     { variables: { id: params.id, page } }
   );
 
+  const userQuery = useQuery<UserData>(
+    gql`
+      query User($id: ID!) {
+        user: user(id: $id) {
+          _id
+          username
+          profilePicture
+          admin
+        }
+      }
+    `,
+    { variables: { id: params.id } }
+  );
+
   React.useEffect(() => {
-    if (!loading) {
-      setPosts((prevPosts) => [...new Set([...prevPosts, ...data.posts])]);
-      setUser(data.user);
-      setHasMore(data.posts.length === 10);
+    if (feedQuery.data && !feedQuery?.loading) {
+      const { posts } = feedQuery.data;
+      setPosts((prevPosts) => [...new Set([...prevPosts, ...posts])]);
+      setHasMore(feedQuery.data.posts.length === 10);
       appDispatch({ type: "hideSnackAlert" });
     }
-    if (error) {
+    if (userQuery.data && !userQuery.loading) {
+      const { user } = userQuery.data;
+      setUser(user);
+      appDispatch({ type: "hideSnackAlert" });
+    }
+
+    if (feedQuery.error || userQuery.error) {
       appDispatch({
         type: "showSnackAlert",
         errorMsg: "User not found",
         severity: "error",
       });
     }
-  }, [data, loading, error, params.id, appDispatch]);
+  }, [feedQuery, userQuery, params.id, appDispatch]);
 
   const observer = useRef(
     new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
@@ -227,7 +249,7 @@ const Profile: React.FC = () => {
       <div className="post-block">
         <Suspense fallback={<div />}>{postMedia}</Suspense>
 
-        {!hasMore && !loading ? (
+        {!hasMore && !feedQuery.loading ? (
           <Suspense fallback={<div />}>
             <DoneAllIcon
               style={{
