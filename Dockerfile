@@ -15,7 +15,7 @@ RUN yarn run client:build && \
   mv client/build/ . && \
   rm -rf client/ && \
   rm -rf server/src && \
-  yarn
+  yarn --prod
 
 FROM node:lts-alpine
 
