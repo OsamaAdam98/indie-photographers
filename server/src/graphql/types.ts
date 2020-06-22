@@ -53,9 +53,9 @@ const typeDefs = gql`
   type Query {
     user(id: ID, email: String): User
     feedById(id: ID!): Feed
-    feedByUserId(id: ID!, page: Int!): [Feed]
-    feedByEmail(email: String!, page: Int!): [Feed]
-    feedByPage(page: Int!): [Feed]
+    feedByUserId(id: ID!, page: Int): [Feed]
+    feedByEmail(email: String!, page: Int): [Feed]
+    feedByPage(page: Int): [Feed]
     login(email: String!, password: String!): UserWithToken
   }
 

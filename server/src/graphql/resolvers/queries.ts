@@ -48,89 +48,38 @@ export const user = async (
 };
 
 export const feedById = async (parent: any, args: { id: string }) => {
-  return await Feed.findById(args.id)
-    .populate(
-      "user comments likes",
-      "-password -registerDate -__v -posts -email"
-    )
-    .populate({
-      path: "likes",
-      populate: {
-        path: "user",
-        model: "users",
-      },
-    })
-    .exec();
+  return await Feed.findById(args.id).exec();
 };
 
 export const feedByUserId = async (
   parent: any,
-  args: { id: string; page: number }
+  { id, page = 1 }: { id: string; page: number }
 ) => {
-  const page = args.page;
-  return await Feed.find({ user: args.id })
+  return await Feed.find({ user: id })
     .sort({ date: "desc" })
     .limit(10)
     .skip(page >= 1 ? 10 * (page - 1) : 0)
-    .select("-photoId")
-    .populate(
-      "user comments likes",
-      "-password -registerDate -__v -posts -email"
-    )
-    .populate({
-      path: "likes",
-      populate: {
-        path: "user",
-        model: "users",
-      },
-    })
     .exec();
 };
 
 export const feedByEmail = async (
   parent: any,
-  args: { email: string; page: number }
+  { email, page = 1 }: { email: string; page: number }
 ) => {
-  const { page, email } = args;
   const user = await User.findOne({ email }).exec();
   if (user) {
     return await Feed.find({ user: user._id })
       .sort({ date: "desc" })
       .limit(10)
       .skip(page >= 1 ? 10 * (page - 1) : 0)
-      .select("-photoId")
-      .populate(
-        "user comments likes",
-        "-password -registerDate -__v -posts -email"
-      )
-      .populate({
-        path: "likes",
-        populate: {
-          path: "user",
-          model: "users",
-        },
-      })
       .exec();
   }
 };
 
-export const feedByPage = async (parent: any, args: { page?: number }) => {
-  const page = Number(args.page);
+export const feedByPage = async (parent: any, { page = 1 }) => {
   return await Feed.find()
     .sort({ date: "desc" })
     .limit(10)
     .skip(page >= 1 ? 10 * (page - 1) : 0)
-    .select("-photoId")
-    .populate(
-      "user comments likes",
-      "-password -registerDate -__v -posts -email"
-    )
-    .populate({
-      path: "likes",
-      populate: {
-        path: "user",
-        model: "users",
-      },
-    })
     .exec();
 };

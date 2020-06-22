@@ -74,7 +74,6 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
           date
           likes {
             _id
-            customID
             user {
               _id
               username

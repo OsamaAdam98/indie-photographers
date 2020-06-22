@@ -1,14 +1,17 @@
 import { GraphQLScalarType } from "graphql";
 import { Kind } from "graphql/language";
+import Comment from "./queries/comment";
+import Feed from "./queries/feed";
+import Like from "./queries/like";
+import { deletePost, post } from "./resolvers/mutations";
 import {
   feedByEmail,
   feedById,
   feedByPage,
   feedByUserId,
-  user,
   login,
+  user,
 } from "./resolvers/queries";
-import { post, deletePost } from "./resolvers/mutations";
 
 const resolvers = {
   Query: {
@@ -24,6 +27,9 @@ const resolvers = {
     post,
     deletePost,
   },
+  Feed,
+  Like,
+  Comment,
 
   Date: new GraphQLScalarType({
     name: "Date",
