@@ -9,7 +9,7 @@ const Comment = {
     await User.findById(user).select("-password").exec(),
 
   likes: async ({ likes }: { likes: string[] }) =>
-    await Like.find({ _id: { $in: [...likes] } }).exec(),
+    await Like.find().where("_id").in(likes).exec(),
 };
 
 export default Comment;

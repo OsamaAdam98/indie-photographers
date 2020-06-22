@@ -7,18 +7,10 @@ const Feed = {
     await User.findById(user).select("-password").exec(),
 
   likes: async ({ likes }: { likes: string[] }) =>
-    Like.find({
-      _id: {
-        $in: [...likes],
-      },
-    }).exec(),
+    Like.find().where("_id").in(likes).exec(),
 
   comments: async ({ comments }: { comments: string[] }) =>
-    Comment.find({
-      _id: {
-        $in: [...comments],
-      },
-    }).exec(),
+    Comment.find().where("_id").in(comments).exec(),
 };
 
 export default Feed;
