@@ -9,7 +9,9 @@ services:
     ports:
       - 5000:5000
       - 3000:3000
-    env_file: .env
+    environment:
+      - MONGO_URI=mongodb://db:27017/indie
+      - jwtSecret=W0wTh@t$ASe(Ret
     volumes:
       - .:/app
     depends_on:

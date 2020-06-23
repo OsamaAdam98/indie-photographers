@@ -14,8 +14,8 @@ First you'd have to clone the app
 Now create a .env file at the root directory with your own details.
 
 ```env
-ATLAS_URI=Your mongodb atlas URI
-jwtSecret=Your JWT secret
+MONGO_URI=<your mongo connection string>
+jwtSecret=<any arbitrary secret>
 ```
 
 It is recommended that you use docker-compose to run the container without any extra setup.
@@ -24,9 +24,9 @@ It is recommended that you use docker-compose to run the container without any e
 -$ docker-compose up
 ```
 
-However, you may run it locally by running the following.
+However, you may run it locally by running the following. (You'll have to set up the MongoDB server yourself.)
 
 ```sh
 -$ yarn
--$ yarn run dev
+-$ yarn dev
 ```

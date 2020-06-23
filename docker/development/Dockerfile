@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:12
 
 WORKDIR /app
 
@@ -11,4 +11,4 @@ RUN yarn
 
 COPY . .
 
-CMD ["yarn", "run", "dev"]
+CMD ["yarn", "dev"]
