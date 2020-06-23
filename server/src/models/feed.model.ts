@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Like from "./likes.model";
 
 const feedSchema = new mongoose.Schema({
   user: {
@@ -30,6 +31,10 @@ const feedSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+});
+
+feedSchema.post("remove", async function (doc: PostType) {
+  await Like.remove({ _id: { $in: doc.likes } });
 });
 
 export interface PostType extends mongoose.Document {

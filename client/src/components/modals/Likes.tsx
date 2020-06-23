@@ -72,7 +72,7 @@ const Likes: React.FC<Props> = (props) => {
   };
 
   const likedUsers = users?.map((user) => {
-    if (user) {
+    if (user && user._id !== currentUser._id) {
       return (
         <Link to={`/profile/${user._id}`} key={user._id} className="text-link">
           <ListItem alignItems="center">
@@ -86,7 +86,7 @@ const Likes: React.FC<Props> = (props) => {
           </ListItem>
         </Link>
       );
-    } else {
+    } else if (user._id !== currentUser._id) {
       return (
         <ListItem alignItems="center" key="">
           <ListItemAvatar>
@@ -177,6 +177,20 @@ const Likes: React.FC<Props> = (props) => {
         <DialogContent>
           <List>
             <Divider />
+            {liked && (
+              <ListItem alignItems="center">
+                <ListItemAvatar>
+                  <Avatar
+                    alt={currentUser.username}
+                    src={currentUser.profilePicture}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={currentUser.username}
+                  secondary={currentUser.admin ? `Admin` : `User`}
+                />
+              </ListItem>
+            )}
             {likedUsers}
           </List>
         </DialogContent>

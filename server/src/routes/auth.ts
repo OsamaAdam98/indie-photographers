@@ -68,7 +68,7 @@ router.post("/facebook-login", async (req, res) => {
       .then((user) => {
         if (user) {
           jwt.sign(
-            { id: user._id, admin: user.admin },
+            { _id: user._id, admin: user.admin },
             process.env.jwtSecret,
             (err: jwt.JsonWebTokenError, token: string) => {
               if (err) throw err;
@@ -152,7 +152,7 @@ router.post("/google-login", async (req, res) => {
   Users.findOne({ email }).then((user) => {
     if (user) {
       jwt.sign(
-        { id: user._id, admin: user.admin },
+        { _id: user._id, admin: user.admin },
         process.env.jwtSecret,
         (err: jwt.JsonWebTokenError, token: string) => {
           if (err) throw err;

@@ -3,7 +3,7 @@ import { Kind } from "graphql/language";
 import Comment from "./queries/comment";
 import Feed from "./queries/feed";
 import Like from "./queries/like";
-import { deletePost, post } from "./resolvers/mutations";
+import { deletePost, post, like } from "./resolvers/mutations";
 import {
   feedByEmail,
   feedById,
@@ -22,15 +22,14 @@ const resolvers = {
     feedByUserId,
     login,
   },
-
   Mutation: {
     post,
     deletePost,
+    like,
   },
   Feed,
   Like,
   Comment,
-
   Date: new GraphQLScalarType({
     name: "Date",
     description: "Date custom scalar type",

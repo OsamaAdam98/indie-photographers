@@ -9,9 +9,12 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+    lowercase: true,
+    trim: true,
+    match: /.+@.+\..+/,
   },
   profilePicture: {
-    type: String,
+    type: String || Buffer,
     required: false,
     default:
       "https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-7.png",

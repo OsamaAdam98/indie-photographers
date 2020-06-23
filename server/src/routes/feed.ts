@@ -23,8 +23,8 @@ router.get("/", (req, res) => {
       path: "likes",
       populate: {
         path: "user",
-        model: "users"
-      }
+        model: "users",
+      },
     })
     .exec()
     .then((result) => res.status(200).json(result))
@@ -50,7 +50,7 @@ router.post("/add", auth, async (req: any, res: any) => {
         const newPost = new Feed({
           msg,
           photo,
-          user
+          user,
         });
 
         newPost
@@ -72,7 +72,7 @@ router.post("/add", auth, async (req: any, res: any) => {
       } else {
         const newPost = new Feed({
           msg,
-          user
+          user,
         });
 
         newPost
@@ -112,7 +112,7 @@ router.post("/comment/:id", auth, (req, res) => {
     msg,
     photo,
     user,
-    post
+    post,
   });
 
   newComment
@@ -138,7 +138,7 @@ router.post("/like/:id", auth, (req, res) => {
   const like = new Likes({
     user,
     post: id,
-    customID
+    customID,
   });
 
   like
@@ -230,8 +230,8 @@ router.get("/user/:id/", (req, res) => {
       path: "likes",
       populate: {
         path: "user",
-        model: "users"
-      }
+        model: "users",
+      },
     })
     .exec()
     .then((result) => res.status(200).json(result))

@@ -54,15 +54,19 @@ app.use("/api/feed", feedRoute);
 app.use("/api/cleanup", cleanupRoute);
 
 if (process.env.NODE_ENV === "production") {
-  const uri = process.env.ATLAS_URI;
+  try {
+    const uri = process.env.ATLAS_URI;
 
-  if (uri) {
-    mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    });
+    if (uri) {
+      mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 
   app.use(express.static("build"));
@@ -70,23 +74,27 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "..", "..", "build", "index.html"));
   });
 } else {
-  const uri = process.env.MONGO_URI;
+  try {
+    const uri = process.env.MONGO_URI;
 
-  if (uri) {
-    mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    });
+    if (uri) {
+      mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 
-const connection = mongoose.connection;
-
-connection.once("open", () =>
+mongoose.connection.once("open", () =>
   console.log("Database connection established successfully.")
 );
+
+mongoose.connection.on("error", (error) => console.error(error));
 
 app.listen(port, () => {
   console.log(`Server started on port: ${port}`);

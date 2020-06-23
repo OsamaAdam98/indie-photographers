@@ -47,7 +47,6 @@ const typeDefs = gql`
     user: User!
     post: Feed!
     date: Date!
-    customID: String!
   }
 
   type Query {
@@ -62,6 +61,7 @@ const typeDefs = gql`
   type Mutation {
     post(msg: String, photo: String): Feed
     deletePost(id: ID!): FeedWithStatus!
+    like(id: ID!): Boolean!
   }
 `;
 

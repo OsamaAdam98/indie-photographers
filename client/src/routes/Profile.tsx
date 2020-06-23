@@ -90,7 +90,6 @@ const Profile: React.FC = () => {
           date
           likes {
             _id
-            customID
             user {
               _id
               username

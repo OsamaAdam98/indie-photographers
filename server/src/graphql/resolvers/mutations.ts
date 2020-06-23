@@ -5,6 +5,7 @@ import {
 } from "apollo-server-express";
 import moment from "moment";
 import Feed from "../../models/feed.model";
+import Likes from "../../models/likes.model";
 
 interface Auth {
   _id: string;
@@ -82,6 +83,37 @@ export const deletePost = async (
         throw new ForbiddenError("You don't have permission to delete post!");
       }
     }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const like = async (
+  parent: any,
+  { id }: { id: string },
+  context: { auth: Auth }
+) => {
+  const user = context.auth._id;
+
+  if (!user) throw new AuthenticationError("User not logged in!");
+
+  try {
+    const like = await Likes.findOne({ post: id, user }).exec();
+    if (like) {
+      await Likes.findOneAndRemove({
+        _id: like._id,
+      }).exec();
+
+      return false;
+    }
+    const newLike = new Likes({
+      user,
+      post: id,
+    });
+
+    await newLike.save();
+
+    return true;
   } catch (error) {
     throw error;
   }

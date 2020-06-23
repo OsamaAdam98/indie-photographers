@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/react-hooks";
 import {
   Avatar,
   Card,
@@ -11,7 +12,7 @@ import {
   MenuItem,
   Typography,
 } from "@material-ui/core";
-import axios from "axios";
+import { gql } from "apollo-boost";
 import moment from "moment";
 import React, { lazy, memo, Suspense, useState } from "react";
 import { Link } from "react-router-dom";
@@ -44,81 +45,23 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
   const currentUser = React.useContext(UserContext).user;
 
   const [anchorEl, setAnchorEl] = useState<any>(null);
-  const [post, setPost] = useState<Post>(feedPost);
   const [liked, setLiked] = useState<boolean>(
     feedPost?.likes?.filter((like) => like.user._id === currentUser._id).length
       ? true
       : false
   );
 
+  const [likePost, likeResult] = useMutation<{ like: boolean }>(gql`
+    mutation Like($id: ID!) {
+      like(id: $id)
+    }
+  `);
+
   const open = Boolean(anchorEl);
 
-  const likeCleanup = (id: string, like: Likes) => {
-    let index: number = 1;
-    let targetHit: boolean = false;
-    let cachedData: Post[];
-
-    do {
-      cachedData = JSON.parse(
-        localStorage.getItem(`feedPage${index}`) as string
-      );
-      if (cachedData !== null) {
-        targetHit = cachedData.filter((post) => post._id === id).length
-          ? true
-          : false;
-        if (targetHit) {
-          if (!like) {
-            cachedData = cachedData.map((post) => {
-              if (post._id === id) {
-                post.likes = post.likes.filter(
-                  (like) => like.user._id !== currentUser._id
-                );
-                setPost(post);
-              }
-              return post;
-            });
-          } else {
-            cachedData = cachedData.map((post) => {
-              if (post._id === id) {
-                post.likes = [
-                  ...post.likes,
-                  {
-                    user: currentUser,
-                  },
-                ];
-                setPost(post);
-              }
-              return post;
-            });
-          }
-
-          localStorage.setItem(`feedPage${index}`, JSON.stringify(cachedData));
-          break;
-        } else {
-          index++;
-        }
-      } else {
-        break;
-      }
-    } while (true);
-  };
-
-  const handleLike = (id: string) => {
-    const token: string | null = localStorage.getItem("token");
-
-    axios
-      .post(`/api/feed/like/${id}`, null, {
-        headers: {
-          "x-auth-token": `${token}`,
-        },
-      })
-      .then((res) => {
-        const { like } = res.data;
-        setLiked(like);
-        likeCleanup(id, like);
-      })
-      .catch((err) => console.log(err));
-  };
+  React.useEffect(() => {
+    if (likeResult.data && !likeResult.loading) setLiked(likeResult.data.like);
+  }, [likeResult]);
 
   const handleMenu = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -232,13 +175,13 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
           )}
           <Likes
             liked={liked}
-            users={post?.likes?.map((like) => like.user)}
+            users={feedPost?.likes?.map((like) => like.user)}
             currentUser={currentUser}
           />
           <CardActions disableSpacing>
             <IconButton
               aria-label="love"
-              onClick={() => handleLike(feedPost._id)}
+              onClick={() => likePost({ variables: { id: feedPost._id } })}
             >
               <FavoriteIcon color={liked ? "secondary" : "disabled"} />
             </IconButton>

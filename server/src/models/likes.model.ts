@@ -1,4 +1,11 @@
 import mongoose from "mongoose";
+import Feed from "./feed.model";
+
+export interface LikeType extends mongoose.Document {
+  user: string;
+  post: string;
+  date: Date;
+}
 
 const likeSchema = new mongoose.Schema({
   user: {
@@ -15,17 +22,24 @@ const likeSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  customID: {
-    type: String,
-    unique: true,
-  },
 });
 
-export interface LikeType extends mongoose.Document {
-  user: string;
-  post: string;
-  date: Date;
-  customID: string;
-}
+likeSchema.pre<LikeType>("remove", async function () {
+  await Feed.findOneAndUpdate(
+    { _id: this.post },
+    {
+      $pull: { likes: this._id },
+    }
+  ).exec();
+});
+
+likeSchema.post<LikeType>("save", async function () {
+  await Feed.findOneAndUpdate(
+    { _id: this.post },
+    {
+      $push: { likes: this._id },
+    }
+  ).exec();
+});
 
 export default mongoose.model<LikeType>("likes", likeSchema);
