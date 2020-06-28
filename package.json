@@ -13,12 +13,10 @@
   "scripts": {
     "server:build": "cd server && rm -rf dist && tsc && cd ..",
     "client:build": "cd client && yarn build && cd ..",
-    "dev": "concurrently \"yarn run server\" \"yarn run client\"",
-    "server": "nodemon",
+    "dev": "concurrently \"yarn server\" \"yarn client\"",
     "client": "cd client && yarn start",
-    "start:dev": "yarn run server:build && yarn run server:dev",
+    "server": "concurrently \"cd server && tsc -w --pretty\" \"nodemon\"",
     "server:dev": "node server/dist/server.js",
-    "server:prod": "NODE_ENV=production node server/dist/server.js",
-    "init-all": "yarn && cd client && yarn"
+    "server:prod": "NODE_ENV=production node server/dist/server.js"
   }
 }

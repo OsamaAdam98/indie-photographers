@@ -1,4 +1,4 @@
-FROM node:lts-alpine as builder
+FROM node:12-alpine as builder
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ RUN yarn run client:build && \
   rm -rf server/src && \
   yarn --prod
 
-FROM node:lts-alpine
+FROM node:12-alpine
 
 WORKDIR /app
 
