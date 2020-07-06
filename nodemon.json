@@ -1,5 +1,0 @@
-{
-  "watch": ["./server/dist"],
-  "ext": "js",
-  "exec": "yarn server:dev"
-}

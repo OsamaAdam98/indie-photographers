@@ -1,9 +1,9 @@
 {
   "name": "indie-photographers",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "server/dist/server.js",
   "repository": "https://github.com/osamaadam/indie-photographers.git",
-  "author": "Osama Adam <osamaadam98@gmail.com>",
+  "author": "Osama Adam",
   "license": "MIT",
   "private": true,
   "workspaces": [
@@ -11,12 +11,11 @@
     "server"
   ],
   "scripts": {
-    "server:build": "cd server && rm -rf dist && tsc && cd ..",
-    "client:build": "cd client && yarn build && cd ..",
-    "dev": "concurrently \"yarn server\" \"yarn client\"",
-    "client": "cd client && yarn start",
-    "server": "concurrently \"cd server && tsc -w --pretty\" \"nodemon\"",
-    "server:dev": "node server/dist/server.js",
-    "server:prod": "NODE_ENV=production node server/dist/server.js"
+    "server:build": "yarn workspace server build",
+    "client:build": "yarn workspace client build",
+    "client": "yarn workspace client start",
+    "server": "yarn workspace server watch",
+    "server:prod": "yarn workspace server prod",
+    "dev": "concurrently \"yarn server\" \"yarn client\""
   }
 }

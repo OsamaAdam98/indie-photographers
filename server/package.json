@@ -2,10 +2,16 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "./server/src/index.js",
+  "main": "src/server.ts",
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "watch": "concurrently \"tsc -w --pretty\" \"nodemon\"",
+    "start": "node dist/server.js",
+    "prod": "NODE_ENV=production node dist/server.js"
+  },
   "dependencies": {
     "apollo-server-express": "^2.15.0",
     "axios": "^0.19.2",
