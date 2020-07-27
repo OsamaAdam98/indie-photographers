@@ -30,7 +30,7 @@ const GraphqlServer = new ApolloServer({
     else {
       try {
         return {
-          auth: jwt.verify(token, process.env.jwtSecret),
+          auth: jwt.verify(token, process.env.JWT_SECRET),
         };
       } catch (e) {
         return {

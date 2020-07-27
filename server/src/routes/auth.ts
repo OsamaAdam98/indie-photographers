@@ -35,7 +35,7 @@ router.post("/", (req, res) => {
             return res.status(400).json({ msg: "Invalid credentials" });
           jwt.sign(
             { id: user._id, admin: user.admin },
-            process.env.jwtSecret,
+            process.env.JWT_SECRET,
             (err: jwt.VerifyErrors, token: string) => {
               if (err) throw err;
               res.json({
@@ -69,7 +69,7 @@ router.post("/facebook-login", async (req, res) => {
         if (user) {
           jwt.sign(
             { _id: user._id, admin: user.admin },
-            process.env.jwtSecret,
+            process.env.JWT_SECRET,
             (err: jwt.JsonWebTokenError, token: string) => {
               if (err) throw err;
               res.json({
@@ -112,7 +112,7 @@ router.post("/facebook-login", async (req, res) => {
                 .then((user) => {
                   jwt.sign(
                     { id: user._id, admin: user.admin },
-                    process.env.jwtSecret,
+                    process.env.JWT_SECRET,
                     { expiresIn: 3600 },
                     (err, token) => {
                       if (err) throw err;
@@ -153,7 +153,7 @@ router.post("/google-login", async (req, res) => {
     if (user) {
       jwt.sign(
         { _id: user._id, admin: user.admin },
-        process.env.jwtSecret,
+        process.env.JWT_SECRET,
         (err: jwt.JsonWebTokenError, token: string) => {
           if (err) throw err;
           res.json({
@@ -187,7 +187,7 @@ router.post("/google-login", async (req, res) => {
             .then((user) => {
               jwt.sign(
                 { id: user._id, admin: user.admin },
-                process.env.jwtSecret,
+                process.env.JWT_SECRET,
                 { expiresIn: 3600 },
                 (err, token) => {
                   if (err) throw err;

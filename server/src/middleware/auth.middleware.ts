@@ -7,10 +7,10 @@ function auth(req: Request, res: Response, next: NextFunction) {
   if (!token) return res.status(401).json({ msg: "Authorization denied." });
 
   try {
-    const decrypted = jwt.verify(token, process.env.jwtSecret);
+    const decrypted = jwt.verify(token, process.env.JWT_SECRET);
     req.body = {
       ...req.body,
-      user: decrypted
+      user: decrypted,
     };
     next();
   } catch (e) {

@@ -13,7 +13,7 @@ router.post("/", (req, res) => {
     email,
     password,
     admin,
-    profilePicture
+    profilePicture,
   }: {
     username: string;
     email: string;
@@ -32,7 +32,7 @@ router.post("/", (req, res) => {
       email,
       password,
       admin,
-      profilePicture
+      profilePicture,
     });
 
     newUser.email = email.toLowerCase();
@@ -47,7 +47,7 @@ router.post("/", (req, res) => {
           .then((user) => {
             jwt.sign(
               { id: user._id },
-              process.env.jwtSecret,
+              process.env.JWT_SECRET,
               { expiresIn: 3600 },
               (err, token) => {
                 if (err) throw err;
@@ -58,8 +58,8 @@ router.post("/", (req, res) => {
                     username: user.username,
                     email: user.email,
                     admin: user.admin,
-                    profilePicture: user.profilePicture
-                  }
+                    profilePicture: user.profilePicture,
+                  },
                 });
                 console.log(user);
               }

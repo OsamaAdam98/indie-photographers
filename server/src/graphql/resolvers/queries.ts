@@ -17,7 +17,7 @@ export const login = async (
     if (!isMatch) throw new AuthenticationError("Invalid credentials!");
     const token = jwt.sign(
       { _id: user._id, admin: user.admin },
-      process.env.jwtSecret
+      process.env.JWT_SECRET
     );
     return {
       token,
