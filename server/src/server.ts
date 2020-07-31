@@ -8,9 +8,6 @@ import resolvers from "./graphql/resolvers";
 import typeDefs from "./graphql/types";
 import sslRedirect from "./middleware/sslRedirect.middleware";
 import authRoute from "./routes/auth";
-import cleanupRoute from "./routes/cleanup";
-import feedRoute from "./routes/feed";
-import usersRoute from "./routes/users";
 
 require("dotenv").config();
 
@@ -43,15 +40,10 @@ const GraphqlServer = new ApolloServer({
 
 app.use(cors());
 app.use(express.json());
-app.use(
-  sslRedirect([process.env.ISHEROKU === "true" ? "production" : "development"])
-);
+app.use(sslRedirect(["production"]));
 GraphqlServer.applyMiddleware({ app });
 
-app.use("/api/users", usersRoute);
 app.use("/api/auth", authRoute);
-app.use("/api/feed", feedRoute);
-app.use("/api/cleanup", cleanupRoute);
 
 if (process.env.NODE_ENV === "production") {
   try {
@@ -68,6 +60,8 @@ if (process.env.NODE_ENV === "production") {
   } catch (error) {
     console.error(error);
   }
+
+  console.log(process.env);
 
   app.use(express.static(path.resolve(__dirname, "..", "..", "build")));
   app.get("*", (req, res) => {

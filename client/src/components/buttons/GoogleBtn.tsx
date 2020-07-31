@@ -25,7 +25,8 @@ interface Props {
   dispatch: React.Dispatch<actions>;
 }
 
-const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || "";
+const clientId =
+  "534118121647-dmkt2evfqn84d2s48f3phnpjfociapnk.apps.googleusercontent.com";
 
 const GoogleBtn: React.FC<Props> = ({ handleClose, dispatch }) => {
   const classes = useStyles();

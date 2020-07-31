@@ -49,7 +49,7 @@ interface Props {
   dispatch: React.Dispatch<actions>;
 }
 
-const appId = process.env.REACT_APP_FACEBOOK_APP_ID || "";
+const appId = "608523869954489";
 
 const FBButton: React.FC<Props> = ({ dispatch, handleClose }) => {
   const classes = useStyles();
