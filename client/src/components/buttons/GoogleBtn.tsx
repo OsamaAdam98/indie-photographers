@@ -1,19 +1,23 @@
 import { makeStyles } from "@material-ui/core";
 import axios from "axios";
 import React from "react";
-import { GoogleLogin } from "react-google-login";
+import {
+  GoogleLogin,
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from "react-google-login";
 import { actions } from "../../reducers/appReducer";
 
 const useStyles = makeStyles(() => ({
   gBtn: {
-    width: "100%"
+    width: "100%",
   },
   gIcon: {
-    marginRight: 3
+    marginRight: 3,
   },
   gType: {
-    padding: 0
-  }
+    padding: 0,
+  },
 }));
 
 interface Props {
@@ -21,10 +25,12 @@ interface Props {
   dispatch: React.Dispatch<actions>;
 }
 
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || "";
+
 const GoogleBtn: React.FC<Props> = ({ handleClose, dispatch }) => {
   const classes = useStyles();
 
-  const onResponse = (res: any) => {
+  const onSuccess = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     axios
       .post(`/api/auth/google-login`, res)
       .then((res) => {
@@ -44,17 +50,18 @@ const GoogleBtn: React.FC<Props> = ({ handleClose, dispatch }) => {
         dispatch({
           type: "showSnackAlert",
           errorMsg: "Login failed!",
-          severity: "error"
+          severity: "error",
         });
-        console.log(err);
+        console.error(err);
       });
   };
 
   return (
     <GoogleLogin
-      clientId="534118121647-dmkt2evfqn84d2s48f3phnpjfociapnk.apps.googleusercontent.com"
-      onSuccess={onResponse}
-      onFailure={onResponse}
+      clientId={clientId}
+      onSuccess={onSuccess}
+      onFailure={() => {}}
+      isSignedIn={true}
       cookiePolicy={"single_host_origin"}
       buttonText={"Google"}
       className={classes.gBtn}

@@ -21,7 +21,7 @@ const showSnackAlert = (
     ...updatedState,
     errorMsg,
     severity,
-    openError: true
+    openError: true,
   };
 };
 
@@ -32,7 +32,7 @@ const clearUser = (state: AppState) => {
   return {
     ...updatedState,
     user: { _id: "", email: "", admin: false, username: "" },
-    isLogged: false
+    isLogged: false,
   };
 };
 
@@ -42,7 +42,7 @@ const setUser = (state: AppState, user: User) => {
   return {
     ...updatedState,
     user,
-    isLogged: true
+    isLogged: true,
   };
 };
 

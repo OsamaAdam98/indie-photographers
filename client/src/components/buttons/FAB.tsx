@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     width: 500,
     position: "relative",
-    minHeight: 200
+    minHeight: 200,
   },
   customFab: {
     margin: 0,
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     right: 20,
     bottom: 70,
     left: "auto",
-    position: "fixed"
+    position: "fixed",
   },
   "@media (min-width: 31.25rem)": {
     customFab: {
@@ -24,9 +24,9 @@ const useStyles = makeStyles((theme) => ({
       right: 20,
       bottom: 20,
       left: "auto",
-      position: "fixed"
-    }
-  }
+      position: "fixed",
+    },
+  },
 }));
 
 interface Props {
@@ -40,7 +40,7 @@ const FAB: React.FC<Props> = ({
   currentLocation,
   offline,
   icon,
-  handleClick
+  handleClick,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -48,7 +48,7 @@ const FAB: React.FC<Props> = ({
 
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,
-    exit: theme.transitions.duration.leavingScreen
+    exit: theme.transitions.duration.leavingScreen,
   };
 
   return (
@@ -59,7 +59,7 @@ const FAB: React.FC<Props> = ({
         display: offline ? "none" : "",
         transitionDelay: `${
           location.pathname === currentLocation ? transitionDuration.exit : 0
-        }ms`
+        }ms`,
       }}
       unmountOnExit
     >

@@ -10,7 +10,7 @@ const ProfileSkeleton: React.FC = () => {
         <div className="tagline">
           <Typography
             style={{
-              fontStyle: "italic"
+              fontStyle: "italic",
             }}
           >
             <span className="highlight">title</span>

@@ -24,7 +24,7 @@ const SnackAlert: React.FC<Props> = ({
   severity,
   openError,
   errorMsg,
-  dispatch
+  dispatch,
 }) => {
   const handleClose = (
     event:
@@ -47,7 +47,7 @@ const SnackAlert: React.FC<Props> = ({
         onClick={handleClose}
         style={{
           position: "fixed",
-          bottom: "70px"
+          bottom: "70px",
         }}
       >
         <Alert severity={severity}>{errorMsg}</Alert>

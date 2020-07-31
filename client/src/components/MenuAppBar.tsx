@@ -5,7 +5,7 @@ import {
   Slide,
   Toolbar,
   Typography,
-  useScrollTrigger
+  useScrollTrigger,
 } from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -16,20 +16,20 @@ const useStyles: any = makeStyles((theme: any) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     position: "relative",
-    boxShadow: "0px 0px 0px 0px"
+    boxShadow: "0px 0px 0px 0px",
   },
   menuButton: {
-    marginRight: "1rem"
+    marginRight: "1rem",
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   toolbar: theme.mixins.toolbar,
   bottomBar: {
     position: "sticky",
     top: 0,
     zIndex: theme.zIndex.appBar,
-    marginBottom: "1rem"
+    marginBottom: "1rem",
   },
   "@media (max-width: 31.25rem)": {
     bottomBar: {
@@ -38,15 +38,15 @@ const useStyles: any = makeStyles((theme: any) => ({
       bottom: 0,
       zIndex: theme.zIndex.appBar,
       width: "100vw",
-      marginBottom: 0
+      marginBottom: 0,
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
       position: "sticky",
       boxShadow: "0px 1px 5px 1px rgba(0, 0, 0, .3)",
-      marginBottom: theme.spacing(2)
-    }
-  }
+      marginBottom: theme.spacing(2),
+    },
+  },
 }));
 
 const HideOnScroll: React.FC = ({ children }) => {
@@ -73,7 +73,7 @@ const MenuAppBar: React.FC = (props) => {
                 alt="indie photographers"
                 src={logo}
                 style={{
-                  marginRight: "1rem"
+                  marginRight: "1rem",
                 }}
               />
             </Link>

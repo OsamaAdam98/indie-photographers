@@ -8,9 +8,9 @@ const LightSwitch = React.lazy(() =>
 const useStyles = makeStyles(() => ({
   btnStyle: {
     "@media all and (display-mode: standalone)": {
-      display: "none"
-    }
-  }
+      display: "none",
+    },
+  },
 }));
 
 interface Props {
@@ -34,7 +34,7 @@ const Settings: React.FC<Props> = ({ showBtn, handleClick }) => {
         onClick={handleClick}
         className={classes.btnStyle}
         style={{
-          display: showBtn ? "" : "none"
+          display: showBtn ? "" : "none",
         }}
       >
         Install

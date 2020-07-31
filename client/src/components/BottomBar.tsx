@@ -11,8 +11,8 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     backgroundColor: theme.palette.background.paper,
     width: "100%",
-    boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)"
-  }
+    boxShadow: "0px -1px 5px 1px rgba(0, 0, 0, .3)",
+  },
 }));
 
 const BottomBar: React.FC = () => {
@@ -57,7 +57,7 @@ const BottomBar: React.FC = () => {
           window.scroll({
             top: 0,
             left: 0,
-            behavior: "auto"
+            behavior: "auto",
           });
         history.push("/feed/");
         break;
@@ -66,7 +66,7 @@ const BottomBar: React.FC = () => {
           window.scroll({
             top: 0,
             left: 0,
-            behavior: "auto"
+            behavior: "auto",
           });
         break;
       case 3:
@@ -99,7 +99,7 @@ const BottomBar: React.FC = () => {
               src={user.profilePicture}
               style={{
                 width: 24,
-                height: 24
+                height: 24,
               }}
             />
           }
@@ -108,7 +108,7 @@ const BottomBar: React.FC = () => {
             history.push(`/profile/${user._id}`);
           }}
           style={{
-            display: user.username ? "" : "none"
+            display: user.username ? "" : "none",
           }}
         />
 
@@ -116,7 +116,7 @@ const BottomBar: React.FC = () => {
           icon={<SettingsIcon />}
           aria-label="Settings"
           style={{
-            display: user.username ? "none" : ""
+            display: user.username ? "none" : "",
           }}
         />
       </Tabs>

@@ -49,5 +49,5 @@ export {
   NotFound,
   AppContext,
   appReducer,
-  resizeImage
+  resizeImage,
 };

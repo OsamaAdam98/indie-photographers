@@ -16,6 +16,7 @@
     "client": "yarn workspace client start",
     "server": "yarn workspace server watch",
     "server:prod": "yarn workspace server prod",
-    "dev": "concurrently \"yarn server\" \"yarn client\""
+    "dev": "concurrently \"yarn server\" \"yarn client\"",
+    "prettier": "prettier --write \"**/*.{ts,tsx,json,js,jsx}\""
   }
 }

@@ -59,8 +59,8 @@ router.post("/", (req, res) => {
 
 router.post("/facebook-login", async (req, res) => {
   if (req.body?.status !== "unknown") {
-    const { email, name }: { email: string; name: string } = req.body;
-    const { url }: { url: string } = req.body.picture.data;
+    const { email, name }: { email: string; name: string } = req.body.user;
+    const { url }: { url: string } = req.body.user.picture.data;
 
     const updatedPicture = await downloadImage(url as string);
 

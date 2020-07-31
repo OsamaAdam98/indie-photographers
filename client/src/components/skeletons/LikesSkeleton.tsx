@@ -21,7 +21,7 @@ const LikesSkeleton: React.FC<Props> = (props) => {
           <Skeleton height={10} width="80%" style={{ marginBottom: 6 }} />
           <Skeleton height={10} width="40%" />
         </ListItemText>
-      </ListItem>
+      </ListItem>,
     ];
   }
 

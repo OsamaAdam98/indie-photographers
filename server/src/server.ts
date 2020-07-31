@@ -55,7 +55,7 @@ app.use("/api/cleanup", cleanupRoute);
 
 if (process.env.NODE_ENV === "production") {
   try {
-    const uri = process.env.ATLAS_URI;
+    const uri = process.env.ATLAS_URI || process.env.MONGO_URI;
 
     if (uri) {
       mongoose.connect(uri, {
@@ -69,7 +69,7 @@ if (process.env.NODE_ENV === "production") {
     console.error(error);
   }
 
-  app.use(express.static("build"));
+  app.use(express.static(path.resolve(__dirname, "..", "..", "build")));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "..", "..", "build", "index.html"));
   });

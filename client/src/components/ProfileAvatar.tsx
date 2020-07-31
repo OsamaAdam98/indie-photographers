@@ -40,12 +40,12 @@ const ProfileAvatar: React.FC<Props> = ({ dispatch }) => {
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: "top",
-          horizontal: "right"
+          horizontal: "right",
         }}
         keepMounted
         transformOrigin={{
           vertical: "top",
-          horizontal: "right"
+          horizontal: "right",
         }}
         open={open}
         onClose={handleClose}

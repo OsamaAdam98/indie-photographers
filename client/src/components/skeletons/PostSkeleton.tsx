@@ -4,7 +4,7 @@ import {
   CardContent,
   CardHeader,
   IconButton,
-  makeStyles
+  makeStyles,
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
@@ -15,11 +15,11 @@ const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: "31.25rem",
     marginBottom: theme.spacing(2),
-    width: "100%"
+    width: "100%",
   },
   media: {
-    height: "15.625rem"
-  }
+    height: "15.625rem",
+  },
 }));
 const PostSkeleton: React.FC = () => {
   const classes = useStyles();

@@ -7,14 +7,14 @@ const useStyles = makeStyles({
     objectFit: "contain",
     maxWidth: "100vw",
     maxHeight: "100vh",
-    margin: "auto"
+    margin: "auto",
   },
   dialog: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
-    alignContent: "center"
-  }
+    alignContent: "center",
+  },
 });
 
 interface Props {
@@ -59,7 +59,7 @@ const PhotoPreview: React.FC<Props> = (props) => {
         maxHeight: maxHeight ? maxHeight : "",
         minWidth: round ? "200px" : "",
         maxWidth: round ? "30vmin" : "",
-        width: "100%"
+        width: "100%",
       }}
       className={`hover-img ${round ? "profile-photo" : ""}`}
     />
