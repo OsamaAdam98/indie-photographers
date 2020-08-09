@@ -4,8 +4,8 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import ViewDayIcon from "@material-ui/icons/ViewDay";
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import UserContext from "../context/AppContext";
 import { useWindowDimensions } from ".";
+import UserContext from "../context/AppContext";
 
 const useStyles = makeStyles((theme) => ({
   tabs: {

@@ -3,8 +3,8 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import axios from "axios";
 import React from "react";
 import useFacebook from "react-easy-facebook";
-import { actions } from "../../reducers/appReducer";
 import { FacebookResponse } from "react-easy-facebook/dist/types";
+import { actions } from "../../reducers/appReducer";
 
 const useStyles = makeStyles((theme) => ({
   root: {

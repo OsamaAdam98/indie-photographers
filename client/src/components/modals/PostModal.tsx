@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/react-hooks";
+import { gql, useMutation } from "@apollo/client";
 import {
   Button,
   Dialog,
@@ -8,7 +8,6 @@ import {
   TextField,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import { gql } from "apollo-boost";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FAB, resizeImage } from "../index";
@@ -51,7 +50,7 @@ const PostModal: React.FC<Props> = (props) => {
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [msg, setMsg] = useState<string>("");
 
-  const [addPost, mutationData] = useMutation<PostMutation>(
+  const [addPost, { error, loading, data, called }] = useMutation<PostMutation>(
     gql`
       mutation Post($msg: String, $photo: String) {
         post(msg: $msg, photo: $photo) {
@@ -134,16 +133,24 @@ const PostModal: React.FC<Props> = (props) => {
   };
 
   React.useEffect(() => {
-    if (mutationData?.data && !mutationData.loading) {
-      const { data } = mutationData;
+    if (called && data?.post && !loading) {
       setNewPost((prevPosts) => [data.post, ...prevPosts]);
       setPhoto("");
       setMsg("");
       setIsUploading(false);
       handleClose();
     }
-    if (mutationData.error) console.error(mutationData.error);
-  }, [mutationData, setNewPost, setPhoto, setIsUploading, handleClose]);
+    if (error) console.error(error);
+  }, [
+    setNewPost,
+    setPhoto,
+    setIsUploading,
+    handleClose,
+    called,
+    data,
+    loading,
+    error,
+  ]);
 
   const subButton = isLogged ? (
     <FAB

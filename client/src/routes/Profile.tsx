@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/react-hooks";
+import { gql, useQuery } from "@apollo/client";
 import {
   Avatar,
   List,
@@ -9,7 +9,6 @@ import {
   Paper,
   Typography,
 } from "@material-ui/core";
-import { gql } from "apollo-boost";
 import axios from "axios";
 import React, {
   lazy,

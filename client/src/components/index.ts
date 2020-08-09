@@ -1,3 +1,5 @@
+import AppContext from "../context/AppContext";
+import appReducer from "../reducers/appReducer";
 import Feed from "../routes/Feed";
 import Home from "../routes/Home";
 import NotFound from "../routes/NotFound";
@@ -9,20 +11,18 @@ import FBButton from "./buttons/FBButton";
 import GoogleBtn from "./buttons/GoogleBtn";
 import LightSwitch from "./buttons/LightSwitch";
 import MenuAppBar from "./MenuAppBar";
-import PostModal from "./modals/PostModal";
 import Likes from "./modals/Likes";
 import Login from "./modals/Login";
 import PhotoPreview from "./modals/PhotoPreview";
+import PostModal from "./modals/PostModal";
 import PostMedia from "./PostMedia";
 import ProfileAvatar from "./ProfileAvatar";
 import LikesSkeleton from "./skeletons/LikesSkeleton";
 import PostSkeleton from "./skeletons/PostSkeleton";
 import ProfileSkeleton from "./skeletons/ProfileSkeleton";
 import SnackAlert from "./SnackAlert";
-import useWindowDimensions from "./utilities/WindowDimensions";
-import AppContext from "../context/AppContext";
-import appReducer from "../reducers/appReducer";
 import resizeImage from "./utilities/resizeImage";
+import useWindowDimensions from "./utilities/WindowDimensions";
 
 export {
   Home,

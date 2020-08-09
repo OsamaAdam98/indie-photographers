@@ -1,6 +1,5 @@
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { LinearProgress, makeStyles } from "@material-ui/core";
-import { gql } from "apollo-boost";
 import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { DispatchContext } from "../context/AppContext";
@@ -93,7 +92,10 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
     { variables: { page } }
   );
 
-  const [deletePost, deletedPost] = useMutation<DeletedPost>(gql`
+  const [
+    deletePost,
+    { data: deletedData, error: deletedError, loading: deletedLoading },
+  ] = useMutation<DeletedPost>(gql`
     mutation DeletePost($id: ID!) {
       postInfo: deletePost(id: $id) {
         post {
@@ -147,8 +149,8 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
   );
 
   React.useEffect(() => {
-    if (deletedPost?.data && !deletedPost.loading) {
-      const { post, postStatus } = deletedPost.data.postInfo;
+    if (deletedData && !deletedLoading) {
+      const { post, postStatus } = deletedData.postInfo;
       cleanupDelete(post._id);
       appDispatch({
         type: "showSnackAlert",
@@ -156,10 +158,13 @@ const Feed: React.FC<Props> = ({ isLogged, user }) => {
         severity: "success",
       });
     }
-    if (deletedPost.error) {
-      console.error(deletedPost.error);
-    }
-  }, [deletedPost, appDispatch]);
+    if (deletedError)
+      appDispatch({
+        type: "showSnackAlert",
+        errorMsg: deletedError.message,
+        severity: "error",
+      });
+  }, [deletedData, deletedLoading, deletedError, appDispatch]);
 
   const observer = React.useRef(
     new IntersectionObserver(

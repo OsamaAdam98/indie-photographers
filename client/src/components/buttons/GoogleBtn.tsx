@@ -62,7 +62,7 @@ const GoogleBtn: React.FC<Props> = ({ handleClose, dispatch }) => {
       clientId={clientId}
       onSuccess={onSuccess}
       onFailure={() => {}}
-      isSignedIn={true}
+      isSignedIn={false}
       cookiePolicy={"single_host_origin"}
       buttonText={"Google"}
       className={classes.gBtn}

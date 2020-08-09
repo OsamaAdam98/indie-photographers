@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/react-hooks";
+import { gql, useMutation } from "@apollo/client";
 import {
   Avatar,
   Card,
@@ -12,7 +12,6 @@ import {
   MenuItem,
   Typography,
 } from "@material-ui/core";
-import { gql } from "apollo-boost";
 import moment from "moment";
 import React, { lazy, memo, Suspense, useState } from "react";
 import { Link } from "react-router-dom";
@@ -74,10 +73,6 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
   };
 
   let date = new Date(feedPost.date);
-  let monthsOffset = moment().diff(date, "months");
-  let hoursOffset = moment().diff(date, "hours");
-  let daysOffset = moment().diff(date, "days");
-  let minutesOffset = moment().diff(date, "minutes");
 
   if (user) {
     return (
@@ -133,27 +128,7 @@ const PostMedia: React.FC<Props> = ({ feedPost, handleDelete }) => {
                 </Typography>
               </Link>
             }
-            subheader={
-              monthsOffset === 1 && daysOffset < 30
-                ? `Posted ${daysOffset} days ago`
-                : monthsOffset === 1 && daysOffset > 30
-                ? `Posted about a month ago`
-                : monthsOffset
-                ? `Posted ${monthsOffset} months ago`
-                : daysOffset === 1
-                ? `Posted yesterday`
-                : daysOffset
-                ? `Posted ${daysOffset} days ago`
-                : hoursOffset === 1 && minutesOffset < 60
-                ? `Posted ${minutesOffset} minutes ago`
-                : hoursOffset
-                ? `Posted ${hoursOffset} hours ago`
-                : minutesOffset > 1
-                ? `Posted ${minutesOffset} minutes ago`
-                : minutesOffset
-                ? `Posted a minute ago`
-                : `Posted just now`
-            }
+            subheader={`Posted ${moment(date).fromNow()}`}
           />
           <CardContent>
             <Typography variant="body2" component="p" dir="auto">

@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/react-hooks";
+import { gql, useLazyQuery } from "@apollo/client";
 import {
   Button,
   Dialog,
@@ -9,7 +9,6 @@ import {
   makeStyles,
   TextField,
 } from "@material-ui/core";
-import { gql } from "apollo-boost";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FBButton, GoogleBtn, ProfileAvatar } from "..";
