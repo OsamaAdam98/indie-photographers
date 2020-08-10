@@ -1,11 +1,6 @@
-FROM node:12-alpine as builder
+FROM buildkite/puppeteer as builder
 
 WORKDIR /app
-
-RUN apk update && apk upgrade && \
-  apk add chromium
-
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 COPY package.json yarn.lock ./
 COPY client/package.json ./client/
