@@ -25,7 +25,7 @@ const BottomBar: React.FC = () => {
 
   useEffect(() => {
     switch (location.pathname) {
-      case "/feed/":
+      case "/feed":
         setValue(1);
         break;
       case `/profile/${user._id}`:
@@ -59,7 +59,7 @@ const BottomBar: React.FC = () => {
             left: 0,
             behavior: "auto",
           });
-        history.push("/feed/");
+        history.push("/feed");
         break;
       case 2:
         if (location.pathname === `/profile/${user._id}`)

@@ -2,7 +2,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import { yellow } from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import React, { lazy, Suspense, useEffect } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { appReducer } from "./components";
 import SnackAlert from "./components/SnackAlert";
 import UserContext, { DispatchContext } from "./context/AppContext";
@@ -218,6 +218,15 @@ const App: React.FC = () => {
                 )}
               />
             </Switch>
+            <Link to="/settings" className="hidden">
+              settings
+            </Link>
+            <Link to="/feed" className="hidden">
+              feed
+            </Link>
+            <Link to="/about" className="hidden">
+              about
+            </Link>
           </Router>
         </DispatchContext.Provider>
       </UserContext.Provider>

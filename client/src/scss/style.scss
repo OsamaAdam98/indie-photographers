@@ -26,6 +26,10 @@ html[data-theme="light"] {
   text-decoration: inherit;
 }
 
+.hidden {
+  display: none;
+}
+
 .hover-img:hover {
   cursor: pointer;
 }
