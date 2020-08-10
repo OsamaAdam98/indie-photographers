@@ -5,6 +5,8 @@ WORKDIR /app
 RUN apk update && apk upgrade && \
   apk add chromium
 
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+
 COPY package.json yarn.lock ./
 COPY client/package.json ./client/
 COPY server/package.json ./server/
