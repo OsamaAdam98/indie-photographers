@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  currentLocation: "/feed/";
+  currentLocation: "/feed";
   offline: boolean;
   icon: JSX.Element;
   handleClick: () => void;

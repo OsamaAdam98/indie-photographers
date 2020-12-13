@@ -156,7 +156,7 @@ const PostModal: React.FC<Props> = (props) => {
     <FAB
       handleClick={handleShow}
       offline={offline}
-      currentLocation="/feed/"
+      currentLocation="/feed"
       icon={<EditIcon />}
     />
   ) : null;
